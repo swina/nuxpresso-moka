@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-
+import Dashboard from '@/views/Dashboard.vue'
+import Components from '@/views/Components.vue'
+import Moka from '@/views/Moka.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -10,6 +12,22 @@ const routes = [
     name: 'Home',
     component: Home
   },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: Dashboard
+  },
+  {
+    path: '/components',
+    name: 'Components',
+    component: Components
+  },
+  {
+    path: '/moka',
+    name: 'Moka',
+    component: Moka
+  },
+  
   {
     path: '/about',
     name: 'About',

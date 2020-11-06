@@ -1,0 +1,15 @@
+query Upload ($limit: Int , $start: Int){
+  files ( limit : $limit , start: $start , sort: "updated_at:desc" ){
+  	id
+    name
+    url
+    previewUrl
+    width
+    height
+    size
+    ext
+    formats
+    caption
+    alternativeText
+  }
+}

@@ -1,0 +1,27 @@
+query Articles ( $limit : Int, $start : Int ) {
+  articles ( limit: $limit , start: $start , sort: "updated_at:desc" ){
+    id
+    title
+    slug
+    tags
+    homepage
+    excerpt
+    updated_at
+    random_image
+    lang
+    component {
+      id
+      name
+      category
+    }
+    image {
+      url
+      caption
+      alternativeText
+    }
+    user {
+      firstname
+      lastname
+    }
+  }
+}
