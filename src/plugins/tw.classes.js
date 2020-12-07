@@ -25,6 +25,7 @@ function setOpacity ( prefix ){
     return arr
 }
 var classes = {
+    semantics:['article','aside','details','figcaption','figure','footer','header','main','mark','nav','section','summary','time'],
     textSize: [
         'text-xs' , 
         'text-sm' , 
@@ -57,7 +58,7 @@ var classes = {
         'leading-loose'
     ],
     textOpacity: setOpacity('text-opacity'),
-    fontfamily: [ 
+    fontfamily: [
         'Barlow Condensed',
         'Abel',
         'Alice',
@@ -68,6 +69,33 @@ var classes = {
         'Quattrocento'
     ],
     bgOpacity: setOpacity('bg-opacity'),
+    flexdirection : [ 'flex-col' , 'flex-row' , 'flex-col-reverse' , 'flex-row-reverse' ],
+    flexorder:[
+        'order-first',
+        'order-last',
+        'order-none'
+    ],
+    zindex: [
+        'z-auto',
+        'z-0',
+        'z-1',
+        'z-2',
+        'z-3',
+        'z-4',
+        'z-5',
+        'z-6',
+        'z-7',
+        'z-8',
+        'z-9',
+        'z-10',
+        'z-20',
+        'z-30',
+        'z-40',
+        'z-50',
+        'z-max',
+        'z-top',
+        'z-2xtop'
+    ],
     gridgap: [ 
         'gap-1' , 
         'gap-2' , 

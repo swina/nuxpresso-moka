@@ -62,7 +62,7 @@ import MokaContainer from '@/components/editor/preview/moka.preview.container'
 import MokaFlex from '@/components/editor/preview/moka.editor.flex'
 import MokaGrid from '@/components/editor/preview/moka.editor.grid'
 import MokaSlider from '@/components/editor/preview/moka.slider'
-import MokaArticlesLoop from '@/components/editor/moka.preview.articles.loop'
+//import MokaArticlesLoop from '@/components/editor/moka.preview.articles.loop'
 
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -81,7 +81,7 @@ export default {
         MokaGrid,
         MokaSlider ,
         MokaElement,
-        MokaArticlesLoop
+        //MokaArticlesLoop
     },
     computed:{
         animations(){

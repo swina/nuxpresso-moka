@@ -90,7 +90,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import gallery from '@/components/moka/moka.gallery'
 export default {
     name: 'MokaEditorElement',
     data:()=>({
@@ -126,11 +125,13 @@ export default {
         
         
     },
+    /*
     async asyncData({context}){
         const { data } = await this.$axios.$get('articles/2')
         console.log ( data )
         return { article: data.content }
     },
+    */
     methods:{
         select(el){
             this.$store.dispatch('selected',el.id)

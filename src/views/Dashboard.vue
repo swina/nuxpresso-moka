@@ -32,16 +32,16 @@
 
 <script>
 import MokaList from '@/components/moka/moka.list'
-import MokaTest from '@/components/moka/moka.components'
+//import MokaTest from '@/components/moka/moka.components'
 import MokaArticles from '@/components/articles/moka.articles'
 import MokaMedia from '@/components/media/media'
-import MokaGrid from '@/components/moka/moka.grid'
+//import MokaGrid from '@/components/moka/moka.grid'
 import articlesQry from '@/apollo/articles.gql'
 import categoriesQry from '@/apollo/categories.gql'
 import MokaHome from '@/views/Home'
 export default {
     components: {
-        MokaList, MokaTest, MokaArticles, MokaMedia, MokaGrid , MokaHome
+        MokaList,  MokaArticles, MokaMedia,  MokaHome
     },
     data:()=>({
         section: '',

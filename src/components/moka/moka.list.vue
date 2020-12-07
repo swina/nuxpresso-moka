@@ -60,7 +60,7 @@
 import MokaTable from '@/components/table'
 import MokaGallery from '@/components/moka/moka.gallery'
 import MokaPreview from '@/components/editor/preview/moka.preview'
-import MokaSlider from '@/components/editor/moka.preview.slider'
+import MokaSlider from '@/components/editor/preview/moka.preview.slider'
 import MokaUpload from '@/components/moka/moka.import.json'
 import { mapState } from 'vuex'
 export default {

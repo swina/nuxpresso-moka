@@ -46,9 +46,10 @@
 <script>
 //import MokaEditor from '@/components/editor/moka.editor'
 import MokaEditor from '@/components/editor/render/moka.editor.main'
-import MokaPreview from '@/components/editor/moka.preview'
+import MokaPreview from '@/components/editor/preview/moka.preview'
 import { mapState } from 'vuex'
 export default {
+    name: 'MokaMain',
     components: { MokaEditor, MokaPreview  },
     data:()=>({
         loading: false,

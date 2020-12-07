@@ -15,7 +15,7 @@
 import Moka from '@/components/moka/moka'
 import { mapState } from 'vuex'
 export default {
-    name: 'MokaEditorContainer',
+    name: 'MokaStudio',
     data:()=>({
         component: null,
         message: ''

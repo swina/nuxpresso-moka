@@ -43,7 +43,7 @@ export default {
     mounted(){  
         if ( !this.css.length ) return
         this.min = -1
-        this.le = parseInt(classes[this.$attrs.attr].length)
+        this.le = parseInt(classes[this.$attrs.attr].length)-1
         if ( this.$attrs.negative ){
             this.selected = 0
         }

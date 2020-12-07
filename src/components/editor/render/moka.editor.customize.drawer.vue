@@ -70,6 +70,7 @@
                 :element="entity.entity" 
                 :component="$attrs.component"
                 @media="$emit('media')"/>
+            <!--
             <div class="flex flex-col mt-2">
                 <label>HTML Semantic</label>
                 <select class="dark" v-model="entity.entity.semantic">
@@ -77,6 +78,7 @@
                     <option v-for="semantic in semantics" :value="semantic">{{ semantic }}</option>
                 </select>
             </div>
+            -->
             <!-- customize dropdown to be fixed -->
             <!--
             <div v-if="entity && entity.entity.tag === 'menu'"><button   @click="customizeDropdown=!customizeDropdown" class="flex flex-row items-center justify-center w-full mt-1">
@@ -87,17 +89,17 @@
             -->
 
         </div>
-        <div v-else class="p-2 overflow-y-auto">
-                Select an element
-            
-        </div>
+        
+        <!--
         <transition name="fade">
             <div class="nuxpresso-modal z-max bg-gray-800 rounded-lg" :data="isRichText">
                 <moka-text-editor v-if="editor"  v-model="entity.entity.content" @close="editor=!editor"/>
             </div>
         </transition>
+        -->
         
         <!-- SAVE AS REUSABLE -->
+        <!--
         <transition name="fade">
             <div v-if="saveAsReusable" class="nuxpresso-modal rounded w-full md:w-1/4 p-4 flex flex-col bg-white z-50">
                 <i class="material-icons absolute top-0 right-0 cursor-pointer" @click="saveAsReusable=!saveAsReusable">close</i>
@@ -119,13 +121,14 @@
                 <button @click="saveNewBlock" class="my-2">Save</button>
             </div>
         </transition>
+        -->
     </div>
 </template>
 
 <script>
-import MokaImagePlaceholder from '@/components/editor/render/moka.editor.image.placeholder'
-import MokaCustomizeGrid from '@/components/editor/moka.customize.grid'
-import MokaTextEditor from '@/components/editor/moka.text.editor'
+//import MokaImagePlaceholder from '@/components/editor/render/moka.editor.image.placeholder'
+//import MokaCustomizeGrid from '@/components/editor/moka.customize.grid'
+//import MokaTextEditor from '@/components/editor/moka.text.editor'
 import MokaEditContent from '@/components/editor/render/moka.edit.content'
 //import MokaIcons from '@/components/editor/render/moka.customize.icon'
 import MokaTw from '@/components/editor/render/moka.tailwind'
@@ -134,15 +137,14 @@ import { mapState } from 'vuex'
 export default {
     name: 'MokaCustomizer',
     components: {  
-        MokaCustomizeGrid , 
-        MokaTextEditor , 
+        //MokaCustomizeGrid , 
+        //MokaTextEditor , 
         MokaEditContent , 
         //MokaIcons, 
-        MokaImagePlaceholder , 
+        //MokaImagePlaceholder , 
         MokaTw 
     },
     data:()=>({
-        semantics:['article','aside','details','figcaption','figure','footer','header','main','mark','nav','section','summary','time'],
         customizeDropdown: false,
         settings: false,
         breakpoint:'md',

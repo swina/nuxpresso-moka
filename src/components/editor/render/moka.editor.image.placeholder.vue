@@ -11,7 +11,7 @@
 
 <script>
 export default {
-    name: 'NuxpressoImagePlaceHolder',
+    name: 'MokaImagePlaceHolder',
     computed:{
         size(){
             return this.$attrs.size ?

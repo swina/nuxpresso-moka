@@ -197,16 +197,11 @@
 </template>
 
 <script>
-//import MokaFlex from '@/components/editor/moka.editor.flex'
-//import MokaGrid from '@/components/editor/moka.editor.grid'
 import MokaElement from '@/components/editor/render/moka.editor.element'
-//import MokaSlider from '@/components/editor/moka.preview.slider'
-//import MokaRightToolbar from '@/components/editor/moka.editor.right.toolbar'
 import MokaTextEditor from '@/components/editor/render/moka.text.editor'
 import MokaEditIcon from '@/components/editor/render/moka.customize.icon'
 import MokaEditMenu from '@/components/editor/render/moka.menus'
 import MokaEditMedia from '@/components/media/media'
-//import MokaCustomize from '@/components/editor/moka.editor.customize'
 import MokaTree from '@/components/editor/render/moka.tree.draggable'
 import MokaAnimation from '@/components/editor/render/moka.animation'
 import MokaContainer from '@/components/editor/render/moka.editor.container'
@@ -238,12 +233,7 @@ export default {
         tree: false
     }),
     components: { 
-        //MokaFlex,
-        //MokaGrid,
-        //MokaCustomize,
-        //MokaSlider ,
         MokaElement,
-        //MokaRightToolbar,
         MokaTextEditor,
         MokaEditIcon,
         MokaEditMenu,
@@ -268,17 +258,7 @@ export default {
                 return this.current.entity.tag
             }
         },
-        /*
-        current(){
-            if ( this.moka.current ){
-                return this.moka.current
-            } else {
-                return { coords: null , entity: null}
-            }
-        },
-        */
         gsapAnimations(){
-            
             return gsapEffects
         },
         coords(){
@@ -291,7 +271,6 @@ export default {
         },
         customizeElement(flag){
             console.log ( 'customize=>' , flag )
-            //this.customize = flag
         },
         customizeSwitch(v){
             v ? this.customizePos = 'left-0' : this.customizePos = 'right-0'

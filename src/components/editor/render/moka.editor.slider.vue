@@ -7,19 +7,6 @@
             <input type="checkbox" v-model="slider.slider.navigation.enable"/>
             <label>Dots</label>
             <input type="checkbox" v-model="slider.slider.dots.enable"/>
-            <!--
-            <label>Animation</label>
-            <select v-model="slider.slider.animation">
-                <option value="">no animation</option>
-                <option value="animation-1">Fade</option>
-                <option value="animation-2">Slide</option>
-                <option value="animation-3">Flip 1</option>
-                <option value="animation-4">Flip 2</option>
-                <option value="animation-5">Tilt In</option>
-                <option value="animation-6">Roll In</option>
-
-            </select>
-            -->
         </div>
     </div>
 </template>

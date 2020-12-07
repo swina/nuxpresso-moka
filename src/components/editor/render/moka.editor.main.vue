@@ -9,7 +9,7 @@
                 <!-- TOP BAR -->
                 <div :class="'fixed z-xtop top-0 left-0 bg-gray-500 p-1 grid grid-cols-3 items-center w-full m-auto cursor-pointer'" title="Select component body" @click="$store.dispatch('selected',$attrs.component.id)">
                     <div class="flex flex-row items-center">
-                        <i class="material-icons text-red-500" @click="$router.push('dashboard')" title="Close">fiber_manual_record</i>
+                        <i class="material-icons text-red-500" @click="$store.dispatch('setAction',null),$router.push('dashboard')" title="Close">fiber_manual_record</i>
                         <i class="material-icons text-yellow-500" title="Select component">fiber_manual_record</i>
                         <i class="material-icons text-green-500" @click="preview=!preview" title="preview">fiber_manual_record</i>
                         <div class="text-sm ml-4">
@@ -277,17 +277,14 @@
 </template>
 
 <script>
-//import MokaElement from '@/components/editor/moka.editor.element'
-//import MokaCustomize from '@/components/editor/moka.editor.customize'
 import MokaReusable from '@/components/editor/render/moka.reusable'
 import MokaEditorMedia from '@/components/media/media'
-//import MokaEditorBlocks from '@/components/editor/moka.editor.blocks.loop'
 import MokaEditorPreview from '@/components/editor/preview/moka.preview'
-import MokaTextEditor from '@/components/editor/moka.text.editor'
+import MokaTextEditor from '@/components/editor/render/moka.text.editor'
 import MokaSlider from '@/components/editor/preview/moka.slider'
-import MokaEditorSlider from '@/components/editor/moka.editor.slider'
+import MokaEditorSlider from '@/components/editor/render/moka.editor.slider'
 import MokaEditorSelectors from '@/components/editor/render/moka.editor.selector'
-import MokaEditMenu from '@/components/editor/moka.menus'
+import MokaEditMenu from '@/components/editor/render/moka.menus'
 import { mapState } from 'vuex'
 import draggable from 'vuedraggable'
 import gsapEffects from '@/plugins/animations'
@@ -295,11 +292,8 @@ import gsapEffects from '@/plugins/animations'
 export default {
     name: 'MokaEditor',
     components: { 
-        //MokaElement , 
-        //MokaCustomize , 
         MokaEditorMedia , 
         MokaReusable , 
-        //MokaEditorBlocks, 
         MokaEditorPreview , 
         MokaSlider , 
         MokaTextEditor , 

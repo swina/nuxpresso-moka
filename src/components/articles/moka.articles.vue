@@ -147,8 +147,8 @@
 <script>
 import queryArticles from '@/apollo/articles-admin.gql'
 import queryArticleSlug from '@/apollo/articles-slug.gql'
-import MokaTextEditor from '@/components/editor/moka.text.editor'
-import MokaImagePlaceholder from '@/components/editor/moka.editor.image.placeholder'
+import MokaTextEditor from '@/components/editor/render/moka.text.editor'
+import MokaImagePlaceholder from '@/components/editor/render/moka.editor.image.placeholder'
 import MokaTemplates from '@/components/articles/moka.articles.templates'
 import MokaMedia from '@/components/media/media'
 import { mapState } from 'vuex'

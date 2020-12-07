@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import MokaElement from '@/components/editor/moka.element'
+import MokaElement from '@/components/editor/preview/moka.element'
 
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
