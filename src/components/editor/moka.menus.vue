@@ -1,39 +1,27 @@
 <template>
-    
-    <!--<div class="nuxpresso-modal rounded w-full md:w-1/3 p-4 flex flex-col overflow-y-auto" v-if="menus">
-        <i class="material-icons absolute top-0 right-0 cursor-pointer" @click="$emit('close')">close</i>
-        <h4>Menus</h4>
-        <div  class="w-full flex flex-row flex-wrap p-2 justify-between">
-            <div v-for="(component,c) in menus" class="flex flex-col p-2">
-                <div class="hover:bg-blue-200 hover:text-black flex-auto flex flex-col justify-center  p-1 text-center text-xs w-24 h-24 cursor-pointer" @click="$emit('add',component)">
-                    <i class="material-icons text-blue-800">menu</i>
-                    <div class="leading-4">{{ component.name }}</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    -->
-    <div v-if="menu" class="w-full z-max bg-white overflow-y-auto h-auto mb-2 border shadow">
-        <div class="flex flex-col items-center cursor-pointer bg-gray-100 p-1 my-1">
+    <div v-if="menu" class="w-full z-max bg-gray-800 text-white overflow-y-auto h-auto mb-2 shadow">
+        <div class="flex flex-col items-center cursor-pointer p-1 my-1">
            
-            <div class="flex flex-row">
+            <div class="flex flex-row items-center">
                 <span class="font-bold" @click="showItems=!showItems">Menu Items</span> 
+                <button class="xs ml-2" @click="addItem">Add</button>
                 <i class="material-icons nuxpresso-icon-circle text-xs ml-2 mr-4" @click="addItem">add</i>
             </div>
         </div>
         <transition name="fade">
-            <draggable v-model="items">
+            <div class="absolute bg-gray-800 text-gray-200 overflow-y-auto h-2/3 w-full p-1">
+            <draggable v-model="items" class="relative">
                 <div v-for="(item,i) in items" class="flex flex-col text-sm cursor-pointer pb-1" v-if="showItems">
-                    <div class="bg-gray-400 p-1 flex flex-col" @click="currentIndex<0||currentIndex!=i?currentIndex=i:currentIndex=-1">{{ item.label }}</div>
-                    <transition name="fade"> 
-                        <div class="bg-gray-200 p-1 flex flex-col mb-1" v-if="currentIndex===i">
+                    <div class="bg-gray-600 p-1 flex flex-col" @click="currentIndex<0||currentIndex!=i?currentIndex=i:currentIndex=-1">{{ item.label }}</div>
+                    <transition> 
+                        <div class="bg-gray-800 p-1 flex flex-col mb-1" v-if="currentIndex===i">
                             
-                            <input type="text" v-model="items[i].label" @focus="currentFocus=i"/>
+                            <input class="dark" type="text" v-model="items[i].label" @focus="currentFocus=i"/>
                             <div v-if="currentFocus===i" class="flex flex-col">
                                 <label>URL</label>
-                                <input type="text" v-model="items[i].link" @focus="currentFocus=i"/>
+                                <input class="dark" type="text" v-model="items[i].link" @focus="currentFocus=i"/>
                                 <label>Page</label>
-                                <select v-model="items[i].link" @focus="currentFocus=i">
+                                <select class="dark" v-model="items[i].link" @focus="currentFocus=i">
                                     <option v-for="(opt,o) in moka.articles" :value="'articles/' + opt.slug">{{ opt.title }}</option>
                                 </select>
                             </div>
@@ -41,19 +29,19 @@
                         </div>
                     </transition>
                     <div v-if="item.submenu && currentIndex===i" v-for="(sub,s) in item.submenu">
-                        <div  @click="subIndex<0||subIndex!=s?subIndex=s:subIndex=-1" class="ml-2 border p-1 bg-gray-300 mb-1">
+                        <div  @click="subIndex<0||subIndex!=s?subIndex=s:subIndex=-1" class="ml-2 border p-1 bg-gray-700 mb-1">
                         {{ sub.label}}
                         </div>
                         <transition name="fade">
-                        <div class="bg-gray-100 ml-3 mr-1 flex flex-col mb-1" v-if="subIndex===s">
+                        <div class="bg-gray-800 ml-3 mr-1 flex flex-col mb-1" v-if="subIndex===s">
                             
-                            <input type="text" v-model="items[i].submenu[s].label" @input="subIndex=-1,subIndex=s"/>
+                            <input class="dark" type="text" v-model="items[i].submenu[s].label" @input="subIndex=-1,subIndex=s"/>
                             <div class="flex flex-col">
                                 <label>URL</label>
-                                <input type="text" v-model="items[i].submenu[s].link"/>
+                                <input class="dark" type="text" v-model="items[i].submenu[s].link"/>
                                 <label>Page</label>
-                                <select v-model="items[i].submenu[s].link">
-                                    <option v-for="(opt,o) in moka.articles" :value="'articles/' + opt.slug">{{ opt.title }}</option>
+                                <select class="dark" v-model="items[i].submenu[s].link">
+                                    <option v-for="(opt,o) in articles" :value="'articles/' + opt.slug">{{ opt.title }}</option>
                                 </select>
                             </div>
                             <a href="#" class="text-xs" @click="items[currentIndex].submenu.splice(s,1),subIndex=-1,subIndex=s">Remove</a>
@@ -62,31 +50,31 @@
                     </div>
                 </div>
             </draggable>
-        </transition>
-         <div class="flex flex-col w-full mt-2 p-1">
                 <div class="flex flex-row">
                     <input type="checkbox" v-model="menu.responsive"/> Responsive
                 </div>
-                <div class="flex flex-row mt-2">
+                <div class="flex flex-col mt-2">
                     Orientation
-                    <select v-model="menu.type" class="ml-2">
+                    <select v-model="menu.type" class="dark">
                         <option value="horizontal">Horizontal</option>
                         <option value="vertical">Vertical</option>
                     </select>
                 </div>
-                <div class="flex flex-row mt-2">
+                <div class="flex flex-col mt-2">
                     Position
-                    <select v-model="menu.css.align" class="ml-2">
+                    <select v-model="menu.css.align" class="dark">
                         <option value="justify-start">left</option>
                         <option value="justify-center">center</option>
                         <option value="justify-end">right</option>
                     </select>
                 </div>
             </div>
+        </transition>
     </div>
 </template>
 
 <script>
+import queryArticles from '@/apollo/articles-admin.gql'
 import draggable from 'vuedraggable'
 import { mapState } from 'vuex'
 export default {
@@ -104,12 +92,6 @@ export default {
     computed:{
         ...mapState ( ['moka'] ),
         
-        /*menu(){
-            console.log ( this.moka.articles )
-            this.items = this.$attrs.menu.items
-            return true
-        },
-        */
     },
     mounted(){
         this.items = this.menu.items
@@ -124,20 +106,28 @@ export default {
             this.items.push ( {
                 label: 'new item',
                 link: '#',
-                title: ''
+                title: '',
+                id: this.$randomID()
             })
         },
         addSubMenu(i){
             !this.items[i].submenu ? this.items[i].submenu = [] : null
             this.items[i].submenu.push ( {
                 label: 'submenu item #' + parseInt(this.items[i].submenu.length+1),
-                link: '#'
+                link: '#',
+                id: this.$randomID()
             })
             this.currentIndex = -1
             this.currentIndex = i
         },
         setAlign(){
             
+        }
+    },
+    apollo: {
+        articles : {
+            query: queryArticles,
+            update: data => data.articles 
         }
     }
 }

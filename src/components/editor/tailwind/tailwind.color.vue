@@ -66,9 +66,14 @@ export default {
     methods:{
         setColor ( color , tone ){
             let c = this.context
-            tone ? c += color + '-' + tone : c += color
-            !this.is_over ?
-                this.color[this.attr] = c : this.color[this.attr + '_over']= 'hover:' + c
+            if ( color ){
+                tone ? c += color + '-' + tone : c += color
+                !this.is_over ?
+                    this.color[this.attr] = c : this.color[this.attr + '_over']= 'hover:' + c
+            } else {
+                !this.is_over ?
+                    this.color[this.attr] = '' : this.color[this.attr + '_over']= ''
+            }
 
             this.$emit('input', Object.values(this.color).join(' ') + ' ' )
             this.$emit('css', Object.values(this.color).join(' ') + ' ')
@@ -96,11 +101,7 @@ export default {
             })
         }
     },
-    watch:{
-        css(v){
-            this.update(v)
-        }
-    },
+    
     mounted(){
         if ( !this.css.length ) return
         this.allCss = this.css

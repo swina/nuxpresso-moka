@@ -1,5 +1,6 @@
 <template>
     <div class="mt-2">
+        Translate
         <div class="flex flex-row text-center w-full items-center justify-center">
             <i :class="'material-icons cursor-pointer'">chevron_left</i>
             <input type="range" :min="-pixels.length+1" :max="pixels.length-1" v-model="posX" class="mx-2">

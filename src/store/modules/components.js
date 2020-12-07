@@ -5,6 +5,7 @@ import articlesQry from '@/apollo/articles.gql'
 
 const moka = {
     state:  {
+        loading: false,
         message: '',
         filter: '',
         components: null,
@@ -17,9 +18,13 @@ const moka = {
         icons: icons.icons,
         selected: null,
         current: null,
-        fonts: [ 'Barlow Condensed','Abel','Alice','Alegreya','Amethysta','Nunito Sans','Roboto','Quattrocento']
+        fonts: [ 'Barlow Condensed','Abel','Alice','Alegreya','Amethysta','Nunito Sans','Roboto','Quattrocento'],
+        slide: 0
     },
     mutations: {
+        SET_LOADING ( state ){
+            state.loading =! state.loading
+        },
         SET_MESSAGE ( state , message ){
             state.message = message
         },
@@ -52,9 +57,15 @@ const moka = {
         },
         SET_CURRENT ( state , current ){
             state.current = current 
+        },
+        SET_SLIDE ( state , slide ){
+            state.slide = slide
         }
     },
     actions: {
+        loading( { commit } ){
+            commit ( 'SET_LOADING' )
+        },
         filter ( { commit } , filter ){
             commit ( 'SET_FILTER' , filter )
         },
@@ -91,6 +102,9 @@ const moka = {
         },
         current ( { commit } , current ){
             commit ( 'SET_CURRENT' , current )
+        },
+        slide ( { commit } , slide ){
+            commit (  'SET_SLIDE' , slide )
         }
     }
 

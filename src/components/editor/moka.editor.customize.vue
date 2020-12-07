@@ -4,20 +4,23 @@
             
             <div class="bg-gray-700 text-white flex flex-row items-center p-1 shadow relative p-1" v-if="entity.coords">
                 <div class="flex flex-row items-center" @dblclick="$emit('switch')">
-                    <i class="material-icons mr-2" @click="$emit('switch')">horizontal_distribute</i>
+                    
                     <div>{{ entities[entity.coords.length] }}</div>
                     <i class="material-icons text-sm ml-2">{{entity.entity.icon}}</i> 
                     <!--<div class="ml-1 uppercase">{{entity.entity.type}}</div>-->
                 </div>
-                <div class="flex-1 absolute right-0">
+                <div class="flex-1 absolute right-0 mt-2">
                     
-                    <i v-if="entity.entity.tag === 'blocks'" class="material-icons mx-2 nuxpresso-icon-circle bg-gray-600 border-0" @click="$emit('addreusable')">add</i>
+                    <!--<i v-if="entity.entity.tag === 'blocks'" class="material-icons mx-2 nuxpresso-icon-circle bg-gray-600 border-0" @click="$emit('addreusable')">add</i>
                     <i v-if="entity.coords.length > 2" class="material-icons mr-2 nuxpresso-icon-circle bg-gray-600 border-0" @click="entity_copy">content_copy</i>
                     <i v-if="entity.coords.length > 1" class="material-icons mr-2 nuxpresso-icon-circle bg-gray-600 border-0" @click="entity_paste">content_paste</i>
                     <i v-if="entity.coords.length === 2" class="material-icons mr-2 nuxpresso-icon-circle bg-gray-600 border-0" @click="entity_duplicate">file_copy</i>
                     <i v-if="entity.coords.length > -1" class="material-icons mr-2 nuxpresso-icon-circle bg-gray-600 border-0" @click="confirmModal=!confirmModal">delete</i>
                     <i v-if="entity.coords.length === 1" class="material-icons mr-2 nuxpresso-icon-circle bg-gray-600 border-0" title="Save as a reusable component" @click="saveAsReusable=!saveAsReusable">save</i>
-                    <i v-if="entity.coords.length === 1" class="material-icons mr-2 nuxpresso-icon-circle  bg-gray-600 border-0" title="Save as a reusable component" @click="$emit('print',entity.coords[1])">print</i>
+                    <i v-if="entity.coords.length === 1" class="material-icons mr-2 nuxpresso-icon-circle  bg-gray-600 border-0" title="Save as a reusable component" @click="$emit('print',entity.coords[1])">print</i>-->
+
+                    <i class="material-icons mr-2" @click="$emit('switch')" v-if="!$attrs.position">first_page</i>
+                    <i class="material-icons mr-2" @click="$emit('switch')" v-else>last_page</i> 
                     <i class="material-icons mr-2" @click="$emit('close')">close</i>
                 </div>
             </div>
@@ -52,14 +55,16 @@
                 </div>  
             </transition>
 
+            <!--
             <div v-if="entity.entity.tag === 'blocks'" class="w-4/5 h-10 fixed  bottom-0 left-0 mb-10  z-top">
                 <i class="absolute right-0 rounded-full hover:bg-black text-white cursor-pointer shadow-lg bg-blue-400 text-2xl p-2 material-icons mr-2" @click="$emit('addreusable')" title="Add a component or element">add</i>
             </div>
-            <!-- menu settings -->
+            -->
+            <!-- menu settings
             <transition name="slidedown">
                 <moka-menus v-if="entity.entity.tag==='menu'" :menu="entity.entity"/>
             </transition>
-
+            -->
             <!-- entity position array and info status bar -->
             <!--
             <div class="fixed bottom-0 left-0 p-1 border-t w-4/5 bg-white z-max uppercase">
@@ -98,7 +103,16 @@
                 {{Object.keys(entity.entity)}}
             </div>
 
+
+            <moka-edit-content 
+                :entity="entity" 
+                :element="entity.entity" 
+                :component="$attrs.component"
+                @media="$emit('media')"/>
+
+            
             <!-- image or background image -->
+            <!--
             <div class="p-4 text-center" v-if="entity && entity.entity.hasOwnProperty('image')">
                 <span v-if="entity.entity.element!='img'">Background </span>Image
                 <moka-image-placeholder v-if="entity" size="sm" :image="entity.entity.image" @noimage="entity.entity.image=null" @media="$emit('media')"/> 
@@ -107,15 +121,18 @@
                     <input class="dark" type="text" v-model="entity.entity.link"/>
                     <label>Anchor</label>
                     <input class="dark" type="text" v-model="entity.entity.anchor"/>
+                    
                 </div>
+                
             </div>
-
+            -->
             <!-- rich text editor -->
+            <!--
             <div class="editfields w-full my-2" v-if="entity.entity.type === 'element'">
                 
                 <button class="w-full mb-2" v-if="entity.entity.element && entity.entity.element==='p'" @click="editor=!editor">Edit Content</button>
 
-                <moka-edit-content :element="entity.entity" v-else/>
+                <moka-edit-content :element="entity.entity" :component="$attrs.component" v-else/>
                 <div class="flex flex-col">
                     <label>Link</label>
                     <input class="dark" type="text" v-model="entity.entity.link"/>
@@ -123,8 +140,9 @@
                     <input class="dark" type="text" v-model="entity.entity.anchor"/>
                 </div>
             </div>
+            -->
 
-                
+            <!--    
             <div v-if="entity.entity.tag === 'container'">
                 Loop
                 <select v-model="loop">
@@ -132,23 +150,24 @@
                     <option :value="true">Articles</option>
                 </select>
             </div>
- 
+            -->
+            <!--
             <div class="w-full my-2" v-if="entity.entity.type === 'button' || entity.entity.type === 'video' || entity.entity.type === 'audio' && entity.entity.tag != 'menu' && entity.coords.length > 2"> 
-                <moka-edit-content :element="entity.entity"/>
+                <moka-edit-content :element="entity.entity" :component="$attrs.component"/>
             </div>
-
+            -->
             <!-- icon settings -->
             <moka-icons v-if="entity.entity.tag ==='icon'" :icon="entity.entity.content" v-model="entity.entity.content"/>
 
             <!-- Link && Anchor -->
-            
+            <!--
             <div class="flex flex-col my-1" v-if="entity.entity.tag === 'icon'">
                 <label>Link</label>
                 <input class="dark" type="text" v-model="entity.entity.link"/>
                 <label>Anchor</label>
                 <input class="dark" type="text" v-model="entity.entity.anchor"/>
             </div>
-            
+            -->
             <!-- slider -->
 
             <moka-slider v-if="entity.entity.tag === 'slider'" :slider="entity.entity.element"/>
@@ -169,17 +188,20 @@
 
             
              <!-- CUSTOMIZE BUTTON => tailwind classes button -->
+            <!--
             <div class="w-full m-auto mt-2 text-center font-thin ">
                 <div class="text-xl w-12 m-auto h-12 bg-gray-900 hover:bg-green-400 border-transparent border rounded-full flex flex-col text-gray-300 font-black animate-pulse cursor-pointer" @click="tailwind=!tailwind,$emit('disabled')">
                 <div class="m-auto text-sm">M O K A</div>
                 </div>
                 <div class="text-gray-500 text-xs mt-1 font-hairline" @click="tailwind=!tailwind,$emit('disabled')">Customize</div>
             </div>
+            -->
         </div>
         <div v-else class="p-2 overflow-y-auto">
                 Select an element
             
         </div>
+        <!--
         <transition>
             <div class="z-max" v-if="entity && entity.entity && tailwind">
                 {{ entity.entity.css }}
@@ -204,7 +226,7 @@
                     @close="tailwind=!tailwind,$emit('disabled')"/>
             </div>
         </transition>   
-
+        -->
         <!--
         <div style="transform:translate(-100%,-50%);top:50%;" class="fixed w-8 h-8 pt-1 pl-1 cursor-pointer border-t border-b border-l border-gray-700 shadow-lg bg-gray-800 text-white transform">
             <i class="material-icons text-xl" @click="$emit('close')">close</i>
@@ -250,13 +272,13 @@ import MokaTextEditor from '@/components/editor/moka.text.editor'
 import MokaEditContent from '@/components/editor/moka.edit.content'
 import MokaMenus from '@/components/editor/moka.menus'
 import MokaEditorSlider from '@/components/editor/moka.editor.slider'
-import MokaTailwind from '@/components/editor/tailwind.class.helper'//moka.customize.tailwind'
+//import MokaTailwind from '@/components/editor/tailwind.class.helper'//moka.customize.tailwind'
 import MokaIcons from '@/components/editor/moka.customize.icon'
 import MokaTw from '@/components/editor/moka.tailwind'
 import fonts from '@/plugins/icons'
 import { mapState } from 'vuex'
 export default {
-    components: {  MokaCustomizeGrid , MokaTextEditor , MokaTailwind , MokaEditContent , MokaMenus, MokaEditorSlider, MokaIcons, MokaImagePlaceholder , MokaTw },
+    components: {  MokaCustomizeGrid , MokaTextEditor , MokaEditContent , MokaMenus, MokaEditorSlider, MokaIcons, MokaImagePlaceholder , MokaTw }, //MokaTailwind , 
     data:()=>({
         settings: false,
         breakpoint:'md',
@@ -341,6 +363,10 @@ export default {
             this.entity = this.$attrs.element
             this.entity.entity ? this.entity.entity.hasOwnProperty('cols') ? this.grid_columns = this.entity.entity.cols : 0 : null
             this.isRichText
+            !this.entity.entity.css.hasOwnProperty('css') ?
+                this.entity.entity.css = this.$clean(this.entity.entity.css , 'md:' ) :
+                    this.entity.entity.css.css = this.$clean(this.entity.entity.css.css , 'md:' ) 
+
             this.grid_settings = []
         },
         isRichText(){
@@ -359,7 +385,6 @@ export default {
             console.log ( css )
         },
         setCSS(css){
-            console.log ( css )
             !this.entity.entity.css.hasOwnProperty('css') ?
                 this.entity.entity.css = css :
                     this.entity.entity.css.css = css
@@ -368,8 +393,7 @@ export default {
             this.entity.entity.css = css
         },
         set_style(stile,extra){
-            if ( stile )
-                this.entity.entity.style = stile
+            this.entity.entity.style = this.$clean(stile)
             if ( extra ){
                 this.entity.entity.css.container = this.entity.entity.css.container + ' ' + extra
             }    

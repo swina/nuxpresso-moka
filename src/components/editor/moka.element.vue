@@ -1,5 +1,5 @@
 <template>
-    <div v-if="element" :ref="element.id" >
+    <div v-if="element" :ref="element.id" :style="element.style" element @click="element.hasOwnProperty('action') ? $emit('click',element.action) : null">
             <a v-if="el.hasOwnProperty('anchor')" :id="el.anchor"></a>
 
             <component :class="$cssResponsive(el.css)" :is="tag" v-html="el.content" v-if="(el.tag==='element' || el.type==='button')  && el.element !='img' && el.type != 'video' && el.type != 'audio' && !el.link" :style="stile"></component>
@@ -13,8 +13,12 @@
             <!--<component :ref="element.id" :class="$cssResponsive(el.css)" :is="tag" v-if="el.type === 'video'" :src="el.src + el.content"/>-->
             
 
-            <img v-if="el.element === 'img' && el.image && el.image.url" :src="el.image.url" :caption="el.image.caption" :alt="el.image.alternative_text" :class="$cssResponsive(el.css)"/>
+            <img v-if="el.element === 'img' && el.image && el.image.url && el.image.ext != '.svg' && el.image.ext != '.mp4'" :src="el.image.url" :caption="el.image.caption" :alt="el.image.alternative_text" :class="$cssResponsive(el.css)"/>
             
+            <div v-if="(el.element === 'img')  && el.image && el.image.ext === '.svg'" :class="el.css + ' fill-current'">     
+                <simple-svg :src="el.image.url" width="100%" height="100%"/>
+            </div>
+
             <video  :class="$cssResponsive(el.css)" v-if="el.type==='video' && el.image && el.image.url" autoplay controls>
                 <source :src="el.image.url">
             </video>
@@ -31,7 +35,7 @@
             </a>
             <textarea v-if="el.element === 'textarea'" :class="$cssResponsive(el.css)"></textarea>
 
-            <nav v-if="el.element === 'menu'" :class="menu_responsive(el) + ' ' + el.css.align"> 
+            <nav v-if="el.element === 'menu'" :class="menu_responsive(el) + ' z-top ' + el.css.align"> 
                 <div v-for="(item,i) in el.items" :class="el.css.css + ' cursor-pointer relative pr-4'" :key="el.id + '_' + i"> 
                     
 
@@ -46,16 +50,16 @@
                     </div>
                 </div>
             </nav>
-            <i :class="'material-icons moka-icons z-max fixed md:hidden top-0 left-0 m-1 ' + el.css.css" v-if="el.element === 'menu' && el.responsive" @click="menu_show=!menu_show">menu</i>
+            <i :class="'material-icons moka-icons z-top fixed md:hidden top-0 left-0 m-1 ' + el.css.css" v-if="el.element === 'menu' && el.responsive" @click="menu_show=!menu_show">menu</i>
             <transition name="fade">
-            <nav v-if="el.element === 'menu' && menu_show" class="flex flex-col p-1 my-2"> 
+            <nav v-if="el.element === 'menu' && menu_show" class="z-top flex flex-col p-1 my-2"> 
                 <div v-for="(item,i) in el.items" :class="el.css.css + ' cursor-pointer relative p-1'"> 
                     
                     <a :class="el.css.css" v-if="!item.submenu && !$attrs.develop && item.link && !item.link.includes('http')" :href="item.link">{{ item.label }} <i v-if="item.submenu" class="material-icons moka-icons">arrow_drop_down</i></a>
                     
                     <div v-else @mouseover="menuover=i" :class="el.css.css" @click="menuover=i">{{item.label}} <i v-if="item.submenu && item.submenu.length" :class="el.css.css + ' material-icons moka-icons text-sm'">arrow_drop_down</i></div>
                     
-                    <div v-if="item.submenu && item.submenu.length" :class="isOver(i) + ' ' + el.css.css + ' absolute w-48 p-1 flex flex-col z-40'" @mouseleave="menuover=-1"> 
+                    <div v-if="item.submenu && item.submenu.length" :class="isOver(i) + ' ' + el.css.css + ' absolute w-48 z-top p-1 flex flex-col'" @mouseleave="menuover=-1"> 
                         <div v-for="sub in item.submenu">
                             <div :class="el.css.css">{{sub.label}}</div>
                         </div>
@@ -128,7 +132,7 @@ export default {
 
                 ScrollTrigger.create({
                     id: id,
-                    start: "top 80%",
+                    start: "bottom 99.99%",
                     trigger: this.$refs[id],
                     toggleActions: "play pause restart none",
                     animation:ani,
@@ -145,7 +149,7 @@ export default {
             }
         },
         responsiveCss(css){
-            return this.$clean ( this.$cssResponsive ( css ) )
+            return css //this.$clean ( this.$cssResponsive ( css ) )
         },
         isOver(i){
             return i < 0 ? 'opacity-0' : this.menuover === i ? 'opacity-100' : 'opacity-0'
@@ -157,10 +161,9 @@ export default {
         }
     },
     mounted(){
-        if ( this.$attrs.sub ){
-            console.log ( 'is sub' )
+        //if ( this.$attrs.sub ){
             this.animation(this.element,this.element.id)
-        }
+        //}
     }
 }
 </script>   

@@ -1,10 +1,11 @@
 <template>
 <div>
-    <div class="w-full fixed top-0 right-0 left-0 bottom-0 flex flex-row bg-gray-200" v-if="$attrs.component && hasblocks && !preview">
+    <div class="w-full fixed top-0 right-0 left-0 bottom-0 flex mx-4 flex-row bg-white" v-if="$attrs.component && hasblocks && !preview">
         <div class="w-full overflow-y-auto">
-           
+            
             <div :class="'relative mt-2 mx-2 p-2 cursor-pointer'">
                 <div class="absolute top-0 left-0 bottom-0 right-0 z-top" v-if="disable"></div>
+                <!-- TOP BAR -->
                 <div :class="'bg-gray-500 p-1 rounded-tl-lg rounded-tr-lg grid grid-cols-3 items-center relative cursor-pointer z-top '  + activeDocHead($attrs.component.id)" title="Select component body"  @click="current.coords=[],current.entity=doc,$store.dispatch('selected',$attrs.component.id)">
                     <div class="flex flex-row items-center">
                         <i class="material-icons text-red-500" @click="$router.push('dashboard')" title="Close">fiber_manual_record</i>
@@ -27,107 +28,44 @@
                     </div>
                 </div>
                 
-                <!--<i class="material-icons moka-icons absolute box-border text-xl left-0 -mt-8 ml-1 mb-8" @click="current.coords=null,current.entity=doc,$store.dispatch('selected',$attrs.component.id)" title="Select component body">web</i>-->
-
-                <div :class="'border box-border rounded-bl rounded-br shadow ' + activeDoc($attrs.component.id)">
-                
-
-                <moka-editor-selectors 
-                    :doc="doc"
-                    :component="current"
-                    :develop="true"
-                    @save="save" 
-                    @preview="preview=!preview"
-                    @slider="slider=!slider,disable=false"
-                    @animations="animations=!animations"
-                    @reusable="reusableElement"
-                    @import="importReusable=!importReusable,reusable=!reusable"
-                    @edit="editContent=!editContent"
-                    @copy="copyElement"
-                    @paste="pasteElement"
-                    @duplicate="duplicateElement"
-                    @saveblock="saveBlock"
-                    @delete="removeElement"/>    
-                
-                <!--<div :class="doc.css + ' p-8 h-full ' " :style="stile(doc) + ' ' + background(doc)">
-                <draggable v-model="doc.blocks" class="grid gap-4">
-                    <div v-for="(block,index) in doc.blocks" :class="'relative ' + Object.values(block.css).join(' ')" :style="stile(block) + background(block)" :id="block.id">
-
-                        <div container v-if="!block.hasOwnProperty('slider')" v-for="(row,r) in block.blocks" :class="'z-4 relative flex ' + row.css" :style="stile(row) + background(row)">
-                        
-                                <draggable v-model="row.blocks" class="grid gap-4">
-                        
-                                    <div v-for="(element,e) in row.blocks" class="relative z-5">
-
-                                        <moka-element :key="'el_' + r + e" 
-                                            :element="element" 
-                                            v-if="element.tag!='container'" 
-                                            class="z-5"
-                                            :coords="[index,r,e]"
-                                            :current="current" 
-                                            :develop="true"
-                                            @duplicate="duplicateElement(element,[index,r,e])"
-                                            @delete="removeElement"
-                                            @selected="selectElement(element,[index,r,e]),allCss=element.css"
-                                            @editelement="customizebar=!customizebar"
-                                            @editinline="editContent=!editContent"
-                                            />
-
-                                        <moka-editor-blocks v-else :blocks="element" :coords="[index,r,e]" @selected="sub"/>
-                                    
-                                    </div>
-
-                        
-                                </draggable>  
-                                <div :class="'z-4 -m-2 moka-editor-selector ' + active(row.id,row.css)" @click="$store.dispatch('selected',row.id),selectElement(row,[index,r]),allCss=row.css">
-                                    <div class="moka-editor-tag">
-                                        <i class="material-icons moka-icons" @click="customizebar=!customizebar">select_all</i>
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                        <div :class="'moka-editor-selector-block z-2 h-full ' + active(block.id)" @click="$store.dispatch('selected',block.id),selectElement(block,[index]),allCss=block.css.css">
-                            <div class="moka-editor-tag">
-                                <i v-if="block.hasOwnProperty('slider')" class="material-icons moka-icons" @click="customizebar=!customizebar">collections</i>
-                                <i v-else class="material-icons moka-icons" @click="customizebar=!customizebar">view_columns</i>
-                            </div>
-                        </div>
-                        <div v-if="block.hasOwnProperty('slider')" class="text-center text-sm">
-                            <label>[slider] <span class="font-bold">{{block.name}}</span></label>
-                            <img :src="block.image_uri" class="h-1/5 m-auto"/>
-                        </div>
+                <!-- BLOCKS EDITOR -->
+                <div class="pb-10">
+                    {{ $attrs.component.id }}
+                    <div :class="'absolute top-0 mt-10 mx-2 left-0 right-0 bottom-0 ' + activeDoc($attrs.component.id)">
                     </div>
-                </draggable>
-                </div>-->
+
+                    <moka-editor-selectors 
+                        :doc="doc"
+                        :component="current"
+                        :develop="true"
+                        :category="$attrs.component.category"
+                        @save="save" 
+                        @preview="preview=!preview"
+                        @slider="slider=!slider,disable=false"
+                        @animations="animations=!animations"
+                        @reusable="reusableElement"
+                        @import="importReusable=!importReusable,reusable=!reusable"
+                        @edit="editContent=!editContent"
+                        @copy="copyElement"
+                        @paste="pasteElement"
+                        @duplicate="duplicateElement"
+                        @saveblock="saveBlock"
+                        @delete="removeElement"/>    
                
                 </div>
             </div>
                 
-            
-            <div class="opacity-100 hover:opacity-100 text-center pb-6 mb-6" title="Add block">
-                <i class="material-icons moka-icons nuxpresso-icon-circle" @click="grids=!grids">add</i><!--addBlock=true,reusable=!reusable-->
-                <div class="text-gray-500 text-sm">Add block</div>
+            <!-- ADD BLOCK BUTTON -->
+            <div class="fixed bottom-0 left-0 opacity-100 hover:opacity-100 pb-6 mb-6 z-top " title="Add block flex flex-col">
+                
+                    <i class="material-icons moka-icons nuxpresso-icon-circle ml-2" @click="grids=!grids">add</i><!--addBlock=true,reusable=!reusable-->
+                    <div class="text-xs text-gray-400">Add block</div>
+                
             </div>
         </div>
-        <!--
-        <transition name="slideright">
-            <div v-if="!customizebar && current && current.entity" style="transform:translateY(-50%);top:50%;" class="absolute top-0 z-top right-0 w-10 p-1 cursor-pointer border shadow-lg rounded-tl-lg rounded-bl-lg bg-gray-600 transform flex flex-col">
-                <i class="material-icons nuxpresso-icon-btn text-black mb-2" @click="customizebar=!customizebar" title="Edit component">edit</i>
-                <i v-if="current.coords.length === 2 || current.coords.length === 4" class="material-icons nuxpresso-icon-btn text-black mb-2" @click="reusable=!reusable" title="Add component">add</i>
-                
-                <i v-if="current.coords && current.coords.length === 3" class="material-icons nuxpresso-icon-btn text-black mb-2" @click="copyElement" title="Copy element">content_copy</i>
-                <i v-if="copiedElement" class="material-icons nuxpresso-icon-btn text-black mb-2" @click="pasteElement" title="Paste element">content_paste</i>
-                <i class="material-icons nuxpresso-icon-btn text-black mb-2" @click="duplicateElement(current.entity,current.coords)" title="Duplicate element">file_copy</i>
-                <i class="material-icons nuxpresso-icon-btn text-black mb-2" v-if="current.entity.tag==='container'" @click="saveBlockAsComponent=!saveBlockAsComponent" title="Save block as component">save</i>
-                <i class="material-icons nuxpresso-icon-btn text-black mb-2" @click="animations=!animations" title="Animation">motion_photos_on</i>
-                
-                <i class="material-icons nuxpresso-icon-btn text-black mb-2" v-if="$attrs.component && $attrs.component.category!='slider'" title="Preview" @click="preview=!preview,disable=false">preview</i> 
-                <i class="material-icons nuxpresso-icon-btn text-black mb-2" v-if="$attrs.component && $attrs.component.category==='slider'" title="Preview" @click="slider=!slider,disable=false">preview</i>
-                <i class="material-icons nuxpresso-icon-btn text-black" @click="removeElement" title="Delete element">delete</i>
-                
-            </div>
-        </transition>
-        -->
+      
+
+        <!-- TAILWIND DRAWER -->
         <transition name="slideright">
             <div v-if="customizebar" class="fixed w-1/5 bg-gray-800 text-gray-500 text-xs z-top  shadow-lg min-h-screen right-0 top-0">
                 
@@ -148,20 +86,7 @@
 
             </div>
         </transition>
-        
-        <!--<div class="fixed bottom-0 right-0 z-top" v-if="current && current.entity && current.entity.id === moka.selected">
-            <i class="material-icons p-1" @click="position=!position">pan_tool</i>
-            <div class="mb-2 flex flex-col text-xs bg-white border rounded p-2" v-if="position">
-                        
-                    <label>X Axis</label>
-                    <moka-position axis="x" :position="twCss.positionx" @set="setTW"/>
-                    <label>Y Axis</label>
-                    <moka-position axis="y" :position="twCss.positiony" @set="setTW"/>
-                    <label class="my-2">Level</label>
-                    <input type="range" min="0" max="10" v-model="zindex"/>
-            </div>
-        </div>
-        -->
+       
     </div>
 
     <!-- COMPONENT SETTINGS -->
@@ -174,6 +99,7 @@
             <textarea v-model="$attrs.component.description"></textarea>
             <label class="font-bold ">Category</label>
             <select v-model="$attrs.component.category">
+                <option value="element">element</option>
                 <option value="component">component</option>
                 <option value="widget">widget</option>
                 <option value="template">template</option>
@@ -181,15 +107,20 @@
                 <option value="slider">slider</option>
                 <option value="gallery">gallery</option>
             </select>
-            <label>Loop</label>
-            <input type="checkbox" v-model="$attrs.component.loop"/>
-            <select v-model="$attrs.component.loop_type">
-                <option value="articles">articles</option>
-                <option value="last">last articles</option>
-                <option value="category">articles category</option>
-                <option value="tag">articles tag</option>
-            </select>
-            </select>
+            <div class="flex flex-col" v-if="$attrs.component.category === 'template'">
+                <label>Default</label>
+                <input type="checkbox" v-model="$attrs.component.default"/> 
+                <div class="text-xs text-gray-600">(apply to articles with no template)</div>
+            
+                <label>Loop</label>
+                <input type="checkbox" v-model="$attrs.component.loop"/>
+                <select v-if="$attrs.component.loop" v-model="$attrs.component.loop_type">
+                    <option value="articles">articles</option>
+                    <option value="last">last articles</option>
+                    <option value="category">articles category</option>
+                    <option value="tag">articles tag</option>
+                </select>
+            </div>
 
             <!-- mobile breakpoint -->
             <div class="grid grid-cols-2 gap-2 p-1">
@@ -201,14 +132,10 @@
                 </div>
                 <label class="font-bold">Font</label>
                 <select v-model="fontFamily">
+                    <option value="Arial">sans</option>
+                    <option value="serif">serif</option>
                     <option v-for="font in moka.fonts" :value="font">{{font}}</option>
-                    <!--
-                    <option value="Barlow Condensed">Default</option>
-                    <option value="Abel">Abel</option>
-                    <option value="Alice">Alice</option>
-                    <option value="Amethysta">Amethysta</option>
-                    <option value="Arima Madurai">Arima Madurai</option>
-                    -->
+                    
                 </select>
             </div>
         </div>
@@ -218,7 +145,9 @@
     <transition name="fade">
         <div v-if="editContent" class="nuxpresso-modal w-1/2 p-4 border shadow-lg text-sm">
             <i class="material-icons absolute top-0 right-0 cursor-pointer" @click="editContent=!editContent">close</i>
-            <textarea class="w-full text-base" v-if="current && current.entity.tag === 'element' && current.entity.element != 'p'" v-model="current.entity.content"></textarea>
+            {{ current.entity }}
+            <textarea class="w-full text-base" 
+                v-if="current && (current.entity.tag === 'element' || current.entity.element ==='button') && current.entity.element != 'p'" v-model="current.entity.content"></textarea>
             <moka-text-editor v-if="current && current.entity.tag === 'element' && current.entity.element === 'p'"  v-model="current.entity.content" @close="editConntent=!editContent"/>
         </div>
     </transition>
@@ -248,6 +177,7 @@
             <input type="text" v-model="newComponent.name"/>
             <label>Category</label>
             <select v-model="newComponent.category">
+                <option value="element">element</option>
                 <option value="component">component</option>
                 <option value="widget">widget</option>
                 <option value="template">template</option>
@@ -263,13 +193,15 @@
 
     <!-- REUSABLE COMPONENTS PICKER -->
     <transition name="slidedown">
-        <moka-reusable v-if="reusable" :importReusable="importReusable" :newblock="addBlock" @close="reusable=!reusable" @add="addReusable" @importreusable="addComponent"/>
+        <moka-reusable v-if="reusable" :importReusable="importReusable" :newblock="addBlock" @close="reusable=!reusable"  @add="addReusable" @importreusable="addComponent"/>
+        <!--@add="addReusable"-->
     </transition>
 
     <!-- PREVIEW -->
     <transition name="fade">
         <div class="absolute top-0 left-0 min-h-screen w-screen bg-white" v-if="preview">
-            <moka-editor-preview :doc="doc" @save="save" :loop="$attrs.component.loop_type" :develop="true" @close="preview=!preview"/>
+            <moka-editor-preview :category="$attrs.component.category" :doc="doc"  @save="save" :loop="$attrs.component.loop_type" :develop="false" @close="preview=!preview"/>
+
         </div>
     </transition>
 
@@ -318,7 +250,7 @@ import MokaCustomize from '@/components/editor/moka.editor.customize'
 import MokaReusable from '@/components/editor/moka.reusable'
 import MokaEditorMedia from '@/components/media/media'
 import MokaEditorBlocks from '@/components/editor/moka.editor.blocks.loop'
-import MokaEditorPreview from '@/components/editor/moka.preview'
+import MokaEditorPreview from '@/components/editor/preview/moka.preview'
 import MokaTextEditor from '@/components/editor/moka.text.editor'
 import MokaSlider from '@/components/editor/moka.preview.slider'
 import MokaPosition from '@/components/editor/tailwind.position'
@@ -410,6 +342,7 @@ export default {
             element.id = this.$randomID()
             this.copiedElement = element
             this.current = current
+            this.$emit('copy')
         },
         setAnimation(){
             this.current.entity['animation'] = this.animation
@@ -430,8 +363,8 @@ export default {
             return 'bg-gray-500 text-gray-700'
         },
         activeDoc(id){
-            if ( id === this.moka.selected ){
-                return ' moka-editor-active border-dashed border-indigo-500 bg-white border-4'
+            if ( this.moka.current && !this.moka.current.coords ){
+                return ' moka-editor-active border-dashed border-gray-500 bg-white border-2'
             }
             return ' border-transparent bg-white'
             
@@ -446,14 +379,17 @@ export default {
             
         },
         stile(block){
+            if ( !block ) return
             return block.hasOwnProperty('style') ? block.style : ''
         },
         background(block){
+            if ( !block ) return 
             return block.hasOwnProperty('image') ?
                 block.image ? 
                     ' background-image:url(' + block.image.url + ');' : '' : ''
         },
         setPosition(){
+            if ( !this.current.entity ) return 
             this.allCss = ''
             let css, classi
             this.current.entity.css.hasOwnProperty('container') ? css = this.current.entity.css.css : css = this.current.entity.css
@@ -487,7 +423,9 @@ export default {
         duplicateBlock(block,coords){
             let master = this.doc.blocks[coords[0]]
             let obj = {}
-            master.blocks.push ( this.$unique ( block ))
+            if ( block.hasOwnProperty('blocks') ){
+                master.blocks.push ( this.$unique ( block ))
+            }
             return
             /*
             obj = Object.assign ( {} , block )
@@ -508,28 +446,55 @@ export default {
         },
         duplicateElement(current){
             let coords = current.coords
-            if ( coords.length === 3 || coords.length === 5 ){
-                let obj = {}
-                obj = Object.assign ( {} , current.entity )
+            let obj = {}
+            obj = Object.assign ( {} , current.entity )
+            obj.id = this.$randomID()
+            obj.hasOwnProperty('gsap') ?
+                obj.gsap = Object.assign ( {} , current.entity.gsap ) :
+                    null
+            this.$store.dispatch('current',obj.id)
+            let clone
+            if ( current.hasOwnProperty('blocks') ){
+                clone = Object.assign ( {} , this.$unique(obj) )
+            } else {
+                this.copyElement ( current )
+                if ( coords.length === 3 ){
+                    this.doc.blocks[coords[0]].blocks[coords[1]].blocks.splice ( coords[2],0,obj )
+                }
+                if ( coords.length === 4 ){
+                    this.doc.blocks[coords[0]].blocks[coords[1]].blocks[coords[2]].blocks.splice ( coords[2],0,obj )
+                }
+                return
+                //this.pasteElement()
+            }
+            if ( coords.length === 3 || coords.length === 5 ){           
+                //obj = Object.assign ( {} , current.entity )
                 if ( current.coords.length === 3 ){
-                    obj.id = this.$randomID()
-                    let clone = this.$unique(obj)
+                    //obj.id = this.$randomID()
+                    //let clone = this.$unique(obj)
                     this.doc.blocks[coords[0]].blocks[coords[1]].blocks.splice ( coords[2] , 0 , clone )
                 } else {
-                    obj.id = this.$randomID()
-                    let clone = this.$unique(obj)
+                    //obj.id = this.$randomID()
+                    //let clone = this.$unique(obj)
                     this.doc.blocks[coords[0]].blocks[coords[1]].blocks[coords[2]].blocks[coords[3]].blocks.splice ( coords[4] , 0 , clone )
                 }
                 return
+            }
+            if ( current.coords.length === 4 ){
+                //let obj = {}
+                //obj = Object.assign ( {} , current.entity )
+                //obj.id = this.$randomID()
+                //this.$store.dispatch('current',obj.id)
+                this.doc.blocks[coords[0]].blocks[coords[1]].blocks[coords[2]].blocks.splice ( coords[3] , 0 , obj )
             }
             if ( current.coords.length === 2 ){
                 this.duplicateBlock ( current.entity , current.coords )
                 return
             }
             if ( current.coords.length === 1 ){
-                let obj = {}
-                obj = Object.assign ( {} , current.entity )
-                let clone = this.$unique ( obj )
+                //let obj = {}
+                //obj = Object.assign ( {} , current.entity )
+                //let clone = this.$unique ( obj )
                 this.doc.blocks.splice ( current.coords[0],0,clone )
                 return
             }
@@ -542,12 +507,32 @@ export default {
             this.reusable = true
         },
         addReusable(obj){
+            console.log ( 'add => ' , obj )
             this.reusable = false
             let coords = this.current.coords
+            let myDoc = this.$getDoc ( this.doc , coords )
             let component = {}
-            component = Object.assign( {} , obj )
+            obj.tag === 'blocks' ?
+                component = this.$unique( obj ) :
+                    component = Object.assign( {} , obj )
             component.id = this.$randomID()
+            
+            //component.blocks = []
+
+            if ( obj.type === 'grid' ){
+                let mycomponent = Object.assign ( {} , this.$grid( obj.blocks.length ) )
+                myDoc.blocks.push ( mycomponent )
+                this.doc = myDoc
+                return
+            } else {
+                
+                myDoc.blocks.push ( component )
+                this.doc = myDoc
+                return
+                
+            }
             if ( !this.addBlock ){
+
                 if ( coords.length === 1 ){
                     let pos = this.doc.blocks[coords[0]].blocks.length-1
                     this.doc.blocks[coords[0]].blocks[pos].blocks.push ( component )
@@ -598,10 +583,46 @@ export default {
             let comp = {}
             comp = Object.assign ({} , component.json )
             comp.id = this.$randomID()
+            let master = this.$getDoc ( this.doc , this.current.coords)
+
+            console.log ( comp )
+
+            if ( component.category != 'slider' ){
+                let clone = comp
+                if ( comp.tag === 'document' ){
+                    clone = comp.blocks[0]
+                }
+                if ( component.hasOwnProperty ( 'blocks' ) ){
+                    clone = this.$unique ( comp )
+                }
+                master.blocks.push ( clone )
+            }
+            /*
             let master = this.doc
             let coords = this.moka.current.coords
+            console.log ( 'adding => ' , component )
             if ( component.category != 'slider' ){
-                let clone = this.$unique ( comp.blocks[0] )
+                let clone
+                console.log ( comp.blocks[0] )
+                if ( comp.tag === 'document' ){
+                    if ( !comp.blocks[0].hasOwnProperty('blocks') ){
+                        clone = comp.blocks[0]
+                        clone.blocks = []
+                    } else {
+                        if ( !comp.blocks[0].blocks[0].hasOwnProperty('blocks')){
+                            clone = comp.blocks[0].blocks[0] 
+                            clone.blocks = []
+                        } else {
+                            clone = Object.assign ( {} , comp.blocks[0])
+                            close.blocks[0].blocks = [] 
+                            console.log ( clone )
+                            clone.id = this.$randomID()
+                        }
+                    }
+                } else {
+                    clone = this.$unique ( comp.blocks[0] )
+                }
+                console.log ( 'clone=> ' , clone )
                 if ( coords.length < 2 ){
                     master.blocks.push ( clone )
                 } else {
@@ -620,6 +641,7 @@ export default {
                 clone.image_uri = component.image_uri
                 master.blocks.push ( clone )
             }
+            */
             this.importReusable = false
             this.reusable = false
         },
@@ -631,6 +653,7 @@ export default {
         removeElement(){
             let coo = this.current.coords
             this.current.entity = null
+            console.log ( coo )
             this.current && this.current.coords ?
 
                 this.current.coords.length === 1 ? 
@@ -650,14 +673,33 @@ export default {
             this.copiedElement = element
         },
         pasteElement(){
+            let master = this.$getDoc ( this.doc , this.moka.current.coords)
+            let clone = Object.assign ( {} , this.copiedElement )
+            clone.gsap = Object.assign ( {} , this.copiedElement.gsap )
+            clone.id = this.$randomID()
+            clone.hasOwnProperty ( 'blocks' ) ?
+                clone = this.$unique ( clone ) :
+                    null
+            master.blocks.push ( clone )                    
+            
+            /*
             let coords = this.current && this.current.coords ? this.current.coords : null
             let obj = Object.assign ( {} , this.copiedElement )
             obj.id = this.$randomID()
+            obj.gsap = Object.assign ( {} , this.copiedElement.gsap )
+            obj.css.hasOwnProperty('css') ?
+                obj.css = Object.assign ( {} , this.copiedElement.css ) : null
+            obj.hasOwnProperty('blocks') ?
+                obj = this.$unique(obj) : null
+            this.$store.dispatch('current',obj.id)
             coords ?
-                coords.length === 2 || coords.length === 3 ?
+                coords.length === 2 ?
                     this.doc.blocks[coords[0]].blocks[coords[1]].blocks.push ( obj ) : 
-                    coords.length === 4 ?
-                        this.doc.blocks[coords[0]].blocks[coords[1]].blocks[coords[2]].blocks.push ( obj )  : null : null 
+                    coords.length === 3 ?
+                        this.doc.blocks[coords[0]].blocks[coords[1]].blocks[coords[2]].blocks.push ( obj ) : 
+                            coords.length === 4 ?
+                                this.doc.blocks[coords[0]].blocks[coords[1]].blocks[coords[2]].blocks.push ( obj )  : null : null 
+            */
         },
         setImage(img){
             let image = img ? this.$cleanImage(img) : null
@@ -689,14 +731,19 @@ export default {
             this.current.entity = element
             this.current.coords = coords
         },
-        saveBlockAsNewComponent(block){
+        saveBlockAsNewComponent(){
             
             this.loading = true
-            if ( this.current.coords.length === 1 ){
+            //if ( this.current.coords.length === 1 ){
                 let newComponent = {}
                 newComponent = Object.assign( {}, this.$attrs.component)
                 let block = {}
-                block = this.current.entity
+                if ( this.current.entity.hasOwnProperty('blocks') ){
+                    block = this.$unique(this.current.entity)
+                } else {
+                    block = Object.assign({} , this.current.entity)
+                    block.id = this.$randomID()
+                }
                 newComponent.json.blocks = [ block ]
                 newComponent.name = this.newComponent.name
                 newComponent.description = this.newComponent.description
@@ -706,7 +753,7 @@ export default {
                 this.$emit('saveasreusable', newComponent)
                 return null
                
-            }
+            //}
             this.saveBlockAsComponent = false
             return null
         }
@@ -722,7 +769,6 @@ export default {
         fontFamily(font){
             document.querySelector('#content').style.fontFamily = font
             this.doc.fontFamily = font
-            //this.$attrs.component.json.blocks[0].block.style = 'font-family:\"' + font + '\"'
         },
     }
 }

@@ -3,7 +3,7 @@
         <moka v-if="component" :component="component" @message="setMessage"/>
         
         <transition name="fade">
-            <div style="transform: translateX(-50%);left:50%;" class="nuxpresso-admin border-l-4 border-blue-500 fixed bottom-0 m-auto shadow-xl mb-2 bg-gray-200 text-left p-4 w-1/2  z-top" v-if="message">   
+            <div style="transform: translateX(-50%);left:50%;" class="nuxpresso-admin border-l-4 border-blue-500 fixed bottom-0 m-auto shadow-xl mb-2 bg-gray-800 text-gray-100 text-left p-4 w-1/2  z-top" v-if="message">   
             {{ message }}
             </div>
         </transition>

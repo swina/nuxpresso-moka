@@ -1,12 +1,12 @@
 <template>
     <div class="flex flex-col">
         <label>Rounded</label>
-        <select v-model="rounded">
+        <select class="dark" v-model="rounded">
             <option value=""></option>
             <option :key="round" v-for="round in rounds" :value="round">{{ round }}</option>
         </select>
         <label>Shadow</label>
-        <select v-model="shadow">
+        <select class="dark" v-model="shadow">
             <option value=""></option>
             <option :key="shad" v-for="shad in shadows" :value="shad">{{ shad }}</option>
         </select>

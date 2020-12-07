@@ -1,0 +1,51 @@
+<template>
+    <div class="flex flex-col">
+        <label class="font-bold">Font</label>
+        <select class="dark" v-model="fontFamily" @change="emit">
+            <option value=""></option>
+            <option value="Arial">sans-serif</option>
+            <option value="serif">serif</option>
+            <option v-for="font in fonts" :value="font">{{font}}</option>
+        </select>
+    </div>
+</template>
+
+<script>
+import classes from '@/plugins/tw.classes'
+import { mapState } from 'vuex'
+export default {
+    name: 'MokaTailwindFont',
+    data:()=>({
+        fontFamily: ''
+    }),
+    computed:{
+        ...mapState ( ['moka'] ),
+        fonts(){
+            return classes.fontfamily
+        }
+    },
+    mounted(){
+        if ( !this.$attrs.entity.style ) return
+        let stile = this.$attrs.entity.style.split ( ' ' )
+        stile.forEach ( st => {
+            if ( st.length > 1 ){
+                this.fonts.forEach ( ft => {
+                    if ( st.indexOf ( ft ) > -1 ){
+                        this.fontFamily = ft
+                        this.$emit('stile' , 'font-family:\"' + ft + '\"' )
+                        this.$emit('clearstile', 'font-family:\"' + ft + '\"' )
+                    }
+                })
+            }
+        })
+    },
+    methods:{
+        emit(){
+            this.fontFamily ?
+                this.$emit('stile' , 'font-family:\"' + this.fontFamily + '\"' ) :
+                    this.$emit('stile' ,'')
+
+        }
+    }
+}
+</script>

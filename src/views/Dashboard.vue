@@ -2,16 +2,17 @@
     <div class="flex flex-row w-full">
         <nav class="w-2/12 fixed min-h-screen bg-gray-800 text-white flex flex-col cursor-pointer">
             Dashboard
-            <div class="py-1 font-thin text-sm p-2 hover:bg-gray-700" @click="$router.push('/')">Home</div>
+            <div class="py-1 font-thin text-sm p-2 hover:bg-gray-700" @click="section='MokaHome'">Home</div>
             <div class="py-1 font-thin text-sm p-2 hover:bg-gray-700" @click="section='MokaArticles'">Articles</div>
             <div class="py-1 font-thin text-sm p-2 hover:bg-gray-700" @click="section='MokaList',filter=''">Mokas</div>
             <div class="py-1 font-thin text-sm p-2 pl-6 hover:bg-gray-700" @click="section='MokaList',filter='page'">Pages</div>
             <div class="py-1 font-thin text-sm p-2 pl-6 hover:bg-gray-700" @click="section='MokaList',filter='template'">Templates</div>
-            <div class="py-1 font-thin text-sm p-2 pl-6 hover:bg-gray-700" @click="section='MokaList',filter='component'">Components</div>
-            <div class="py-1 font-thin text-sm p-2 pl-6 hover:bg-gray-700" @click="section='MokaList',filter='slider'">Sliders</div>
             <div class="py-1 font-thin text-sm p-2 pl-6 hover:bg-gray-700" @click="section='MokaList',filter='widget'">Widgets</div>
+            <div class="py-1 font-thin text-sm p-2 pl-6 hover:bg-gray-700" @click="section='MokaList',filter='slider'">Sliders</div>
+            <div class="py-1 font-thin text-sm p-2 pl-6 hover:bg-gray-700" @click="section='MokaList',filter='element'">Elements</div>
+            <div class="py-1 font-thin text-sm p-2 pl-6 hover:bg-gray-700" @click="section='MokaList',filter='component'">Components</div>
             <div class="py-1 font-thin text-sm p-2 hover:bg-gray-700" @click="section='MokaMedia'">Media</div> 
-            <div class="py-1 font-thin text-sm p-2 hover:bg-gray-700" @click="section='MokaGrid'">Grid</div>
+            <!--<div class="py-1 font-thin text-sm p-2 hover:bg-gray-700" @click="section='MokaGrid'">Grid</div>-->
             <div class="absolute w-full bottom-0 m-auto mb-2 text-center font-thin ">
                 <img alt="Vue logo" class="m-auto w-16" src="../assets/new-logo.png">
                 <div class="text-xl w-16 m-auto h-16 bg-gray-900 hover:border-gray-200 border-transparent border rounded-full flex flex-col text-gray-300 font-black animate-pulse cursor-pointer" @click="$router.push('dashboard')">
@@ -37,10 +38,10 @@ import MokaMedia from '@/components/media/media'
 import MokaGrid from '@/components/moka/moka.grid'
 import articlesQry from '@/apollo/articles.gql'
 import categoriesQry from '@/apollo/categories.gql'
-
+import MokaHome from '@/views/Home'
 export default {
     components: {
-        MokaList, MokaTest, MokaArticles, MokaMedia, MokaGrid
+        MokaList, MokaTest, MokaArticles, MokaMedia, MokaGrid , MokaHome
     },
     data:()=>({
         section: '',

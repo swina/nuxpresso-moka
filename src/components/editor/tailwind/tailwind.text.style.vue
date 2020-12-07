@@ -57,6 +57,7 @@ export default {
     watch:{
         model(v){
             this.$emit('input',v)
+            this.$emit('css',v)
         }
     },
     methods: {
@@ -77,6 +78,7 @@ export default {
                     this.model += cl + ' '
                     this.font[cl] = true
                     this.$emit('input',this.model)
+                    this.$emit('css',cl)
                 }
             })
         })

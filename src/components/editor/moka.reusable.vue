@@ -59,7 +59,7 @@
             
             {{ schema.keys }}
          -->   
-            <div v-if="$attrs.importReusable && components">
+            <div v-if="components">
                 <div class="p-1 bg-gray-200 mt-4">Reusable Components</div>
                 <div  class="w-full flex flex-col flex-wrap p-2 justify-between">
                     <div v-for="(group,index) in components.keys" :key="'group_' + index">
@@ -78,7 +78,7 @@
                 </div>
             </div>
 
-            <template v-if="schema && !$attrs.importReusable"  v-for="(group,g) in schema.keys">
+            <template v-if="schema"  v-for="(group,g) in schema.keys">
                 <div class="p-1 bg-gray-200 mt-4 capitalize" v-if="!$attrs.newblock||group==='container'" :key="group">
                     {{ group }}
                 </div>
@@ -611,20 +611,28 @@ export default {
     }
   }*/
         createGridNew ( ){
-            let obj = Object.assign ( {} , this.selected )
+            let obj = JSON.parse(JSON.stringify(this.selected))
+            //let obj = Object.assign ( {} , this.selected )
+            console.log ( 'from reusables => ' , obj )
             obj['blocks'] = []
             obj.id = this.$randomID()
             obj.css.container = "flex flex-col md:grid md:grid-cols-" + this.grid.cols
+            obj.css.css = ''
             let content 
             for ( var n = 0 ; n < this.grid.cols ; n++ ){
-                content = Object.assign ( {} , this.schema.text[1] )
+                content = JSON.parse(JSON.stringify(this.schema.text[1]))
+                //content = Object.assign ( {} , this.schema.text[1] )
                 content.id = this.$randomID()
                 let el = {
                     id: this.$randomID(),
                     blocks: [ content ],
                     image: null,
-                    css: '',
+                    css: {
+                        css: 'flex-col',
+                        container: 'flex'
+                    },
                     style: '',
+                    type:'flex',
                     tag:'blocks'
                 }
                 obj.blocks[n] = el

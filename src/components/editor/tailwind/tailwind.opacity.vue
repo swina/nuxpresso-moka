@@ -21,7 +21,10 @@ export default {
     props: [ 'css' ],
     computed:{
         prefix(){
-            return this.$attrs.attr === 'textopacity' ? 'text-' : 'bg-'
+            return this.$attrs.attr === 'textopacity' ? 
+                'text-' : 
+                    this.$attrs.attr === 'borderopacity' ?
+                        'border-' : 'bg-'
         }
     },
     watch:{
@@ -39,7 +42,8 @@ export default {
                 if ( cl.indexOf ( op ) > -1 ){
                     this.model = op.split('-')[1]
                     console.log ( op , this.model )
-                    this.$emit('input',cl)
+                    this.$emit('input', cl )
+                    this.$emit('css', cl )
                     return
                 }
             })

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import _ from 'lodash'
-
+import store from '../store'
 
 
 const justifyItemsAttrs = [
@@ -183,10 +183,71 @@ function randomID(){
     return 'moka-' + Math.random().toString(36).substr(2, 5)
 }
 
+function findNode(id,currentNode ,remove){
+    if (id == currentNode.id) {
+        return currentNode;
+    } else {
+        var node = null
+        for(var index in currentNode.blocks){
+            
+            node = currentNode.blocks[index];
+            
+            if(node.id === id){
+                remove ? currentNode.blocks.splice(index,1) : null
+                node.parent = currentNode
+                store.dispatch ( 'setParent' , currentNode )
+                return node;
+            }
+            findNode(id, node , remove );
+        }
+        return node
+
+    }
+}
+
+function clone(currentNode){
+        var node = null
+        for(var index in currentNode.blocks){
+            
+            node = currentNode.blocks[index];
+            node.id = randomID()
+            return clone(node);
+        }
+        return node
+}
+
+
+function getObj(obj,index){
+    return obj[index]
+}
+
 
 export default {
     install: function (Vue) {
+        
+        Vue.prototype.$findNode= (id, currentNode , remove = false) => {
+            return findNode(id, currentNode , remove );
+        }
+        Vue.prototype.$copy = ( obj ) => {
+            if ( !obj ) return
+            let o = JSON.parse(JSON.stringify(obj))
+            let newObj = clone(o)
+            return newObj
+        }
 
+        Vue.prototype.$getDoc = ( obj , coord )=> {
+            console.log ( obj , coord )
+            let o = obj
+            let len = 0
+            coord.forEach ( index => {
+                if ( o.hasOwnProperty ( 'blocks' ) ){
+                    o = o.blocks
+                    if ( o.length ) len = o.length
+                    o = getObj (o,index)
+                }
+            })
+            return o
+        }
         Vue.prototype.$grid = (cols=1)=>{
                 let grid = {
                     "css": {
@@ -226,15 +287,55 @@ export default {
                             }
                         ],
                         "image": null,
-                        "css": "",
+                        "css": {
+                            css: "flex-col",
+                            container: "flex"
+                        },
                         "style": "",
-                        "tag": "blocks"
+                        "tag": "blocks",
+                        "type": "flex",
+                        "icon" : "select_all",
+                        "link" : "",
+                        "content" :"",
+                        "element" : "div",
+                        "gsap" : { "animation" : null , "ease" : null , "duration" : null , "delay" : null }
                     }
                     grid.blocks.push ( block )
                 }
                 return grid
             }
-        
+        Vue.prototype.$flex = ()=>{
+            let flex = { 
+                "id": 'moka-' + Math.random().toString(36).substr(2, 5),
+                "blocks": [
+                    {
+                        "css": "",
+                        "tag": "element",
+                        "icon": "text_format",
+                        "link": "",
+                        "type": "element",
+                        "label": "Text",
+                        "style": "",
+                        "content": "Some text",
+                        "element": "div" ,
+                        "id": 'moka-' + Math.random().toString(36).substr(2, 5)
+                    }
+                ],
+                "image": null,
+                "css": {
+                    css: "flex-col",
+                    container: "flex"
+                },
+                "style": "",
+                "tag": "blocks",
+                "type": "flex",
+                "link" : "",
+                "content" :"",
+                "elemend" : "div",
+                "gsap" : { "animation" : null , "ease" : null , "duration" : null , "delay" : null }
+            }
+            return flex
+        }
         Vue.prototype.$hasCss = ( css , arr ) => {
             let classe = css.split(' ')
             classe.forEach ( cl => {
@@ -456,6 +557,7 @@ export default {
             if ( !component ) return false
             let obj = Object.assign( {} , component )
             obj.id = randomID()
+            if ( !obj.hasOwnProperty('blocks') ) return obj
             let objblocks = []
             obj.blocks.forEach ( block => {
                 if ( block.hasOwnProperty('blocks') ){
@@ -477,8 +579,8 @@ export default {
                 }
             })
             obj.blocks = objblocks
+            console.log ( 'cloned => ' , clone ( component ) )
             return obj
-            
         }
     }
 }

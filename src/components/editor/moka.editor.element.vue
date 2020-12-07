@@ -1,29 +1,20 @@
 <template>
-    <div v-if="element" @click="$emit('selected')" :class="$attrs.develop ? 'relative z-top' : ''" @dblclick="$emit('editinline')">
-            <!--
-            <p :class="el.css" v-if="el.element === 'p'" v-html="el.content"></p>
-            
-            <div :class="el.css" v-if="el.element ==='div'" v-html="el.content"></div>
-            <component :class="el.css" :is="tag" v-html="el.content" v-if="el.element==='button'||el.element==='p'||el.element==='div'||el.element==='h'" :style="stile"></component>
-            -->
-            
+    <div editorelement v-if="element" @click="$emit('selected')" :class="$attrs.develop ? 'relative z-top' : ''" @dblclick="$emit('editinline',element)" :style="element.style">
+
             <component :class="$cssResponsive(el.css)" :is="tag" v-html="el.content" v-if="(el.tag==='element' || el.type==='button' || ( el.tag === 'article' && !el.hasOwnProperty('article') ) )  && el.element !='img' && el.type != 'video' && el.type != 'audio'" :style="stile"></component>
             
             <component :is="tag" v-if="el.tag === 'article' && el.hasOwnProperty('article')" v-html="el.article[el.label]"/>
             
             <svg v-if="el.tag === 'svg'" :viewBox="el.content.viewbox" width="100%" height="100%" v-html="el.content.g" :class="el.css + ' fill-current'"></svg>
 
+            <img v-if="el.element === 'img' && el.image && el.image.url && el.image.ext != '.svg'" :src="el.image.url" :caption="el.image.caption" :alt="el.image.alternative_text" :class="$cssResponsive(el.css)"/>
             
-
-            <img v-if="el.element === 'img' && el.image && el.image.url" :src="el.image.url" :caption="el.image.caption" :alt="el.image.alternative_text" :class="$cssResponsive(el.css)"/>
-            
-            <!--
-            <img v-if="(el.element === 'img')  && !el.image" src="../assets/no-image.png" :class="$cssResponsive(el.css)"/>
-            -->
-
+            <div v-if="(el.element === 'img')  && el.image && el.image.ext === '.svg'" :class="el.css + ' fill-current'">     
+                <simple-svg :src="el.image.url" width="100%" height="100%"/>
+            </div>
             <!--<button v-if="el.element === 'button'" :class="el.css">{{ el.content }}</button>-->
 
-            <img :class="$cssResponsive(el.css)" :ref="el.id" v-if="el.type==='video' && el.image && el.image.url" :src="el.image.previewUrl"/>
+            <img :class="$cssResponsive(el.css)" :ref="el.id" v-if="el.type==='video' && el.image && el.image.url && el.image.ext != '.svg'" :src="el.image.previewUrl"/>
 
             <i :class="'material-icons text-10xl ' + $cssResponsive(el.css)" v-if="el.type==='video' && !el.image">movie</i> 
             <i :class="'material-icons text-10xl ' + $cssResponsive(el.css)" v-if="el.type==='image' && !el.image">photo</i> 
@@ -42,21 +33,21 @@
             <nav v-if="el.element === 'menu'" :class="el.css.container + ' ' + el.css.align"> 
                 <div v-for="(item,i) in el.items" :class="el.css.css + ' cursor-pointer relative pr-4'" :key="el.id + '_' + i"> 
                     
-
+                    
                     <a :class="el.css.css" v-if="!item.submenu && !$attrs.develop && item.link && !item.link.includes('http')" :href="item.link">{{ item.label }} <i v-if="item.submenu" class="material-icons moka-icons">arrow_drop_down</i></a>
                     
                     <div v-else @mouseover="menuover=i" :class="el.css.css" @click="menuover=i">{{item.label}} <i v-if="item.submenu && item.submenu.length" :class="el.css.css + ' material-icons moka-icons text-sm'">arrow_drop_down</i></div>
                     
-                    <div v-if="item.submenu && item.submenu.length" :class="isOver(i) + ' ' + el.css.css + ' absolute w-48 p-1 flex flex-col z-max'" @mouseleave="menuover=-1"> 
+                    <div v-if="item.submenu && item.submenu.length && !$attrs.develop" :class="isOver(i) + ' ' + el.css.css + ' absolute w-48 p-1 flex flex-col z-max'" @mouseleave="menuover=-1"> 
                         <div v-for="sub in item.submenu">
                             <div :class="el.css.css">{{sub.label}}</div>
                         </div>
                     </div>
                 </div>
             </nav>
-            <i :class="'material-icons moka-icons z-max fixed md:hidden top-0 left-0 m-1 ' + el.css.css" v-if="el.element === 'menu' && el.responsive" @click="menu_show=!menu_show">menu</i>
+            <i :class="'material-icons moka-icons z-top fixed md:hidden top-0 left-0 m-1 ' + el.css.css" v-if="el.element === 'menu' && el.responsive" @click="menu_show=!menu_show">menu</i>
             <transition name="fade">
-            <nav v-if="el.element === 'menu' && menu_show" class="flex flex-col p-1 my-2"> 
+            <nav v-if="el.element === 'menu' && menu_show" class="z-top flex flex-col p-1 my-2"> 
                 <div v-for="(item,i) in el.items" :class="el.css.css + ' cursor-pointer relative p-1'"> 
                     
                     <a :class="el.css.css" v-if="!item.submenu && !$attrs.develop && item.link && !item.link.includes('http')" :href="item.link">{{ item.label }} <i v-if="item.submenu" class="material-icons moka-icons">arrow_drop_down</i></a>
@@ -71,7 +62,7 @@
                 </div>
             </nav>
             </transition>
-            <div v-if="$attrs.develop" :class="'absolute border border-green-500 border-dashed z-4 top-0 left-0 bottom-0 right-0 ' + active(el.id,el.css) + ' bg-transparent'" @click="$store.dispatch('selected',el.id),$emit('selected')">
+            <div v-if="$attrs.develop" :class="'z-top absolute border border-green-500 border-dashed z-4 top-0 left-0 bottom-0 right-0 scale-x-102 scale-y-102 transform ' + active(el.id,el.css) + ' bg-transparent'" @click="$store.dispatch('selected',el.id),$emit('selected')">
                 <!--<i class="absolute top-0 right-0 material-icons nuxpresso-icon-circle text-sm text-black -mt-4" @click="$emit('editinline')">{{ el.icon }}</i>-->
                 <div v-if="el.id===moka.selected" class="absolute top-0 left-0 -mt-6 h-6 bg-gray-800 text-gray-300 text-xs rounded-2xl items-center flex flex-row">
                     <i class="material-icons text-sm text-gray-600 leading-4 ml-2" @click="toolbar=!toolbar">{{ el.icon }}</i>
@@ -87,27 +78,13 @@
                         </div>
                     </transition>
                 </div>
-                <!--
-                <div class="absolute top-0 left-0 leading-4 px-1 -mt-4 bg-white text-gray-800 text-xs">{{el.id}}</div>-->
             </div>
-            <!--
-            <div v-if="$attrs.develop" :class="'z-top resize cursor-move moka-editor-selector ' + active(el.id,el.css)" @click="$store.dispatch('selected',el.id),$emit('selected')">
-                <div class="moka-editor-tag">
-                    <i class="material-icons moka-icons" @click="$emit('editelement')">{{el.icon}}</i> 
-                    {{el.id}}
-                </div>
-            </div>
-            -->
-
-           
-            <!--<div v-if="$attrs.develop" :class="'absolute top-0 left-0 py-2 -ml-1 my-1 text-left w-full h-full ' + active" @click="$emit('selected',el,$attrs.coords)"><div class="-mt-6"><i class="material-icons moka-icons moka-icons bg-white rounded-full text-xs">{{el.icon}}</i></div></div>-->
     </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import gallery from '@/components/moka/moka.gallery'
-
 export default {
     name: 'MokaEditorElement',
     data:()=>({
@@ -118,6 +95,7 @@ export default {
         menu_show: false,
         toolbar: false,
     }),
+
     props: ['current'],
     beforeMount(){
         let vm = this
@@ -135,6 +113,7 @@ export default {
         ...mapState ( ['moka'] ),
         
         element(){
+            //this.$attrs.element && this.$attrs.element.css ? this.$attrs.element.css = this.$clean(this.$attrs.element.css,'md:') : null
             return this.$attrs.element  ? this.el = this.$attrs.element : false
         },
         tag(){
@@ -170,7 +149,7 @@ export default {
             return classe
         },
         responsiveCss(css){
-            return this.$clean ( this.$cssResponsive ( css ) )
+            return css //this.$clean ( this.$cssResponsive ( css ) )
         
         },
         active(id,css){
@@ -186,7 +165,7 @@ export default {
                         translate += ' '
                     }
                     if ( classe.indexOf ( 'h-') > -1 ){
-                        translate += ' ' + classe
+                        translate += ' '
                     }
                     
                 })

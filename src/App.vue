@@ -10,7 +10,7 @@
     </transition>
     -->
     <transition name="fade">
-        <div style="transform: translateX(-50%);left:50%;" class="nuxpresso-admin border-l-4 border-blue-500 fixed bottom-0 m-auto shadow-xl mb-2 bg-gray-200 text-left p-4 w-1/2  z-top" v-if="message">   
+        <div style="transform: translateX(-50%);left:50%;" class="border-l-4 border-blue-500 fixed bottom-0 m-auto shadow-xl mb-2 bg-gray-800 text-gray-200 text-left p-4 w-1/2  z-top" v-if="message">   
         {{ message }}
         </div>
     </transition>
@@ -46,9 +46,18 @@ export default {
     }
   },
   beforeMount(){
-    this.$store.dispatch('loadComponents')
-    this.$store.dispatch('loadElements')
-    this.$store.dispatch('loadMedia')
+    if ( window.localStorage.getItem('nuxpresso-jwt') ){
+      this.$http.defaults.headers.common = {
+          'Authorization': window.localStorage.getItem('nuxpresso-jwt')
+      }
+      this.$store.dispatch('login',true)
+      this.$store.dispatch('user',JSON.parse(JSON.stringify(window.localStorage.getItem('nuxpresso-user'))))   
+      this.$store.dispatch('loadComponents')
+      this.$store.dispatch('loadElements')
+      this.$store.dispatch('loadMedia')
+    } else {
+      this.$router.push('/')
+    }
   }
 }
 </script>

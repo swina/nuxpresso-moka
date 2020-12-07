@@ -2,20 +2,34 @@
 <!-- MAIN CONTAINER -->
 <div :class="doc.css + ' relative flex flex-no-wrap'" :style="stile(doc) + ' ' + background(doc)" id="content" :autoplay="autoplay()">
     <!-- 1st level - BLOCKS LOOP -->
+    
     <div v-for="(block,b) in doc.blocks" :class="'slide flex-none top-0 left-0 right-0 bottom-0 w-full bg-center bg-cover bg-no-repeat ' + responsive(block.css.css) + ' ' + block.css.container" :style="stile(block) + background(block)" :key="block.id" :ref="block.id">
         <!-- 2nd level - BLOCKS LOOP --->
         <div v-for="(row) in block.blocks" :class="'flex flex-col h-full ' + responsive(row.css)" :style="stile(row) + background(row)" :key="row.id" :ref="row.id">
             <!-- BLOCKS ELEMENTS LOOP -->
             <div v-for="(element) in row.blocks" v-if="!row.hasOwnProperty('slider')" :key="element.id" :ref="element.id" @mouseover="checkAni(element)">
                 <moka-element
+                     @click="hasSlideAction"
                     :element="element"
-                    v-if="element.type!='grid'" 
+                    v-if="element.type!='grid' && element.type!='flex'" 
                     :coords="[]"
                     :develop="false"/>
-            
+
+                <div flex v-else :class="responsive(element.css.css) + ' text-base ' + element.css.container" :style="stile(element) + ' ' + background(element)">
+                    
+                    <moka-element
+                        @click="hasSlideAction"
+                        :sub="true"
+                        :key="el.id"
+                        :element="el"
+                        v-if="!el.hasOwnProperty('blocks')"
+                        v-for="el in element.blocks"
+                        :coords="[]"
+                        :loop="$attrs.loop"
+                        :develop="false"/>
                 <!-- BLOCK ELEMENT IS A GRID/CONTAINER -->
-                <div v-else :class="responsive(element.css.css) + ' ' + element.css.container">
-                    <div v-for="(subrow) in element.blocks" :class="responsive(subrow.css) + ' bg-center bg-cover bg-no-repeat'" :style="stile(subrow) + background(subrow)" :key="subrow.id">
+                <!--<div v-else :class="responsive(element.css.css) + ' ' + element.css.container">-->
+                    <div v-if="!element.loop && element.type!='flex'" v-for="(subrow) in element.blocks" :class="responsive(subrow.css) + ' bg-center bg-cover bg-no-repeat'" :style="stile(subrow) + background(subrow)" :key="subrow.id">
                         <div v-for="(subelement) in subrow.blocks" :key="subelement.id">
                             <moka-element 
                                 
@@ -30,7 +44,7 @@
         </div>  
     </div>
         <div v-if="doc.slider.dots.enable" class="mb-2 absolute left-0 bottom-0 w-full m-auto flex flex-row justify-center">
-            <div v-for="(dot,d) in doc.slider.blocks" title="" :class="'nuxpresso-slider-dots mr-2 nuxpresso-slider-dot-active ' + isActive(d)" @click="index=d"></div>
+            <div :key="d" v-for="(dot,d) in doc.slider.blocks" title="" :class="'nuxpresso-slider-dots mr-2 nuxpresso-slider-dot-active ' + isActive(d)" @click="index=d"></div>
         </div>
         <div v-if="doc.slider.navigation.enable">
             <div class="p-0 md:p-2 absolute md:opacity-0 hover:opacity-100 z-top" style="top:50%;left:0;transform:translateY(-50%)" @click="prev" >
@@ -40,7 +54,7 @@
                 <i class="material-icons text-3xl md:text-5xl text-white cursor-pointer bg-gray-400 rounded-full hover:bg-black hover:text-white">chevron_right</i>
             </div>
         </div>
-    <div class="flex flex-row z-top p-1 fixed right-0 top-0">
+    <div v-if="$attrs.develop && !$attrs.editor" class="flex flex-row z-top p-1 fixed right-0 top-0">
         <i v-if="$attrs.develop" class="material-icons nuxpresso-icon-circle text-black mr-2" title="Save" @click="print">save</i>
         <i class="material-icons nuxpresso-icon-circle text-black" title="Close" @click="stop(),$emit('close')">close</i>
     </div>
@@ -74,6 +88,13 @@ export default {
         window.clearInterval(this.timer)
     },
     methods: {
+        hasSlideAction(action){
+            console.log ( action )
+            action === 'slider_next' ?
+                    this.next() : 
+                        action === 'slider_prev' ? this.prev()
+                             : null
+        },
         autoplay(){
             let vm = this
             parseInt(vm.doc.slider.delay) ?

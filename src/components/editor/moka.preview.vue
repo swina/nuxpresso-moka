@@ -1,65 +1,39 @@
-<template>
-<!-- MAIN CONTAINER -->
-<div :class="doc.css + ' w-screen'" :style="stile(doc) + ' ' + background(doc)" id="content">
-    <!-- 1st level - BLOCKS LOOP -->
-    <div v-for="(block) in doc.blocks" :class="responsive(block.css.css) + ' ' + block.css.container" :style="stile(block) + background(block)" :id="block.anchor" :key="block.id" :ref="block.id">
-        <!-- 2nd level - BLOCKS LOOP --->
-        
-        <div container v-if="!block.hasOwnProperty('slider')" v-for="(row) in block.blocks" :class="'flex flex-col ' + responsive(row.css)" :style="stile(row) + background(row)" :id="row.anchor" :key="row.id" :ref="row.id">
-            <!-- BLOCKS ELEMENTS LOOP -->
-            <div elements v-for="(element) in row.blocks" v-if="!row.hasOwnProperty('slider')" :key="element.id" :ref="element.id" :class="$layer(element)">
-                <moka-element
-                    :element="element"
-                    v-if="element.type!='grid' && element.type != 'flex' && !row.hasOwnProperty('slider')" 
-                    :coords="[]"
-                    :loop="$attrs.loop"
-                    :develop="false"/>
-                <!--<moka-articles-loop :loop="$attrs.loop" :elements="elements(row.blocks)"-->
-                <!-- BLOCK ELEMENT IS A GRID/CONTAINER -->
-                <div v-else :class="responsive(element.css.css) + ' text-base ' + element.css.container" :style="stile(element) + ' ' + background(element)">
-                    
-                    <moka-element
-                        :sub="true"
-                        :key="el.id"
-                        :element="el"
-                        v-if="!el.hasOwnProperty('blocks')"
-                        v-for="el in element.blocks"
-                        :coords="[]"
-                        :loop="$attrs.loop"
-                        :develop="false"/>
-
-                    <div v-for="(subrow) in element.blocks" :class="responsive(subrow.css)" :style="stile(subrow) + background(subrow)" :key="subrow.id" v-if="!element.loop && element.type!='flex'" :ref="subrow.id">
-                        
-                        <div v-for="(subelement) in subrow.blocks" :key="subelement.id">
-                            <moka-element 
-                                :sub="true"
-                                :element="subelement" 
-                                v-if="subelement.type!='grid'" 
-                                :coords="[]"
-                                :develop="false"/>
-                        </div>
-                    </div>
-                    
-                </div>
-                <div v-if="element.loop">
-                    <moka-articles-loop :blocks="element"/>
-                </div>
+<template> 
+    <div :ref="doc.id" :class="doc.css" :style="stile(doc,true) + ' ' + background(doc)" id="content">
+        <!-- 1st level - BLOCKS LOOP -->
+        <div  block v-for="(block,b) in doc.blocks" :class="'relative ' + block.css.css + ' ' + block.css.container" :style="stile(block) + background(block)" :key="block.id" :ref="block.id">
+            <div v-for="(row,r) in block.blocks" :key="row.id" :ref="row.id">
+                <moka-flex 
+                    :develop="false"
+                    v-if="row.type==='flex'" 
+                    :key="row.id"  
+                    :doc="doc" 
+                    :blocks="row" 
+                    :coords="[b,r]"/> 
+                
+                <moka-grid 
+                    :develop="false"
+                    v-if="row.type==='grid'" 
+                    :key="row.id" 
+                    :doc="doc"
+                    :blocks="row" 
+                    :coords="[b,r]"
+                />
             </div>
-        </div>
-        
-        <!-- SLIDER BLOCK -->
-        <!--- WHAT IS --->
-        <moka-slider v-if="block.hasOwnProperty('slider')" :embeded="true" :doc="block"/>     
+            <!-- SLIDER BLOCK -->
+            <moka-slider v-if="block && block.hasOwnProperty('slider')" :develop="true" :embeded="true" :doc="block" :editor="true"/>   
+                        
+        </div> 
+        <div class="fixed top-0 right-0 z-top">
+            <i class="material-icons nuxpresso-icon-circle" @click="$emit('close')">close</i>
+        </div> 
     </div>
-    <div class="flex flex-row z-top p-1 fixed right-0 top-0">
-        <i v-if="$attrs.develop" class="material-icons nuxpresso-icon-circle text-black mr-2" title="Save" @click="print">save</i>
-        <i class="material-icons nuxpresso-icon-circle text-black" title="Close" @click="$emit('close')">close</i>
-    </div>
-</div>
 </template>
 
 <script>
-import MokaElement from '@/components/editor/moka.element'
+import MokaElement from '@/components/editor/preview/moka.element'
+import MokaFlex from '@/components/editor/preview/moka.editor.flex'
+import MokaGrid from '@/components/editor/preview/moka.editor.grid'
 import MokaSlider from '@/components/editor/moka.preview.slider'
 import MokaArticlesLoop from '@/components/editor/moka.preview.articles.loop'
 
@@ -75,6 +49,8 @@ export default {
         printScreen: null
     }),
     components: { 
+        MokaFlex,
+        MokaGrid,
         MokaSlider ,
         MokaElement,
         MokaArticlesLoop
@@ -126,7 +102,8 @@ export default {
                         duration: .7,
                         delay:0,
                         ease:'none'
-                    } : null         
+                    } : null  
+                if ( this.$refs[id] ){      
                 let ani = gsap.effects[element.gsap.animation]( this.$refs[id] ,{
                     trigger: this.$refs[id],
                     duration: parseFloat(element.gsap.duration),
@@ -138,7 +115,7 @@ export default {
                 
                 ScrollTrigger.create({
                     id: id,
-                    start: "top 80%",
+                    start: "top 99%",
                     trigger: this.$refs[id],
                     toggleActions: "play pause restart none",
                     animation:ani,
@@ -153,6 +130,7 @@ export default {
                     onComplete:()=> { console.log ( 'completed' , new Date() )}
                     
                 });
+                }
                 
         },
         start(){
@@ -167,8 +145,15 @@ export default {
 
                     block.blocks.forEach ( el => {
                         if ( el.hasOwnProperty('gsap') && el.gsap.animation ){
-                            console.log ( el.id , 'subelement')
                             this.animate ( el , el.id   )
+                        }
+                        if ( el.hasOwnProperty('blocks') ){
+                            el.blocks.forEach ( element => {
+                                 if ( element.hasOwnProperty('gsap') && element.gsap.animation ){
+                                    console.log ( element , element.gsap )
+                                    this.animate ( element , element.id   )
+                                }
+                            })
                         }
                     })
                 }
@@ -177,23 +162,41 @@ export default {
     },
     mounted(){
         window.scrollTo(0,0)
+        console.log ( this.$refs )
         this.doc.blocks.forEach ( block => {
             if ( block.hasOwnProperty('gsap') && block.gsap.animation  ){
                 this.animate(block, block.id)
             }
-            block.blocks.forEach ( container => {
-                if ( container.hasOwnProperty('gsap') && container.gsap.animation ){
-                    this.animate ( container , container.id )
-                }
-                container.blocks.forEach ( el => {
-                    if ( el.hasOwnProperty('gsap') && el.gsap.animation ){
-                        this.animate ( el , el.id   )
+            if ( block.hasOwnProperty('blocks') ){
+                block.blocks.forEach ( container => {
+                    if ( container.hasOwnProperty('gsap') && container.gsap.animation ){
+                        this.animate ( container , container.id )
                     }
-                    
-                    
+                    container.blocks.forEach ( el => {
+                        if ( el.hasOwnProperty('gsap') && el.gsap.animation ){
+                            this.animate ( el , el.id   )
+                        }
+                         if ( el.hasOwnProperty('blocks') ){
+                            el.blocks.forEach ( element => {
+                                 if ( element.hasOwnProperty('gsap') && element.gsap.animation ){
+                                    console.log ( element , element.gsap )
+                                    this.animate ( element , element.id   )
+                                }
+                            })
+                        }
+                        
+                    })
                 })
-            })
+            }
         })
+        window.addEventListener("keydown", e => {
+            if ( e.altKey && e.code === 'KeyX' ){
+                this.$emit('close')
+            }
+            if ( e.altKey && e.code === 'KeyS' ){
+                this.$emit('save')
+            }
+        });
     }
 
 }

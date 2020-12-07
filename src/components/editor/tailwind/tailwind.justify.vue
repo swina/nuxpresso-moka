@@ -23,6 +23,7 @@ export default {
     watch:{
         justify(v){
             this.$emit('input',v)
+            this.$emit('css',v)
         }
     },
     mounted(){
@@ -32,6 +33,7 @@ export default {
             if ( this.options.indexOf ( cl ) > -1 ){
                 this.justify = cl
                 this.$emit('input',cl)
+                this.$emit('css',cl)
                 return
             }
         })

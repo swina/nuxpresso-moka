@@ -39,8 +39,8 @@ export default {
                 if ( cl.indexOf ( opt.value ) > -1 ){
                     if ( opt.value ){
                         this.model = opt.value
-                        this.$emit('input', 'transform ' + opt.value)
-                        this.$emit('css',opt.value)
+                        this.$emit('input', 'transform ' + cl )
+                        this.$emit('css', cl)
                     }
                 }
             })

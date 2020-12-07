@@ -16,8 +16,8 @@
             </div>
         </div>
         Direction                            
-        <select class="dark" v-model="direction">
-            <option value="">none</option>
+        <select class="dark" v-model="direction" @change="update">
+            <option value="">reset</option>
             <option v-for="(dr,index) in directions" :value="dr.value" :key="dr.label">{{dr.label}}</option>
         </select>
         <div :class="'w-full border my-1 h-10 ' + direction + ' ' + Object.values ( twgradient ).join( ' ' )"></div>
@@ -65,7 +65,7 @@ export default {
             this.gradients.forEach ( gr => {
                 if ( cl.indexOf ( gr ) > - 1 ){
                     this.twgradient[gr] = cl
-                    allCss = allCss.replace(cl,'')
+                    //allCss = allCss.replace(cl,'')
                 }
             })
             
@@ -74,16 +74,18 @@ export default {
         this.directions.forEach ( dr => {
                 if ( this.css.indexOf ( dr.value ) > -1 ){
                     this.direction = dr.value
-                    allCss = allCss.replace(dr.value,'')
+                    //allCss = allCss.replace(dr.value,'')
                 }
         })
-        this.twgradient.direction.length ?
+        /*
+        this.direction ?
             this.$emit ( 'input' , Object.values(this.twgradient).join(' ') ) :
-                this.$emit ('input','')
+                    this.$emit ('input','')
         this.$emit('css', this.twgradient.from )
         this.$emit('css', this.twgradient.to )
         this.$emit('css', this.twgradient.via )
         this.$emit('css', this.direction )
+        */
         //this.$emit ( 'input' , Object.values(this.twgradient).join(' '))
         /*
         this.twgradient.gradient = this.gradient
@@ -100,23 +102,7 @@ export default {
         */
     },
     watch:{
-        direction(v){
-            if ( !v )  { 
-                this.$emit ( 'gradient' ,{
-                    direction: '',
-                    gradient: '',
-                    from: '',
-                    to: '',
-                    via: ''
-                })
-                this.$emit ( 'input' , '' )
-                return
-            }
-            this.twgradient.direction = this.direction
-            this.$emit ( 'input' , Object.values(this.twgradient).join(' ') )
-            this.$emit ( 'css' , Object.values(this.twgradient).join(' ') )
-            
-        },
+        
         
         /*
         twgradient:{
@@ -135,6 +121,24 @@ export default {
         */
     },
     methods:{
+        update(){
+            if ( !this.direction )  { 
+                let nogradient = {
+                    direction: '',
+                    gradient: '',
+                    from: '',
+                    to: '',
+                    via: ''
+                }
+                this.$emit ( 'input' , Object.values(nogradient).join(' ') )
+                this.$emit('css','')
+                return
+            }
+            this.twgradient.direction = this.direction
+            this.$emit ( 'input' , Object.values(this.twgradient).join(' ') )
+            this.$emit ( 'css' , Object.values(this.twgradient).join(' ') )
+            
+        },
         color(attr){
             return this.twgradient[attr] ? this.twgradient[attr].replace(attr,'bg') : ''
         },
@@ -153,10 +157,13 @@ export default {
 
                 //this.twgradient.gradient = this.directions[this.direction].value
                 //this.$emit ( 'gradient' , this.twgradient )
-                this.twgradient.direction.length ?
+                this.update()
+                /*
+                this.direction ?
                     this.$emit ( 'input' , Object.values(this.twgradient).join(' ') ) :
                         this.$emit ('input','')
                 this.$emit('css', this.$clean(Object.values(this.twgradient).join(' ')))
+                */
             }
 
         }

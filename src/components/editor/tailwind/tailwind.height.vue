@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col">
         Height  
-        <select class="dark" v-model="model" @change="$emit('input',model)">
+        <select class="dark" v-model="model" @change="$emit('input',model),$emit('css',model)">
             <option value="">not set</option>
             <option v-for="opt in options" :value="opt.value">{{ opt.label }}</option>
         </select>
@@ -49,9 +49,10 @@ export default {
         let classes = this.css.split(' ')
         classes.forEach ( cl => {
             this.options.forEach ( opt => {
-                if ( cl.indexOf ( opt.value ) > -1 ){
-                    this.model = opt.value
-                    this.$emit('input',opt.value)
+                if ( this.$clean(cl) === opt.value  ){
+                    this.model = cl
+                    this.$emit('input',cl)
+                    this.$emit('css',cl)
                 }
             })
         })

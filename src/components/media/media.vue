@@ -12,7 +12,7 @@
         <i v-if="$attrs.modal" class="material-icons absolute top-0 right-0" @click="$emit('close')">highlight_off</i>
         <div class="flex flex-wrap border rounded p-4">
             <template v-for="(file,n) in files">
-                <div class="md:w-1/4 lg:w-2/12 px-2 bg-white text-xs cursor-pointer mb-2" @click="setImage(file),selected=file">
+                <div class="md:w-1/4 lg:w-2/12 px-2 bg-white text-xs cursor-pointer mb-2" @click="setImage(file),selected=file" :title="file.name" >
                     <div :class="'mb-1 overflow-hidden border-4 border-transparent ' + active(file)">
                         <div class="relative pt-32 bg-gray-700 ">
                             <div class="flex items-center text-center h-full justify-center absolute h-48 top-0 left-0 right-0 bottom-0">
@@ -21,13 +21,13 @@
                             </div>
                         </div>
                     </div>
-                    {{file.name.split('.')[0]}}
+                    {{file.name.split('.')[0].substring(0,30)}}
                     <br/>
                     {{file.width}}x{{file.height}} - {{file.size}}KB <span class="px-1 bg-gray-300 text-black rounded uppercase">{{file.ext.replace('.','')}}</span>
                 </div>
             </template>
         </div>
-        <div class="w-full text-center my-4 grid grid-cols-3 grid-cols-auto" v-if="moka.media">
+        <div class="w-full text-center my-4 grid grid-cols-3 grid-cols-auto">
             <div class="text-left">
                 <span class="text-sm" v-if="selected">{{ selected.name }} 
                     <button>Delete</button>
@@ -37,10 +37,10 @@
             <div>
                 <i @click="prev" v-if="start > 0" class="material-icons mr-2 text-3xl cursor-pointer">chevron_left</i>
                 <i v-if="start < 1" class="material-icons mr-2 text-3xl text-gray-300">chevron_left</i>
-                <i @click="next" v-if="moka.media && moka.media.length > (start+limit)" class="material-icons text-3xl cursor-pointer">chevron_right</i>
-                <i v-if="moka.media && moka.media.length <= (start+limit)" class="material-icons text-3xl  text-gray-300">chevron_right</i>
+                <i @click="next" class="material-icons text-3xl cursor-pointer">chevron_right</i>
+                
             </div> 
-            <div><button @click="uploadFile=!uploadFile">Upload</button></div>
+            <!--<div><button @click="uploadFile=!uploadFile">Upload</button></div>-->
         </div>
         <!--</div>-->
         <transition name="fade">
@@ -88,22 +88,27 @@ export default {
             this.$emit( 'close' )
         },
         next(){
+            this.selected=null
             this.start = this.start + this.limit
         },
         prev(){
+            this.selected=null
             this.start = this.start - this.limit
         },
         refresh(){
             this.$apollo.queries.files.refetch()
         }
     },
+    /*
     mounted(){
         if ( window.localStorage.getItem('nuxpresso-jwt') ){
-            this.$axios.defaults.headers.common = {
-                    'Authorization': window.localStorage.getItem('nuxpresso-jwt')
+            this.$http.defaults.headers.common = {
+                'Authorization': window.localStorage.getItem('nuxpresso-jwt')
             }   
+            console.log ( this.$http.defaults )
         }
     },
+    */
     apollo: {
         files: {
             query: uploadQry,

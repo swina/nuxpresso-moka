@@ -53,7 +53,6 @@ ul > li {
 
 p {
     font-weight:400;
-    line-height:2rem;
 }
 
 p.nuxpresso-box-multiline {
@@ -220,7 +219,7 @@ pre {
     left:50%;
     transform:translate(-50%,-50%);
     position:fixed;
-    @apply bg-white shadow-lg w-auto;
+    @apply bg-white shadow-lg w-auto border rounded;
 }
 
 .nuxpresso-modal-lg {
@@ -258,11 +257,22 @@ pre {
 }
 
 .nuxpresso-icon-circle {
-    @apply bg-white text-black rounded-full border cursor-pointer text-base p-1;
+    @apply bg-gray-800 text-gray-600 rounded-full cursor-pointer text-base p-1;
 }
 
+
+
 .nuxpresso-icon-circle:hover {
-    @apply  bg-blue-300;
+    @apply  bg-blue-300 text-gray-800;
+}
+
+.moka-icon-circle {
+  @apply bg-gray-500 text-gray-600 rounded-full cursor-pointer text-sm p-1;
+}
+
+
+.moka-icon-circle:hover {
+  @apply  bg-white text-gray-800;
 }
 
 .fade-enter-active, .fade-leave-active {

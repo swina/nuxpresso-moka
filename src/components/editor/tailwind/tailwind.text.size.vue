@@ -15,8 +15,8 @@ export default {
     props:['css'],
     watch:{
         model(v){
-            v ?
-                this.$emit ( 'input' , this.$clean(this.options[v]) ) : this.$emit('input','')
+            this.$emit('input',this.options[this.model])
+            this.$emit('css',this.options[this.model])
         }
     },
     mounted(){
@@ -28,6 +28,7 @@ export default {
                     if ( cl === op ){
                         this.model = index
                         this.$emit('input',' ' + this.options[index])
+                        this.$emit('css',this.options[index])
                         return
                     }
                 })

@@ -1,5 +1,5 @@
 <template>
-    <div class="w-screen absolute">
+    <div class="w-screen relative">
         <div class="w-full" v-if="!preview">
             <moka-editor v-if="component" 
                 :component="component" 
@@ -19,6 +19,7 @@
             <input type="text" v-model="newComponent.name"/>
             <label>Category</label>
             <select v-model="newComponent.category">
+                <option value="element">element</option>
                 <option value="component">component</option>
                 <option value="widget">widget</option>
                 <option value="template">template</option>
@@ -33,20 +34,22 @@
     </transition>
         <transition name="fade">
             <div v-if="preview" class="fixed top-0 left-0 h-screen m-auto w-screen z-max bg-white border shadow overflow-x-hidden overflow-y-auto">
-                <moka-preview v-if="component" :blocks="component.json.blocks" @close="preview=!preview" @save="savePrint"/>
+                <moka-preview v-if="component" :category="component.category" :blocks="component.json.blocks" @close="preview=!preview" @save="savePrint"/>
             </div>
         </transition>
         <div class="fixed top-0 bg-black bg-opacity-50 left-0 z-max h-screen w-screen flex flex-col justify-center items-center" v-if="loading">
-            <div class="flex  lds-ring" v-if="loading"><div></div><div></div><div></div><div></div></div>
+            <div class="flex  lds-ring" v-if="loading || moka.loading"><div></div><div></div><div></div><div></div></div>
         </div>
     </div>
 </template>
 
 <script>
-import MokaEditor from '@/components/editor/moka.editor'
+//import MokaEditor from '@/components/editor/moka.editor'
+import MokaEditor from '@/components/editor/render/moka.editor.main'
 import MokaPreview from '@/components/editor/moka.preview'
+import { mapState } from 'vuex'
 export default {
-    components: { MokaEditor, MokaPreview },
+    components: { MokaEditor, MokaPreview  },
     data:()=>({
         loading: false,
         component: null,
@@ -60,6 +63,9 @@ export default {
             category: 'component'
         },
     }),
+    computed: {
+        ...mapState ( ['moka'] )
+    },
     mounted(){
         this.component = this.$store.getters.component
         this.$http.get('upload/files').then ( response => {

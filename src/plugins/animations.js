@@ -215,27 +215,6 @@ gsap.registerEffect({
 });
 
 
-gsap.registerEffect({
-    name: "heightdown",
-    effect: (targets, config) => {
-        return gsap.fromTo( targets, 
-            {
-                autoAlpha:0,
-                scaleY:0
-            },
-            {
-                autoAlpha:1,
-                scaleY:1,
-                duration:config.duration,
-                delay: config.delay,
-                ease: config.ease
-            }
-        )
-    },
-    defaults: {duration: duration , delay: 1,ease:"power1"}, //defaults get applied to any "config" object passed to the effect
-    extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
-});
-
 
 gsap.registerEffect({
     name: "slidetop",
@@ -283,7 +262,122 @@ gsap.registerEffect({
     extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
 });
 
+gsap.registerEffect({
+    name: "growwidth",
+    effect: (targets, config) => {
+        return gsap.fromTo( targets, 
+            {
+               
+                opacity: 0,
+                width:0
+            },
+            {
+                
+                opacity:1,
+                width:"100%",
+                duration:config.duration,
+                delay: config.delay,
+                ease: config.ease
+            }
+        )
+    },
+    defaults: {duration: duration, delay: 0,ease:"power1"}, //defaults get applied to any "config" object passed to the effect
+    extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
+});
 
-const gsapEffects = [ 'fade' , 'scale' , 'scale-in' , 'flip-x' , 'flip-y' , 'slide-left' , 'slide-right' , 'slide-top' , 'slide-down', 'rotate' , 'rotate-scale' , 'rotate-hover' , 'height-down' ]
+
+gsap.registerEffect({
+    name: "widthreverse",
+    effect: (targets, config) => {
+        return gsap.fromTo( targets, 
+            {
+               
+                opacity: 0,
+                x:"100%",
+                width:0
+            },
+            {
+                
+                opacity: 1,
+                x:0,
+                width:"100%",
+                duration:config.duration,
+                delay: config.delay,
+                ease: config.ease
+            }
+        )
+    },
+    defaults: {duration: duration, delay: 0,ease:"power1"}, //defaults get applied to any "config" object passed to the effect
+    extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
+});
+
+
+gsap.registerEffect({
+    name: "closeleft",
+    effect: (targets, config) => {
+        return gsap.fromTo( targets, 
+            {
+                x:0,
+                width:"100%"
+            },
+            {
+                x:"-100%",
+                width:0,
+                duration:config.duration,
+                delay: config.delay,
+                ease: config.ease
+            }
+        )
+    },
+    defaults: {duration: duration, delay: 0,ease:"power1"}, //defaults get applied to any "config" object passed to the effect
+    extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
+});
+
+
+gsap.registerEffect({
+    name: "closeright",
+    effect: (targets, config) => {
+        return gsap.fromTo( targets, 
+            {
+                x:0,
+            },
+            {
+                x:"100%",
+                duration:config.duration,
+                delay: config.delay,
+                ease: config.ease
+            }
+        )
+    },
+    defaults: {duration: duration, delay: 0,ease:"power1"}, //defaults get applied to any "config" object passed to the effect
+    extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
+});
+
+
+
+gsap.registerEffect({
+    name: "growheight",
+    effect: (targets, config) => {
+        return gsap.fromTo( targets, 
+            {
+                autoAlpha:1,
+                scaleY:0
+            },
+            {
+                autoAlpha:1,
+                scaleY:1,
+                duration:config.duration,
+                delay: config.delay,
+                ease: config.ease
+            }
+        )
+    },
+    defaults: {duration: duration , delay: 1,ease:"power1"}, //defaults get applied to any "config" object passed to the effect
+    extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
+});
+
+
+
+const gsapEffects = [ 'fade' , 'scale' , 'scale-in' , 'flip-x' , 'flip-y' , 'slide-left' , 'slide-right' , 'slide-top' , 'slide-down', 'rotate' , 'rotate-scale' , 'rotate-hover' , 'grow-width' , 'width-reverse' , 'close-left' , 'close-right' , 'grow-height' ]
 const gsapEase = [ 'none' , 'power1' , 'power2' , 'power3' , 'power4' , 'back' , 'elastic','bounce','rough','slow','steps','circ','expo','sine' ]
 export default { gsapEffects , gsapEase }

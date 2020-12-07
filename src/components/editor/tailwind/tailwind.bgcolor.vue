@@ -66,10 +66,16 @@ export default {
     methods:{
         setColor ( color , tone ){
             let c = this.context
-            tone ? c += color + '-' + tone : c += color
-            !this.is_over ?
-                this.color.color = c :
-                    this.color.hover = 'hover:' + c
+            if ( color ){
+                tone ? c += color + '-' + tone : c += color
+                !this.is_over ?
+                    this.color.color = c :
+                        this.color.hover = 'hover:' + c
+            } else {
+                !this.is_over ?
+                    this.color.color = '' :
+                        this.color.hover = '' 
+            }
             this.$emit('input', Object.values(this.color).join(' ') )
             this.$emit('css', Object.values(this.color).join(' '))
             this.palette = false

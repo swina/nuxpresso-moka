@@ -9,10 +9,14 @@ query Articles ( $limit : Int, $start : Int ) {
     updated_at
     random_image
     lang
+    categories {
+      name
+    }
     component {
       id
       name
-      category
+      category,
+      image_uri
     }
     image {
       url
