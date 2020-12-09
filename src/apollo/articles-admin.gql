@@ -23,9 +23,5 @@ query Articles ( $limit : Int, $start : Int ) {
       caption
       alternativeText
     }
-    user {
-      firstname
-      lastname
-    }
   }
 }

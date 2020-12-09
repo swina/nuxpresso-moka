@@ -109,6 +109,11 @@ export default {
     },
     mounted(){
         this.items = this.menu.items
+        !this.menu.css.submenu ?
+            this.menu.css.submenu = this.menu.css.css + ' w-64 p-4 shadow-xl' : null
+        this.menu.responsive ?
+            !this.menu.css.responsive ?
+                this.menu.css.responsive = 'fixed top-0 left-0 h-screen p-2 z-2xtop' : null: null 
     },
     watch: {
         items(v){

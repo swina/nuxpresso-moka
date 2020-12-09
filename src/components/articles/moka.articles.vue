@@ -72,6 +72,7 @@
                     <div class="w-1/5 ml-1 shadow p-2 text-sm bg-gray-200" v-if="currentArticle && editor">
                         <button class="warning mr-2" @click="editor=!editor">Close</button>
                         <button class="success" @click="save">Save</button>    
+                        <button @click="wordpress=!wordpress">Import WP page</button>
                         <div class="flex flex-col mt-6">
                             <div class="mb-2 flex flex-col">
                                 Template <a href="#" @click="selectTemplate=!selectTemplate">View</a>
@@ -134,13 +135,12 @@
                     </div>
                 </div>
             </transition>
-            <!--
+            
             <transition name="fade">
-                <div v-if="widgets" class="fixed top-0 left-0 m-auto z-40 rounded-lg bg-white">
-                    <nuxpresso-widgets @close="widgets=false" @widget="setWidget"/>
+                <div v-if="wordpress" class="nuxpresso-modal p-4 z-2xtop rounded-lg bg-white">
+                    <input type="text" v-model="wprestapi"/><button @click="importWPPage">Import</button>
                 </div>
             </transition>
-            -->
     </div>
 </template>
 
@@ -171,6 +171,8 @@ export default {
         }
     },
     data:()=>({
+        wordpress: false,
+            wprestapi:'',
             loading: false,
             filter: '',
             editor: false,
@@ -230,6 +232,12 @@ export default {
         }
     },
     methods:{
+        importWPPage(){
+            this.$http.get ( this.wprestapi ).then ( response => {
+                this.currentArticle.content = response.data.content.rendered
+                this.wordpress = false
+            })
+        },
         slugify(){
             console.log ( 'slugify ...' , this.$slugify(this.currentArticle.slug) )
             return this.currentArticle.slug = this.$slugify(this.currentArticle.slug)

@@ -1,9 +1,8 @@
 const user = {
     state: {
-        
-            login: false,
-            user: null
-        
+        login: false,
+        user: null,
+        dashboard: 'MokaHome'
     },
     mutations: {
         login ( state , login ){
@@ -11,6 +10,9 @@ const user = {
         },
         user ( state , user ){
             state.user = user
+        },
+        dashboard ( state , dashboard ){
+            state.dashboard = dashboard
         }
     },
     actions: {
@@ -19,6 +21,9 @@ const user = {
         },
         user( { commit } , user ){
             commit ( 'user' , user )
+        },
+        dashboard ( { commit } , dashboard ){
+            commit ( 'dashboard' , dashboard )
         }
     }
 

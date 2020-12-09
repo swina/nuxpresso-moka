@@ -14,7 +14,8 @@ export default {
 
     Vue.prototype.$clean = function ( str = '' ){
         if ( !str ) return ''
-        return str.replace(/\s\s+/g, ' ')
+        str = str.replace(/\s\s+/g, ' ')
+        return [...new Set(str.split(' '))].join(' ')
     }
 
     Vue.prototype.$cleanImage = ( img ) => {

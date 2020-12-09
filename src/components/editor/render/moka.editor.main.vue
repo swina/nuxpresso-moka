@@ -96,13 +96,15 @@
             <textarea v-model="$attrs.component.description"></textarea>
             <label class="font-bold ">Category</label>
             <select v-model="$attrs.component.category">
+                <option v-for="category in $categories()">{{ category }}</option>
+                <!--
                 <option value="element">element</option>
                 <option value="component">component</option>
                 <option value="widget">widget</option>
                 <option value="template">template</option>
                 <option value="page">page</option>
                 <option value="slider">slider</option>
-                <option value="gallery">gallery</option>
+                <option value="gallery">gallery</option>-->
             </select>
             <div class="flex flex-col" v-if="$attrs.component.category === 'template'">
                 <label>Default</label>
@@ -180,13 +182,15 @@
             <input type="text" v-model="newComponent.name"/>
             <label>Category</label>
             <select v-model="newComponent.category">
+                <option v-for="category in $categories()">{{ category }}</option>
+                <!--
                 <option value="element">element</option>
                 <option value="component">component</option>
                 <option value="widget">widget</option>
                 <option value="template">template</option>
                 <option value="page">page</option>
                 <option value="slider">slider</option>
-                <option value="gallery">gallery</option> 
+                <option value="gallery">gallery</option>-->
             </select>
             <label>Description</label>
             <textarea v-model="newComponent.description"/>

@@ -26,9 +26,9 @@
       </div>
 
       <div v-if="moka.articles" class="border w-1/4 flex flex-col border-t-8 border-green-400 p-2">
-        <div>Last news</div>
+        <div>Last articles</div>
         <template v-for="(article,row) in moka.articles">
-          <div class="flex flex-col p-2" v-if="row < 3 && article.categories[0].name==='news'">
+          <div class="flex flex-col p-2" v-if="row < 3">
             <div class="text-xs">{{ $moment ( article.update_at ) }}</div>
             <div class="text-sm font-bold border-b">{{ article.title }}</div>
             <div class="text-xs">{{ article.excerpt}}</div>

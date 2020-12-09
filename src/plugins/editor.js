@@ -2,11 +2,7 @@ import Vue from 'vue'
 import _ from 'lodash'
 import store from '../store'
 
-
-const justifyItemsAttrs = [
-    'justify-center' , 'justify-start' , 'justify-end' , 'justify-auto' , 'justify-stretch'
-]
-
+const categories = [ 'page' ,  'template' , 'widget' , 'slider' , 'component' , 'element' , 'archive' , 'starred']
 const pixels = [ 1 , 4 , 8 , 12 , 16 , 20 , 24 , 32 , 40 , 48, 64 , 80 , 96 , 128 , 160 , 192 , 224 , 256 ]
 const pixelsAttrs = {
     'p' : 'padding' ,
@@ -20,6 +16,15 @@ const pixelsAttrs = {
     mb: 'marginBottom',
     ml: 'marginLeft' 
 }
+
+const textSizes = [ '','text-xs' , 'text-sm' , 'text-base' , 'text-lg' , 'text-xl' , 'text-2xl' , 'text-3xl' , 'text-4xl' , 'text-5xl' , 'text-6xl' , 'text-7xl' , 'text-8xl' , 'text-9xl' , 'text-10xl' , 'text-20xl']
+
+
+/*
+const justifyItemsAttrs = [
+    'justify-center' , 'justify-start' , 'justify-end' , 'justify-auto' , 'justify-stretch'
+]
+
 const bgColorAttrs = { 
     'bg-white'    : 'text' , 
     'bg-black'    : 'text' , 
@@ -126,7 +131,6 @@ const textOverColorAttrs = {
     'hover:text-pink'     : 'text' 
 } 
 
-const textSizes = [ '','text-xs' , 'text-sm' , 'text-base' , 'text-lg' , 'text-xl' , 'text-2xl' , 'text-3xl' , 'text-4xl' , 'text-5xl' , 'text-6xl' , 'text-7xl' , 'text-8xl' , 'text-9xl' , 'text-10xl' , 'text-20xl']
 
 const textAttrs = {
     text : 'textsize'
@@ -178,6 +182,7 @@ function cssFound(css,str){
     if ( css.indexOf( str ) > -1 ) return true
     return false
 }
+*/
 
 function randomID(){
     return 'moka-' + Math.random().toString(36).substr(2, 5)
@@ -225,6 +230,10 @@ function getObj(obj,index){
 export default {
     install: function (Vue) {
         
+        Vue.prototype.$categories = ()=>{
+            return categories
+        }
+
         Vue.prototype.$findNode= (id, currentNode , remove = false) => {
             return findNode(id, currentNode , remove );
         }
@@ -304,6 +313,8 @@ export default {
                 }
                 return grid
             }
+
+        /*    
         Vue.prototype.$flex = ()=>{
             let flex = { 
                 "id": 'moka-' + Math.random().toString(36).substr(2, 5),
@@ -519,7 +530,7 @@ export default {
 
             return false
         }
-
+        */
         Vue.prototype.$cssResponsive = ( classe = '') => {
             if ( typeof classe === 'object' ) classe = classe.css
             if ( !classe || typeof classe === 'undefined' )  return ''

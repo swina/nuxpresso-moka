@@ -189,7 +189,7 @@
     <transition name="slideright">
         <div v-if="tree" class="fixed h-screen top-0 right-0 w-3/12 border-l shadow bg-white p-2 z-2xtop overflow-y-auto">
             <div class="relative w-full">
-                <moka-tree :doc="doc" @close="tree=!tree" @treeselect="treeselect"/>
+                <moka-tree :doc="editor.current && editor.current.hasOwnProperty('blocks')?editor.current:doc" @close="tree=!tree" @treeselect="treeselect"/>
             </div>
         </div>
     </transition>
@@ -476,7 +476,7 @@ export default {
                 }
             }
             if ( e.altKey && e.code === 'KeyV' ){
-                if ( this.current  ){
+                if ( this.editor.current  ){
                     this.$emit('paste')
                 }
             }

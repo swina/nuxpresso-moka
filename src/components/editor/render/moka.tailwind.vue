@@ -77,8 +77,6 @@ export default {
     computed: {
         ...mapState ( ['moka','editor'] ),
         init(){
-            this.allCss = this.css
-            this.groups = twgroups
             return true
         }
     },
@@ -99,6 +97,7 @@ export default {
         },
     },
     mounted(){
+        this.groups = twgroups
         this.allCss = this.css
         this.allStyle = this.editor.current.style
         //this.allStyle = this.$attrs.entity.style

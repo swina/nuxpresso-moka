@@ -1,5 +1,5 @@
 import axios from 'axios'
-const strapi_url = 'http://localhost:1337/'
+const strapi_url = 'http://localhost:1338/'
 import icons  from '@/plugins/icons.js'
 import articlesQry from '@/apollo/articles.gql'
 
@@ -74,11 +74,21 @@ const moka = {
         },
         async loadComponents ( { commit } ){
             const comps = await axios.get ( strapi_url + 'components' )
+            console.log ( 'Loading components ... ' , comps )
             commit ( 'SET_COMPONENTS' , comps.data.sort( (a, b) => a.name < b.name ? -1 : 1) ) 
         },
         async loadElements ( { commit } ){
-            const els = await axios.get ( strapi_url + 'elements' )
-            commit ( 'SET_ELEMENTS' , els.data )
+            axios.get ( process.env.VUE_APP_API_URL + 'elements' ).then ( response => {
+                commit ( 'SET_ELEMENTS' , response.data )
+            }).catch ( error => {
+                if ( error ){
+                    window.localStorage.removeItem('nuxpresso-user')
+                    window.localStorage.removeItem('nuxpresso-jwt')
+                }
+            })
+            //const els = await axios.get ( strapi_url + 'elements' )
+            //console.log ( 'Loading elements ... ' , els )
+            //commit ( 'SET_ELEMENTS' , els.data )
         },
         async loadArticles ( { commit } ,articles ){
             

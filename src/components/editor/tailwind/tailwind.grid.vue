@@ -1,6 +1,14 @@
 <template>
     <div class="flex flex-col">
-        <moka-customize-grid :cols="cols" :stile="editor.current.style" @grid="set_style"/>
+        <!--<moka-customize-grid :cols="cols" :stile="editor.current.style" @grid="set_style"/>-->
+        <div :class="'h-10 bg-gray-600 border-2 border-dashed items-center grid grid-cols-' + cols" :style="st">
+            <div v-for="col in cols" class="p-1 flex flex-row border border-yellow-200 border-dashed ">
+                {{grid_settings[col-1]}}fr
+            </div>
+        </div>
+        <div v-for="n in cols">
+            Col {{n}} <input type="range" min="1" max="10" step="0.05" :name="'col_' + (n-1)" v-model="grid_settings[n-1]" @change="update_style"/>
+        </div>
         <button @click="addCol" class="m-auto mt-2">Add column</button>
     </div>
 </template>
@@ -14,16 +22,15 @@ export default {
     data:()=>({
         classe:'', 
         cols:0,
-        /*       
-        gap : 0,
-        grid_gaps: [ '' , '1' , '2' , '3' , '4' , '5' , '6' , '8', '10' , '12', '16', '20', '24', '32', '40', '48', '56', '64' ],
-        */
+        grid_settings:[1,1],
+        st:''
     }),
     computed:{
         ...mapState ( ['editor'] )
     },
     props: [ 'css' , 'stile' ],
     mounted(){
+        this.st = this.stile
         this.cols = this.$attrs.entity.blocks.length
         /*
         this.classe = this.$attrs.entity.css.css
@@ -38,6 +45,9 @@ export default {
         */
     },
     watch: {
+        st(v){
+            this.grid_style()
+        }
         /*gap(v){
             v ? this.$emit('input','gap-' + this.grid_gaps[parseInt(v)]) : this.$emit('input','')
         }
@@ -45,11 +55,34 @@ export default {
     },
     methods: {
         addCol(){
-            console.log ( this.$attrs.entity )
             let column = this.$flex()
             this.$attrs.entity.blocks.push ( column )
             this.cols++
             this.$attrs.entity.css.container = "flex flex-col md:grid md:grid-cols-" + this.cols
+        },
+        grid_style(){
+            if ( this.$attrs.entity.style ){
+                this.grid_settings = []
+                let values =this.$attrs.entity.style.split(':')[1]
+                values = this.$clean(values.replace(';',''))
+                values = values.replaceAll('fr','').split(' ')
+                values.forEach ( (v,index) => {
+                    if ( !v ) values.splice(index,1)
+                })
+                console.log ( values )
+                this.grid_settings = values
+                //return this.$attrs.entity.style
+                //this.grid_settings = values.split(' ')
+            }
+        },
+        update_style(){
+            let str = 'grid-template-columns:'
+            this.grid_settings.forEach ( v => {
+                str += v + 'fr '
+            })
+            str +=';' 
+            this.st = str
+            this.$emit( 'stile' , str )
         },
         set_style ( stile ){
             this.$emit ( 'stile' , stile )

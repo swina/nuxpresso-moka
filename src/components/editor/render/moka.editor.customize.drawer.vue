@@ -19,7 +19,7 @@
             </div>
             <moka-tw 
                 v-if="entity && entity.entity.tag!='menu' && !entity.entity.css.hasOwnProperty('css')" 
-                :css="entity.entity.css" 
+                :css="$clean(entity.entity.css)" 
                 :entity="entity.entity"
                 :key="entity.entity.id"
                 :columns="false"
@@ -28,7 +28,7 @@
             
             <moka-tw 
                 v-if="entity && entity.entity.tag !='menu' && entity.entity.css.hasOwnProperty('css')" 
-                :css="entity.entity.css.css" 
+                :css="$clean(entity.entity.css.css)" 
                 :entity="entity.entity"
                 :key="entity.entity.id"
                 :columns="true"
@@ -37,8 +37,8 @@
 
             <moka-tw 
                 v-if="entity && entity.entity.tag ==='menu'" 
-                :css="!customizeDropdown?entity.entity.css.css:entity.entity.css.submenu" 
-                :allCss="!customizeDropdown?entity.entity.css.css:entity.entity.css.submenu"
+                :css="!customizeDropdown?$clean(entity.entity.css.css):$clean(entity.entity.css.submenu)" 
+                :allCss="!customizeDropdown?$clean(entity.entity.css.css):$clean(entity.entity.css.submenu)"
                 :entity="entity.entity"
                 :key="entity.entity.id"
                 :columns="true"

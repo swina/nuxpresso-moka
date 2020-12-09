@@ -12,20 +12,22 @@
 
         
         <transition name="fade">
-        <div v-if="saveAsNew" class="nuxpresso-modal rounded w-full md:w-1/4 p-4 flex flex-col bg-white z-50">
+        <div v-if="saveAsNew" class="nuxpresso-modal rounded w-full md:w-1/4 p-4 flex flex-col bg-white z-2xtop">
             <i class="material-icons absolute top-0 right-0 cursor-pointer" @click="saveAsNew=!saveAsNew">close</i>
             <h4>Duplicate</h4>
             <label>Name*</label>
             <input type="text" v-model="newComponent.name"/>
             <label>Category</label>
             <select v-model="newComponent.category">
+                <option v-for="category in $categories()">{{ category }}</option>
+                <!--
                 <option value="element">element</option>
                 <option value="component">component</option>
                 <option value="widget">widget</option>
                 <option value="template">template</option>
                 <option value="page">page</option>
                 <option value="slider">slider</option>
-                <option value="gallery">gallery</option> 
+                <option value="gallery">gallery</option>-->
             </select>
             <label>Description</label>
             <textarea v-model="newComponent.description"/>
@@ -113,10 +115,12 @@ export default {
                 this.message = 'Component created'
                 this.$store.dispatch ( 'loadComponents' )
                 this.loading = false
+                this.saveAsNew = false
             }).catch ( error => {
                 this.message = 'An error occured.'
                 console.log ( error )
                 this.loading = false
+                this.saveAsNew = false
             })
             return null
         },

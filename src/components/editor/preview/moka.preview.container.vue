@@ -68,13 +68,11 @@ export default {
                             ' background-image:url(' + block.image.url + ');' : ''  : ''        
         },
         elementAction(action){
-            console.log ( action )
             this.$emit('action',action)
         },
         animate(element,id){
             let vm = this
             if ( this.$refs && element.hasOwnProperty('gsap') && element.gsap.animation ){
-                console.log ( 'animation for => ' , id , this.$refs[id] )
                 let ani = gsap.effects[element.gsap.animation]( this.$refs[id] ,{
                     trigger: this.$refs[id],
                     duration: parseFloat(element.gsap.duration),
@@ -88,7 +86,6 @@ export default {
                     toggleActions: "play pause restart none",
                     animation:ani,
                     onEnter: ()=>{ 
-                        console.log ( 'start playing animation')
                         if ( element.gsap.delay ){
                             ani.play()
                         } else {
@@ -104,7 +101,6 @@ export default {
     mounted(){
         window.scrollTo(0,0)
         if ( this.doc.hasOwnProperty('gsap') && this.doc.gsap.animation ){
-            console.log ( 'REFS=>' , this.$refs , ' => animation => ' , this.doc.gsap.animation )
             this.animate ( this.doc , this.doc.id )
         }
         return

@@ -1,24 +1,27 @@
 <template>
     <div>
 
-        <div v-if="customize">
-            Columns Width
+        <div>
+            Columns Width {{ cols }}
+            <!--
             <div class="grid grid-cols-2 border border-green-500" :style="grid_template()">  
                 <div class="border border-dashed bg-gray-600 text-white text-center" v-for="n in cols">{{grid_settings[n-1]}}fr</div>
             </div>
+            -->
+            <!--
             <div class="flex flex-col">
                 <div v-for="n in cols">
                     Col {{n}} <input type="range" min="1" max="10" step="0.1" :name="'col_' + (n-1)" v-model="grid_settings[n-1]"/>
                 </div>
             </div>
-            
+            -->
             <!--<div>
                 <span class="bg-red-300" v-if="parseInt(grid_tot)>100">{{ parseInt(grid_tot) }}%</span>
                 <span class="bg-green-300" v-else>{{ parseInt(grid_tot) }}%</span>
             </div>
             -->
         </div>
-        <button class="w-full" @click="customize=!customize,grid_init()">Columns Settings</button>
+        <!--<button class="w-full" @click="customize=!customize,grid_init()">Columns Settings</button>-->
 
     </div>
 </template>
@@ -38,6 +41,10 @@ export default {
             this.grid_settings = []
             this.customize = false
         }
+    },
+    mounted(){
+        //this.grid_init()
+       
     },
     methods: {
         grid_init(){
@@ -63,7 +70,6 @@ export default {
                 }
                 str +=';'
                 this.$emit('grid', str , this.grid_gap )
-                //this.$emit('grid',str)
                 return str
             } 
             return ''

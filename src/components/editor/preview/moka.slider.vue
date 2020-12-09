@@ -62,7 +62,6 @@ export default {
     },
     methods:{
         hasSlideAction(action){
-            console.log ( 'clicked => ' , action )
             action === 'slider_next' ? 
                     this.next(1) : 
                         action === 'slider_prev' ? this.next(-1)
@@ -72,7 +71,6 @@ export default {
             this.index < (this.doc.blocks.length + n) ? this.index += n : this.index = 0
             this.index < 0 ? this.index = 0 : null
             this.index >= this.doc.blocks.length ? this.index = 0 : null
-            console.log ( 'clicked next =>' , this.index )
             let tl = gsap.timeline()
             tl.to ( '.slide' , { xPercent: -this.index*100 , opacity:1 , duration: 1.5 } )
             
@@ -99,7 +97,6 @@ export default {
         animate(element,id){
             let vm = this
             if ( this.$refs && element.hasOwnProperty('gsap') && element.gsap.animation ){
-                console.log ( 'animation for => ' , id , this.$refs[id] )
                 let ani = gsap.effects[element.gsap.animation]( this.$refs[id] ,{
                     trigger: this.$refs[id],
                     duration: parseFloat(element.gsap.duration),
@@ -113,7 +110,6 @@ export default {
                     toggleActions: "play pause restart none",
                     animation:ani,
                     onEnter: ()=>{ 
-                        console.log ( 'start playing animation')
                         if ( element.gsap.delay ){
                             ani.play()
                         } else {

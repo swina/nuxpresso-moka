@@ -55,10 +55,6 @@
                     <div class="flex flex-col">
                         Number of cols<br/>
                         <input type="number" min="1" max="12" v-model="grid.cols"/> 
-                        <!--
-                        Number of elements<br/>
-                        <input type="number" min="1" v-model="grid.rows"/> 
-                        -->
                         <button class="my-2" @click="createGridNew">OK</button>
                     </div>
                 </div>
@@ -84,7 +80,7 @@
             </div>
         </transition>
        
-         <transition name="fade">
+        <transition name="fade">
             <div class="nuxpresso-modal w-1/4 text-xs p-4 z-50 border max-h-64 overflow-y-auto" v-if="icons">
                 Icon Category
                 <select v-model="groupicon">

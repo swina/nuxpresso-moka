@@ -9,27 +9,23 @@ body {
 }
 
 h1 {
-    @apply text-5xl my-6;
-    line-height:3rem;
+    @apply text-5xl;
 }
 
 h2 {
-    @apply text-4xl my-6 leading-15;
-    line-height: 2rem;
+    @apply text-4xl leading-normal;
 }
 
 h3 {
-    @apply text-3xl my-2 mb-4;
-    line-height: 2rem;
+    @apply text-3xl leading-normal;
 }
 
 h4 {
-    @apply text-2xl my-2 leading-8;
-    line-height:2rem;
+    @apply text-2xl leading-normal;
 }
 
 h5 {
-    @apply text-2xl my-2 leading-8;
+    @apply text-2xl leading-normal;
 }
 
 a { 
