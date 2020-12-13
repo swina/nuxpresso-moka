@@ -88,7 +88,7 @@
 
     <!-- COMPONENT SETTINGS -->
     <transition name="slideleft">
-        <div class="fixed left-0 top-0 mt-12 flex flex-col shadow-lg p-4 bg-white z-2xtop" v-if="settings">
+        <div class="fixed left-0 top-0 mt-12 flex flex-col shadow-lg p-4 bg-white z-2xtop text-base" v-if="settings">
             <i class="material-icons absolute right-0 mr-2" @click="settings=!settings">close</i>
             <label class="font-bold">Name</label>
             <input type="text" v-model="$attrs.component.name"/> 
@@ -106,19 +106,23 @@
                 <option value="slider">slider</option>
                 <option value="gallery">gallery</option>-->
             </select>
-            <div class="flex flex-col" v-if="$attrs.component.category === 'template'">
-                <label>Default</label>
-                <input type="checkbox" v-model="$attrs.component.default"/> 
-                <div class="text-xs text-gray-600">(apply to articles with no template)</div>
+            <label class="font-bold">Default template</label>
+            <div class="flex flex-col text-sm" v-if="$attrs.component.category === 'template'">
+                 
+                <div class="text-xs text-gray-600"><input type="checkbox" v-model="$attrs.component.default"/> (apply to articles with no template)</div>
             
-                <label>Loop</label>
-                <input type="checkbox" v-model="$attrs.component.loop"/>
-                <select v-if="$attrs.component.loop" v-model="$attrs.component.loop_type">
-                    <option value="articles">articles</option>
-                    <option value="last">last articles</option>
-                    <option value="category">articles category</option>
-                    <option value="tag">articles tag</option>
-                </select>
+                <label class="font-bold">Loop 
+                <input type="checkbox" v-model="$attrs.component.loop"/></label>
+                <div class="flex flex-col" v-if="$attrs.component.loop">
+                    <select v-model="$attrs.component.loop_type">
+                        <option value="">all</option>
+                        <option value="articles">articles</option>
+                        <option v-for="opt in moka.categories" :value="opt.slug">articles/category/{{opt.name}}</option>
+                    </select>
+                    <label class="font-bold">Pagination <input type="checkbox" v-model="$attrs.component.loop_pagination"/></label>
+                    <div>Articles per page</div>
+                    <input type="number" min="1" max="100" v-model="$attrs.component.loop_limit"/>
+                </div>
             </div>
 
             <!-- mobile breakpoint -->
@@ -401,11 +405,9 @@ export default {
             delete this.editor.current.parent 
             let el = JSON.parse(JSON.stringify(this.editor.current))
             let o = this.$copy ( this.editor.current )
-            console.log ( o )
             this.$findNode ( el.id , this.moka.component.json )
             let obj = this.$unique(el)
             this.editor.parent.blocks.push ( obj )
-            console.log ( this.editor.parent.type )
             delete this.editor.current.parent
             if ( this.editor.parent.type === 'grid' ){
                 let parent = this.editor.parent

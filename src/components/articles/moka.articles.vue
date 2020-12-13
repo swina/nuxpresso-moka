@@ -125,9 +125,15 @@
             </transition>
             <transition name="fade">
                 <div v-if="createPage" class="nuxpresso-modal border w-1/3 h-1/3 bg-white p-2 rounded shadow">
+                    <i class="material-icons absolute top-0 right-0 m-1" @click="createPage=!createPage">close</i>
                     <div class="flex flex-col">
                         <label>Title</label>
                         <input type="text" v-model="newArticle.title"/>
+                        <label>Category</label>
+                        <select v-model="newArticle.category">
+                            <option value=""></option>
+                            <option v-for="(category,c) in categories" :value="category"> {{ category.name }} </option>
+                        </select>
                         <div class="my-2">
                             <button class="bg-gray-300 mr-2" @click="createPage=!createPage">Cancel</button>
                             <button class="success" @click="create">Create</button>
@@ -276,12 +282,13 @@ export default {
             vm.currentArticle.id = parseInt(vm.currentArticle.id)
             this.$http.put ( 'articles/' + vm.currentArticle.id , vm.currentArticle ).then ( response => {
                 //vm.currentArticle = response.data
-                console.log ( response )
+                this.createPage = false
                 this.$store.dispatch('message','Article has been saved successfully')
                 this.$apollo.queries.articles.refetch()
             }).catch ( error => {
                 vm.$emit('message','An error occurred. Check you console log')
                 console.log ( error )
+                this.createPage = false
             })
             
         },

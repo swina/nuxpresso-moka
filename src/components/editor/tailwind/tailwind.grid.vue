@@ -32,6 +32,23 @@ export default {
     mounted(){
         this.st = this.stile
         this.cols = this.$attrs.entity.blocks.length
+        if ( this.cols > 1 ){
+            if ( this.$attrs.entity.style ){
+                let values =this.$attrs.entity.style.split(':')[1]
+                values = this.$clean(values.replace(';',''))
+                values = values.replaceAll('fr','').split(' ')
+                
+                this.grid_settings = values
+            } else {
+                this.grid_settings = []
+                for ( var n = 0 ; n < this.cols ; n++ ){
+                    this.grid_settings[n] = 1
+                }
+            }   
+        } else {
+            this.st = ''
+        }
+        this.$attrs.entity.css.container = "flex flex-col md:grid md:grid-cols-" + this.cols
         /*
         this.classe = this.$attrs.entity.css.css
         if ( !this.classe ) return
@@ -69,7 +86,6 @@ export default {
                 values.forEach ( (v,index) => {
                     if ( !v ) values.splice(index,1)
                 })
-                console.log ( values )
                 this.grid_settings = values
                 //return this.$attrs.entity.style
                 //this.grid_settings = values.split(' ')
@@ -77,11 +93,21 @@ export default {
         },
         update_style(){
             let str = 'grid-template-columns:'
-            this.grid_settings.forEach ( v => {
-                str += v + 'fr '
-            })
-            str +=';' 
-            this.st = str
+            if ( this.editor.current.blocks.length === 1 ){
+                str = ''
+                this.cols = 1
+                this.grid_settings = [1]
+            } else {
+                if ( this.grid_settings ) {
+                    this.grid_settings.forEach ( fr => {
+                        str += fr + 'fr '
+                    })
+                    str += ';'
+                } else {
+                    str = ''
+                }
+            }
+            this.$attrs.entity.css.container = "flex flex-col md:grid md:grid-cols-" + this.cols
             this.$emit( 'stile' , str )
         },
         set_style ( stile ){

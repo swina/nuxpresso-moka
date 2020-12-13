@@ -40,6 +40,10 @@
             <div v-if="link" class="flex flex-col">
                 <label>Link</label>
                 <input class="dark" type="text" v-model="$attrs.element.link"/>
+                <label>Article/Page</label>
+                <select class="dark" v-model="$attrs.element.link">
+                    <option v-for="(opt,o) in moka.articles" :value="'/articles/' + opt.slug">{{ opt.title }}</option>
+                </select>
                 <label>Anchor</label>
                 <input class="dark" type="text" v-model="$attrs.element.anchor"/>
             </div>
@@ -62,21 +66,25 @@
         <moka-icons v-if="icon" :icon="$attrs.element.content" v-model="$attrs.element.content"/>
 
         <div v-if="$attrs.element.tag === 'input'" class="flex flex-col">
-            <label>Default value</label>
-            <input class="dark" type="text" v-model="$attrs.element.content"/>
-            <label>Field name</label>
-            <input class="dark" type="text" v-model="$attrs.element.name"/>
-            <label>Placeholder</label>
-            <input class="dark" type="text" v-model="$attrs.element.placeholder"/>
-            <label>Required</label>
-            <input type="checkbox" v-model="$attrs.element.required"/>
+            <div class="bg-gray-700 cursor-pointer hover:bg-blue-300 mb-1 text-gray-100 px-1" @click="formfield=!formfield"><label>Field/Button</label></div>
+            <div class="flex flex-col" v-if="formfield">
+                <label>Default value</label>
+                <input class="dark" type="text" v-model="$attrs.element.content"/>
+                <label>Field name</label>
+                <input class="dark" type="text" v-model="$attrs.element.name"/>
+                <label>Placeholder</label>
+                <input class="dark" type="text" v-model="$attrs.element.placeholder"/>
+                <label>Required</label>
+                <input type="checkbox" v-model="$attrs.element.required"/>
+                <!-- button action -->
+                <div v-if="$attrs.element.element === 'button'" class="flex flex-col">
+                    <label>Action</label>
+                    <input class="dark" type="text" v-model="$attrs.element.action"/>
+                </div>
+            </div>
         </div>
 
-        <!-- button action -->
-        <div v-if="$attrs.element.element === 'button'" class="flex flex-col">
-            <label>Action</label>
-            <input class="dark" type="text" v-model="$attrs.element.action"/>
-        </div>
+        
 
        
     </div>
@@ -85,14 +93,20 @@
 <script>
 import MokaImagePlaceholder from '@/components/editor/render/moka.editor.image.placeholder'
 import MokaIcons from '@/components/editor/render/moka.customize.icon'
+import { mapState }  from 'vuex'
 export default {
     name: 'MokaEditContent',
     data:()=>({
         image: false,
         video: false,
         link: false,
-        icon: false
+        icon: false,
+        formfield: false
     }),
-    components: { MokaImagePlaceholder , MokaIcons }
+    components: { MokaImagePlaceholder , MokaIcons },
+    computed:{
+        ...mapState ( ['moka'] )
+    }
+
 }
 </script>

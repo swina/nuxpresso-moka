@@ -7,7 +7,7 @@
             </a>
             <component :class="$cssResponsive(el.css)" :is="tag" v-if="el.tag === 'article'" v-html="el.content"/>
 
-            <svg v-if="el.tag === 'svg'" width="100%" height="100%" :viewBox="el.content.viewbox" v-html="el.content.g" :class="el.css + ' fill-current'"></svg>
+            <svg v-if="el.tag === 'svg'" width="100%" height="100%" :viewBox="el.content.viewBox" v-html="el.content.g" :class="el.css + ' fill-current'"></svg>
 
             <!--<component :ref="element.id" :class="$cssResponsive(el.css)" :is="tag" v-if="el.type === 'video'" :src="el.src + el.content"/>-->
             

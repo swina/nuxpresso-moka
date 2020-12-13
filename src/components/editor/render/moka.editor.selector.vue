@@ -230,7 +230,8 @@ export default {
         animations:false,
         media: false,
         breakpoint: 'md',
-        tree: false
+        tree: false,
+        copiedCSS: ''
     }),
     components: { 
         MokaElement,
@@ -467,6 +468,20 @@ export default {
             if ( e.altKey && e.code === 'KeyA' ){
                 if ( this.editor.current  ){
                     this.animations =! this.animations
+                }
+            }
+            if ( e.altKey && e.code === 'KeyG' ){
+                if ( this.editor.current  ){
+                    this.editor.current.css.hasOwnProperty('css') ?
+                        this.copiedCSS = this.editor.current.css.css :
+                            this.copiedCSS = this.editor.current.css
+                }
+            }
+            if ( e.altKey && e.code === 'KeyH' ){
+                if ( this.editor.current  && this.copiedCSS ){
+                    this.editor.current.css.hasOwnProperty('css') ?
+                        this.editor.current.css.css = this.copiedCSS :  
+                            this.editor.current.css = this.copiedCSS
                 }
             }
             if ( e.altKey && e.code === 'KeyC' ){

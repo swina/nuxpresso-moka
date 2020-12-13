@@ -314,7 +314,7 @@ export default {
                 return grid
             }
 
-        /*    
+           
         Vue.prototype.$flex = ()=>{
             let flex = { 
                 "id": 'moka-' + Math.random().toString(36).substr(2, 5),
@@ -347,6 +347,7 @@ export default {
             }
             return flex
         }
+        /* 
         Vue.prototype.$hasCss = ( css , arr ) => {
             let classe = css.split(' ')
             classe.forEach ( cl => {

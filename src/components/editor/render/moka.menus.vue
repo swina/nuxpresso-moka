@@ -41,6 +41,7 @@
                                 <input class="dark" type="text" v-model="items[i].submenu[s].link"/>
                                 <label>Page</label>
                                 <select class="dark" v-model="items[i].submenu[s].link">
+                                    <option v-for="(opt,o) in moka.categories" :value="'/articles/category/' + opt.slug">category/{{ opt.name}}</option>
                                     <option v-for="(opt,o) in articles" :value="'/articles/' + opt.slug">{{ opt.title }}</option>
                                 </select>
                             </div>

@@ -6,7 +6,7 @@
             
             <component :is="tag" v-if="el.tag === 'article' && el.hasOwnProperty('article')" v-html="el.article[el.label]"/>
             
-            <svg v-if="el.tag === 'svg'" :viewBox="el.content.viewbox" width="100%" height="100%" v-html="el.content.g" :class="el.css + ' fill-current'"></svg>
+            <svg v-if="el.tag === 'svg'" :viewBox="el.content.viewBox" width="100%" height="100%" v-html="el.content.g" :class="el.css + ' fill-current'"></svg>
 
             <img v-if="el.element === 'img' && el.image && el.image.url && el.image.ext != '.svg'" :src="el.image.url" :caption="el.image.caption" :alt="el.image.alternative_text" :class="$cssResponsive(el.css)"/>
             
