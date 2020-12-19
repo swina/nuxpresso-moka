@@ -55,7 +55,7 @@
             </div>
             <div class="w-1/2 p-2">
                 <h4 class="bg-purple-500 p-1">Production</h4>
-                <draggable :list="trash" group="removed">SERVER: {{ user.production.url }}</draggable>
+                <draggable :list="trash" group="removed">SERVER: {{ master }}</draggable>
                 <div v-if="production && mode==='articles'">
                     <div class="font-bold">Articles</div>
                     <draggable :list="serverArticles" group="articles" class="flex flex-col" @add="onEndArticle">
@@ -138,16 +138,16 @@ export default {
             }
         },
         master(){
-            return this.user.production.url
+            return this.moka.remote_api
         },
         production(){
-            return this.remote.get ( this.user.production.url + 'articles' ).then ( response => {
+            return this.remote.get ( this.master + 'articles' ).then ( response => {
                 this.articlesRemote = response.data//this.moka.articles
                 return true// response.data
             })
         },
         components(){
-            return this.remote.get ( this.user.production.url + 'components' ).then ( response => {
+            return this.remote.get ( this.master + 'components' ).then ( response => {
                 this.blocks = response.data
                 return true //response.data
             })
@@ -250,8 +250,8 @@ export default {
     },
     mounted(){
         this.remote.post ( this.master + 'auth/local' , {
-            identifier: 'nuxpresso',
-            password: 'password'
+            identifier: this.moka.remote_user,
+            password: this.moka.remote_password
         } ).then(response => {
           // Handle success.
           console.log ( response )

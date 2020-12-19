@@ -1,10 +1,13 @@
 import axios from 'axios'
-const strapi_url = 'http://localhost:1338/'
 import icons  from '@/plugins/icons.js'
 import articlesQry from '@/apollo/articles.gql'
 
 const moka = {
     state:  {
+        remote_api: process.env.VUE_APP_PRODUCTION_URL,
+        remote_graphql: process.env.VUE_APP_PRODUCTION_GRAPHQL,
+        remote_user: process.env.VUE_APP_REMOTE_USER,
+        remote_password: process.env.VUE_APP_REMOTE_PASSWORD,
         loading: false,
         message: '',
         filter: '',
@@ -73,7 +76,7 @@ const moka = {
             commit ( 'SET_MESSAGE' , message )
         },
         async loadComponents ( { commit } ){
-            const comps = await axios.get ( strapi_url + 'components' )
+            const comps = await axios.get ( process.env.VUE_APP_API_URL + 'components' )
             console.log ( 'Loading components ... ' , comps )
             commit ( 'SET_COMPONENTS' , comps.data.sort( (a, b) => a.name < b.name ? -1 : 1) ) 
         },
@@ -101,7 +104,7 @@ const moka = {
             commit ( 'SET_COMPONENT' , component)
         },
         async loadMedia ( { commit } ){
-            const media = await axios.get ( strapi_url + 'upload/files' )
+            const media = await axios.get ( process.env.VUE_APP_API_URL + 'upload/files' )
             commit ( 'SET_MEDIA' , media.data )
         },
         loadClasses ( { commit } , classes ){

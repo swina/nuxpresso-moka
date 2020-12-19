@@ -55,7 +55,7 @@
         </div>
         <div class="text-gray-500 text-sm mt-1 font-hairline">S T U D I O</div>
       </div>
-      <div class="flex flex-col text-sm text-gray-500" v-if="!user.login">
+      <div class="flex flex-col w-1/3 text-sm text-gray-500" v-if="!user.login">
         <label>User</label>
         <input type="email" v-model="email" class="dark"/>
         <label>Password</label>
