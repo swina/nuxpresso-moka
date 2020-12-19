@@ -15,6 +15,8 @@
                         v-model="cssTw[component.attr]" 
                         :entity="editor.current"
                         :attr="component.attr" 
+                        :icon="component.icon||null"
+                        :classe="component.css||''"
                         :required="component.hasOwnProperty('required')? component.required :''"
                         :title="component.hasOwnProperty('title')?component.title:''"
                         :negative="component.hasOwnProperty('negative')?component.negative:false"
@@ -34,6 +36,7 @@ import MokaBgcolor from '@/components/editor/tailwind/tailwind.bgcolor'
 import MokaBgPosition from '@/components/editor/tailwind/tailwind.bgposition'
 import MokaBorderColor from '@/components/editor/tailwind/tailwind.border.color'
 import MokaBorderType from '@/components/editor/tailwind/tailwind.border.type'
+import MokaButton from '@/components/editor/tailwind/tailwind.button'
 import MokaCheckbox from '@/components/editor/tailwind/tailwind.checkbox'
 import MokaColor from '@/components/editor/tailwind/tailwind.color'
 import MokaGradient from '@/components/editor/tailwind/tailwind.gradient'
@@ -42,7 +45,7 @@ import MokaHeights from '@/components/editor/tailwind/tailwind.height'
 import MokaOptions from '@/components/editor/tailwind/tailwind.options'
 import MokaPosition from '@/components/editor/tailwind/tailwind.position'
 import MokaRange from '@/components/editor/tailwind/tailwind.range'
-import MokaTextStyle from '@/components/editor/tailwind/tailwind.text.style'
+//import MokaTextStyle from '@/components/editor/tailwind/tailwind.text.style'
 import MokaTextFont from '@/components/editor/tailwind/tailwind.text.font'
 import MokaWidths from '@/components/editor/tailwind/tailwind.width'
 import { mapState } from 'vuex'
@@ -54,13 +57,14 @@ export default {
         MokaBgPosition,
         MokaBorderColor,
         MokaBorderType,
+        MokaButton,
         MokaCheckbox,
         MokaColor,
         MokaGradient,
         MokaGrid,
         MokaPosition,
         MokaTextFont,
-        MokaTextStyle,
+        //MokaTextStyle,
         MokaWidths,
         MokaHeights,
         MokaOptions,

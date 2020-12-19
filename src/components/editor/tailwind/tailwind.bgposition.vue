@@ -95,26 +95,31 @@ export default {
                 if ( cl.indexOf ( size ) > -1 ){
                     console.log ( 'found=>' , size )
                     this.bgposition['size'] = size
+                    this.$emit('css',size)
                 }
             })
             this.bgpositions.forEach ( pos => {
                 if ( cl.indexOf ( pos ) > -1 ){
                     this.bgposition['position'] = pos
+                    this.$emit('css',pos)
                 }
             })
             this.bgrepeats.forEach ( rep => {
                 if ( cl.indexOf ( rep ) > -1 ){
                     this.bgposition['repeat'] = rep
+                    this.$emit('css',rep)
                 }
             })
             this.bgattachments.forEach ( att => {
                 if ( cl.indexOf ( att ) > -1 ){
                     this.bgposition['attachment'] = att 
+                    this.$emit('css',att)
                 }
             })
             this.bgclips.forEach ( clip => {
                 if ( cl.indexOf ( clip ) > -1 ){
                     this.bgposition['clip'] = clip
+                    this.$emit('css',clip)
                 }
             })
         })

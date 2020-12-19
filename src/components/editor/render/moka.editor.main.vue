@@ -53,10 +53,12 @@
             </div>
                 
             <!-- ADD BLOCK BUTTON -->
-            <div class="fixed bottom-0 left-0 opacity-100 hover:opacity-100 pb-6 mb-6 z-top " title="Add block flex flex-col">
+            <div class="fixed bottom-0 right-0 opacity-100 hover:opacity-100 pb-6 mr-6 mb-6 z-top ">
                 
-                    <i class="material-icons moka-icons nuxpresso-icon-circle ml-2" @click="grids=!grids">add</i><!--addBlock=true,reusable=!reusable-->
-                    <div class="text-xs text-gray-400">Add block</div>
+                    <i class="material-icons moka-icons nuxpresso-icon-circle ml-2" @click="grids=!grids" title="Add block">add</i><!--addBlock=true,reusable=!reusable-->
+                    <!--<div class="text-xs text-gray-400">Add block</div>-->
+                    <i class="material-icons moka-icons nuxpresso-icon-circle ml-2" @click="$store.dispatch('setAction','addreusable'),addBlock=true" title="Add Moka">widgets</i>
+                    <i class="material-icons moka-icons nuxpresso-icon-circle ml-2" @click="preview=!preview" title="Preview">remove_red_eye</i>
                 
             </div>
         </div>
@@ -106,9 +108,21 @@
                 <option value="slider">slider</option>
                 <option value="gallery">gallery</option>-->
             </select>
-            <label class="font-bold">Default template</label>
+            
+            <label class="font-bold">Type <i class="material-icons" @click="addType=!addType">add</i></label>
+            
+            <input v-if="addType" v-model="newType" @change="saveNewType"/>
+            
+            <select v-model="$attrs.component.tags">
+                <option value=""></option>
+                <option v-for="tipo in moka.elements.types.types" :value="tipo">{{ tipo }}</option>
+            </select>
+            <!--
+            <label class="font-bold">Tags</label>
+            <textarea v-model="$attrs.component.tags"/>
+            -->
             <div class="flex flex-col text-sm" v-if="$attrs.component.category === 'template'">
-                 
+                <label class="font-bold">Default template</label>
                 <div class="text-xs text-gray-600"><input type="checkbox" v-model="$attrs.component.default"/> (apply to articles with no template)</div>
             
                 <label class="font-bold">Loop 
@@ -187,14 +201,6 @@
             <label>Category</label>
             <select v-model="newComponent.category">
                 <option v-for="category in $categories()">{{ category }}</option>
-                <!--
-                <option value="element">element</option>
-                <option value="component">component</option>
-                <option value="widget">widget</option>
-                <option value="template">template</option>
-                <option value="page">page</option>
-                <option value="slider">slider</option>
-                <option value="gallery">gallery</option>-->
             </select>
             <label>Description</label>
             <textarea v-model="newComponent.description"/>
@@ -220,26 +226,22 @@
 
     <!-- ADD BLOCK -->
     <transition name="fade">
-        <div class="nuxpresso-modal text-xs p-4 z-50 w-1/3 border" v-if="grids">
+        <div class="nuxpresso-modal text-xs p-4 z-2xtop w-1/3 border" v-if="grids">
             <i class="material-icons absolute right-0 top-0" @click="grids=!grids">close</i>
             <h3>Columns</h3>
             <div class="flex flex-col">
                 Number of cols<br/>
                 <input type="number" min="1" max="12" v-model="grid.cols"/> 
-                <!--
-                Number of elements<br/>
-                <input type="number" min="1" v-model="grid.rows"/> 
-                -->
                 <button class="my-2" @click="createGridNew">OK</button>
             </div>
         </div>
     </transition>
     <!-- REUSABLE COMPONENTS PICKER -->
     <transition name="slidedown">
-        <moka-reusable v-if="editor.action==='addcomponent'" 
+        <moka-reusable-elements v-if="editor.action==='addcomponent'" 
             :importReusable="false" 
-            :newblock="addBlock" 
-            @close="reusable=false,$store.dispatch('setAction',null)" 
+            :newblock="false" 
+            @close="reusable=false,addBlock=false,$store.dispatch('setAction',null)" 
             @add="addReusable" 
             @importreusable="addReusable"/>
         
@@ -263,7 +265,7 @@
 
     <!-- SLIDER SETTINGS -->
     <transition name="fade">
-        <div v-if="sliderSettings" class="nuxpresso-modal w-1/3 p-2 border rounded shadow-lg">
+        <div v-if="sliderSettings" class="nuxpresso-modal w-1/3 p-2 bg-white z-2xtop border rounded shadow-lg">
             <i class="material-icons absolute top-0 right-0 cursor-pointer" @click="sliderSettings=!sliderSettings">close</i>
             <h4>Slider Settings</h4>
             <div class="p-2">
@@ -275,17 +277,19 @@
 
     <!-- SLIDER PREVIEW-->
     <transition name="fade">
-        <div class="absolute z-max top-0 left-0 min-h-screen w-screen bg-white" v-if="slider">
-            <moka-slider v-if="doc.hasOwnProperty('slider')" @save="save" :develop="true" :embeded="true" :doc="doc" @close="slider=!slider"/>
+        <div class="absolute z-2xtop top-0 left-0 min-h-screen w-screen bg-white" v-if="slider">
+            <moka-slider v-if="doc.hasOwnProperty('slider')" @save="saveprint" :develop="true" :embeded="true" :doc="doc" @close="slider=!slider"/>
             <!--<moka-slider :doc="doc" :embeded="true" @save="save" @close="slider=!slider"/>-->
         </div>
     </transition>
+
 
 </div>
 </template>
 
 <script>
-import MokaReusable from '@/components/editor/render/moka.reusable'
+import MokaReusableElements from '@/components/editor/render/moka.reusable'
+import MokaReusable from '@/components/editor/render/moka.reusable.preview'
 import MokaEditorMedia from '@/components/media/media'
 import MokaEditorPreview from '@/components/editor/preview/moka.preview'
 import MokaTextEditor from '@/components/editor/render/moka.text.editor'
@@ -301,6 +305,7 @@ export default {
     name: 'MokaEditor',
     components: { 
         MokaEditorMedia , 
+        MokaReusableElements,
         MokaReusable , 
         MokaEditorPreview , 
         MokaSlider , 
@@ -311,6 +316,8 @@ export default {
         draggable 
     },
     data:()=>({
+        addType: false,
+        newType: '',
         customizebar: false,
         disable: false,
         addBlock:false,
@@ -381,6 +388,12 @@ export default {
         },
     },
     methods:{
+        saveNewType(){
+            this.moka.elements.types.types.push ( this.newType )
+            this.$http.put ( 'elements' , this.moka.elements )
+            this.newType = ''
+            this.addType = false
+        },
         editInline(block){
             this.current = this.moka.current
             this.editContent = true
@@ -461,13 +474,13 @@ export default {
             let obj = JSON.parse(JSON.stringify(this.schema.containers[0]))
             obj['blocks'] = []
             obj.id = this.$randomID()
-            obj.css.container = "flex flex-col md:grid md:grid-cols-1" //+ this.grid.cols
+            obj.css.container = "flex flex-col md:grid md:grid-cols-" + this.grid.cols
             obj.css.css = ''
-            obj.cols = 1 //this.grid.cols
+            obj.cols = parseInt(this.grid.cols)
             let content 
-            //for ( var n = 0 ; n < this.grid.cols ; n++ ){
-                content = JSON.parse(JSON.stringify(this.schema.text[1]))
-                //content = Object.assign ( {} , this.schema.text[1] )
+            console.log ( obj.cols )
+            for ( var n = 0 ; n < parseInt(this.grid.cols) ; n++ ){
+                content = JSON.parse(JSON.stringify(this.schema.text[2]))
                 content.id = this.$randomID()
                 let el = {
                     id: this.$randomID(),
@@ -481,13 +494,13 @@ export default {
                     type:'flex',
                     tag:'blocks'
                 }
-                obj.blocks = [el]
-            //}
-            this.doc.blocks.push ( obj)
+                obj.blocks[n] = el
+            }
+            this.doc.blocks.push ( obj )
+            console.log ( obj )
             this.grids = false
         },
         addReusable(obj){
-            console.log ( 'add => ' , obj )
             this.reusable = false
             let component , json , imported
             if ( obj.hasOwnProperty ( 'json' ) ){
@@ -511,8 +524,12 @@ export default {
             
             component.id = this.$randomID()
             let target = this.editor.current
+            if ( !target || this.addBlock ){
+                target = this.doc
+            }
             console.log ( 'component => ' , component )
             target.blocks.push ( component )
+            this.addBlock = false
             this.$store.dispatch('setAction',null)
         },
         addComponent(component){
@@ -583,6 +600,9 @@ export default {
         async print(block='content') {
             let el , options
             el = document.querySelector('#' + block)
+            if (!el){
+                document.querySelector('.content')
+            }
             options = { type: "dataURL" , useCORS: true , scale: 0.50 }
             let screenshot = await this.$html2canvas(el, options)
             //this.printScreen = screenshot

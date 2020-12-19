@@ -17,6 +17,10 @@ export default {
         str = str.replace(/\s\s+/g, ' ')
         return [...new Set(str.split(' '))].join(' ')
     }
+    Vue.prototype.$trim = function ( str = '' ){
+        if ( !str ) return ''
+        return str.replace(/\s\s+/g, ' ')
+    }
 
     Vue.prototype.$cleanImage = ( img ) => {
         return {
@@ -68,8 +72,8 @@ export default {
         return icons.split(',')
     }
 
-    Vue.prototype.$moment = function ( d= new Date ) {
-        return moment ( d ).format ( 'MM-DD-YYYY')
+    Vue.prototype.$moment = function ( d= new Date , format = 'MM-DD-YYYY' ) {
+        return moment ( d ).format ( format )
     }
 
     Vue.prototype.$slugify = function ( text = '' ){

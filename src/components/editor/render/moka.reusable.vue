@@ -564,8 +564,7 @@ export default {
             obj.css.css = ''
             let content 
             for ( var n = 0 ; n < this.grid.cols ; n++ ){
-                content = JSON.parse(JSON.stringify(this.schema.text[1]))
-                //content = Object.assign ( {} , this.schema.text[1] )
+                content = JSON.parse(JSON.stringify(this.schema.text[2]))
                 content.id = this.$randomID()
                 let el = {
                     id: this.$randomID(),

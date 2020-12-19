@@ -75,6 +75,19 @@ var classes = {
         'order-last',
         'order-none'
     ],
+    flexwrap: [
+        'flex-wrap',
+        'flex-nowrap',
+        'flex-wrap-reverse'
+    ],
+    flexgrow: [
+        'flex-grow',
+        'flex-grow-0',
+    ],
+    flexshrink: [
+        'flex-shrink',
+        'flex-shrink-0'
+    ],
     zindex: [
         'z-auto',
         'z-0',

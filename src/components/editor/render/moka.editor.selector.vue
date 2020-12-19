@@ -2,7 +2,7 @@
 <!-- MAIN CONTAINER -->
 <div class="w-full h-auto pb-10 mb-10 top-0 left-0 relative" data="init">
     
-    <div v-if="$attrs.category!='element'">
+    <div v-if="$attrs.category!='element' && $attrs.category != 'slider'">
         
         <div :class="doc.css + ' relative p-4 text-black '" :style="stile(doc,true) + ' ' + background(doc)" id="content">
             <template v-for="(block,b) in doc.blocks">
@@ -36,7 +36,7 @@
             data-trigger="scroller"
             :element="element"
             v-for="(element,e) in doc.blocks" 
-            v-if="element.type!='grid' && element.type != 'flex' && !doc.hasOwnProperty('slider')" 
+            v-if="$attrs.category != 'slider' && element.type!='grid' && element.type != 'flex' && !doc.hasOwnProperty('slider')" 
             :coords="[e]"
             :develop="true"
             @selected="selected"
@@ -44,12 +44,50 @@
             @animation="animations=!animations"
             @delete="confirmModal=!confirmModal"
             @edit="editContent=!editContent"/>
+        
+        <div v-if="$attrs.category === 'slider'" :data="getSlider">
+            <div class="flex flex-row items-center">
+                <h3>Slides</h3>
+                <button class="rounded-none mx-2">Add slide</button>
+                <button class="rounded-none mx-2" v-if="currentSlide">Duplicate</button>
+                <button class="danger rounded-none mx-2" v-if="currentSlide">Delete</button>
+            </div>
+            
+                <draggable :list="doc.blocks" class="flex flex-row">
+                    <div v-for="(slide,index) in doc.blocks" :class="'w-20 h-12 border justify-center items-center flex flex-col mr-4 ' + slideSelected(index)" @click="currentSlide=slide,slideIndex=index">
+                        Slide {{ (index+1) }}
+                    </div>
+                </draggable>
+            <div v-if="currentSlide" :class="doc.css + ' relative p-4 text-black '" :style="stile(doc,true) + ' ' + background(doc)" id="content">
+            
+                <moka-container
+                    :key="currentSlide.id" 
+                    :doc="currentSlide"
+                    :component="doc" 
+                    level="0"
+                    index="0"
+                    :slide="true"
+                    :top="true" 
+                    :pos="[0,0]"
+                    :coords="[0,0]" 
+                    zi="1"
+                    :dropdown="dropdownView"
+                    @copy="copy"
+                    @selected="selected"
+                    @customize="customize" 
+                    @animations="animation=!animation"
+                    @edit="edit"/>
+            
+            </div>
+        </div>
     </div>
     
     <!-- STATUS BAR -->
     <div editorstatus class="fixed bg-gray-300 z-top bottom-0 left-0 p-1 border-t w-full flex flex-row items-center text-sm bg-white z-max uppercase divide-x divide-gray-400">
         <div v-if="editor.current" class="pl-1 w-full flex flex-row items-center">
             
+            <i class="material-icons text-gray-800 hover:bg-black hover:text-blue-400 mx-2" @click="help=!help" title="Hotkeys">keyboard</i>
+
             <span v-if="editor.current.type">{{ editor.current.type }}</span>
             <!--<i v-if="moka.current" class="material-icons" @click="swap(false)">expand_less</i>
             <i v-if="moka.current" class="material-icons" @click="swap(true)">expand_more</i>
@@ -68,7 +106,7 @@
         </div>
         <div v-else>COMPONENT</div>
     </div>
-    
+    <!-- edit CSS -->
     <transition name="fade">
         <div class="z-xtop fixed bg-gray-800 text-gray-400 bottom-0 right-0 w-3/12 p-2 border shadow bg-white" v-if="editCSS">
             <i class="material-icons absolute top-0 right-0 m-1" @click="editCSS=!editCSS">close</i>
@@ -97,7 +135,8 @@
             @save="$emit('save')"
             @saveblock="$emit('saveblock',current)"
             @import="$emit('import')"
-            @delete="confirmModal=!confirmModal"/>
+            @delete="confirmModal=!confirmModal"
+            @help="help=!help"/>
     </transition>
    
     <transition name="fade">
@@ -193,6 +232,13 @@
             </div>
         </div>
     </transition>
+
+    <!--HOTKEYS-->
+    <transition name="fade">
+        <div class="fixed z-2xtop top-0 left-0 w-1/4 bg-white" v-if="help">
+            <moka-hotkeys @close="help=!help"/>
+        </div>
+    </transition>
 </div>
 </template>
 
@@ -207,6 +253,7 @@ import MokaAnimation from '@/components/editor/render/moka.animation'
 import MokaContainer from '@/components/editor/render/moka.editor.container'
 import MokaSideBar from '@/components/editor/render/moka.editor.side.toolbar'
 import MokaCustomizeDrawer from '@/components/editor/render/moka.editor.customize.drawer'
+import MokaHotkeys from '@/components/editor/render/moka.hotkeys'
 import draggable from 'vuedraggable'
 import gsap from 'gsap'
 import gsapEffects from '@/plugins/animations'
@@ -231,7 +278,10 @@ export default {
         media: false,
         breakpoint: 'md',
         tree: false,
-        copiedCSS: ''
+        copiedCSS: '',
+        currentSlide: null,
+        slideIndex: 0,
+        help: false
     }),
     components: { 
         MokaElement,
@@ -244,6 +294,7 @@ export default {
         MokaSideBar,
         MokaCustomizeDrawer,
         MokaTree,
+        MokaHotkeys,
         draggable
     },
     props: [ 'doc' , 'component' ],
@@ -252,6 +303,13 @@ export default {
         ...mapState ( ['moka','editor'] ),
         init(){
             this.current = this.editor.current
+            
+            return true
+        },
+        getSlider(){
+            if ( this.doc.hasOwnProperty('slider') ){
+                this.currentSlide = this.doc.blocks[0]
+            }
             return true
         },
         entity(){
@@ -293,6 +351,11 @@ export default {
 
     },
     methods: {
+        slideSelected(index){
+            return this.currentSlide && index === this.slideIndex ?
+                'bg-blue-500 text-white' : ''
+                        
+        },
         dropdown(v){
             this.dropdownView = v
             console.log(this.dropdownView)
@@ -453,7 +516,7 @@ export default {
                     vm.$emit('preview') :
                         vm.$emit('slider')
             }
-            if ( e.altKey && e.code === 'KeyM' ){
+            if ( e.altKey && e.code === 'KeyZ' ){
                 if ( this.editor.current  ){
                     this.$store.dispatch('setAction','customize')
                     this.$emit('customize')
@@ -496,12 +559,18 @@ export default {
                 }
             }
             if ( e.altKey && e.code === 'KeyD' ){
-                if ( this.current  ){
-                    this.$emit('duplicate',this.current)
+                if ( this.editor.current  ){
+                    this.$emit('duplicate',this.editor.current)
+                }
+            }
+
+            if ( e.altKey && e.code === 'KeyQ' ){
+                if ( this.editor.current && this.editor.current.type === 'flex'  ){
+                    this.$store.dispatch ( 'setAction' , 'addcomponent' )
                 }
             }
             if ( e.altKey && e.code === 'KeyR' ){
-                if ( this.moka.current  ){
+                if ( this.editor.current  ){
                     this.confirmModal =! this.confirmModal
                 }
             }
@@ -509,9 +578,7 @@ export default {
                 this.tree =! this.tree
             }
             if ( e.altKey && e.code === 'KeyI' ){
-                if ( this.current ){
-                    this.$emit('reusable',this.current)
-                }
+                this.$store.dispatch ( 'setAction' , 'addreusable' )
             }
             if ( e.altKey && e.code === 'KeyS' ){
                 this.$emit('save')

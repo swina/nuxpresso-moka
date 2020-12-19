@@ -2,7 +2,24 @@
     <div editorelement v-if="element" :class="$attrs.develop ? 'relative z-top' : ''" @dblclick="$emit('editinline',element)" :style="element.style">
             <span :class="'text-xs ' + showid">{{element.id}}</span> 
             
-            <component :class="$cssResponsive(el.css)" :is="tag" v-html="el.content" v-if="(el.tag==='element' || el.type==='button' || ( el.tag === 'article' && !el.hasOwnProperty('article') ) )  && el.element !='img' && el.type != 'video' && el.type != 'audio'" :style="stile"></component>
+            <!--<span :class="'relative z-2xtop '" v-if="editor.current && editor.current.id === el.id && editor.current.tag === 'element'">
+                <moka-text-editor v-if="editor.current.tag === 'element' && editor.current.element === 'p'"  v-model="editor.current.content" @close="editContent=!editContent"/>
+                
+                
+                
+            </span>
+            
+            <span v-else>
+                -->
+            <moka-inline-editor v-if="(el.tag==='element' || el.type==='button' || ( el.tag === 'article' && !el.hasOwnProperty('article') ) )  && el.element !='img' && el.type != 'video' && el.type != 'audio'" :element="el"/>
+            <!--
+            <div  class="relative z-2xtop"  v-if="editor.current && editor.current.id === el.id && editor.current.tag === 'element' && editor.current.element === 'div'">
+                <moka-inline-editor v-if="editor.current && editor.current.tag === 'element' && editor.current.element != 'p'"/>
+            </div>-->
+            <!--<div v-else>-->
+            
+            <!--<component :class="$cssResponsive(el.css)" :is="tag" v-html="el.content" v-if="(el.tag==='element' || el.type==='button' || ( el.tag === 'article' && !el.hasOwnProperty('article') ) )  && el.element !='img' && el.type != 'video' && el.type != 'audio'" :style="stile"></component>
+            -->
             
             <component :is="tag" v-if="el.tag === 'article' && el.hasOwnProperty('article')" v-html="el.article[el.label]"/>
             
@@ -30,7 +47,7 @@
 
 
             <textarea v-if="el.element === 'textarea'" :class="$cssResponsive(el.css)"></textarea>
- 
+            <!--</div>-->
             <nav v-if="el.element === 'menu'" :class="el.css.container + ' ' + el.css.align"> 
                 <div v-for="(item,i) in el.items" :class="el.css.css + ' cursor-pointer relative pr-4'" :key="el.id + '_' + i"> 
                     
@@ -63,7 +80,7 @@
                 </div>
             </nav>
             </transition>
-            <div v-if="$attrs.develop" :class="'z-max absolute border border-green-500 border-dashed z-4 top-0 left-0 bottom-0 right-0 scale-x-102 scale-y-102 transform ' + active(el.id,el.css) + ' bg-transparent'" @click="select(el)">
+            <div v-if="$attrs.develop " :class="'z-max absolute border border-green-500 border-dashed z-4 top-0 left-0 bottom-0 right-0 scale-x-102 scale-y-102 transform ' + active(el.id,el.css) + ' bg-transparent'" @click="select(el)">
                 <div class="h-2 w-2 absolute top-0 right-0 bg-black rounded-full -m-1"></div>
             <div class="h-2 w-2 absolute top-0 left-0 bg-black rounded-full -m-1"></div>
             <div class="h-2 w-2 absolute bottom-0 right-0 bg-black rounded-full -m-1"></div>
@@ -89,9 +106,12 @@
 </template>
 
 <script>
+import MokaTextEditor from '@/components/editor/render/moka.text.editor'
+import MokaInlineEditor from '@/components/editor/render/moka.editor.inline'
 import { mapState } from 'vuex'
 export default {
     name: 'MokaEditorElement',
+    components: { MokaTextEditor , MokaInlineEditor },
     data:()=>({
         el: null,
         article: 'article',
@@ -104,7 +124,7 @@ export default {
     props: ['current'],
    
     computed:{
-        ...mapState ( ['moka'] ),
+        ...mapState ( ['moka','editor'] ),
         showid(){
             return this.$attrs.debug ? '' : 'hidden'
         },
@@ -113,8 +133,17 @@ export default {
             return this.$attrs.element  ? this.el = this.$attrs.element : false
         },
         tag(){
-            return this.$attrs.element.element === 'h' ? 'h' + this.$attrs.element.level : 
-                    this.$attrs.element.element
+            if ( !this.editor.current ){
+                return this.$attrs.element.element === 'h' ? 
+                            'h' + this.$attrs.element.level : 
+                                    this.$attrs.element.element
+            } else {
+                return this.$attrs.element.id != this.editor.current.id ?
+                    this.$attrs.element.element === 'h' ? 
+                        'h' + this.$attrs.element.level : 
+                            this.$attrs.element.element : 
+                                MokaInlineEditor
+            }
         },
         stile(){
             if (this.el.image ){
@@ -184,7 +213,15 @@ export default {
             if ( menu.type === 'horizontal' ) return 'flex flex-row' 
             if ( menu.type === 'vertical' ) return 'flex flex-col'
             if ( menu.responsive ) return menu.css.container.replace('flex-row','h-0 opacity-0 md:h-auto md:opacity-100 flex-col md:flex-row')
-        }
+        },
+        handleInput: function(e){
+            let pippo = '<a style="pippo">'.replace(/style=\".*"/gm,'')
+            console.log ( pippo )
+            let text = e.target.innerHTML.replaceAll(/style=\".*"/gm,'')
+            console.log ( text )
+            this.editor.current.content = text//e.target.innerHTML
+            //this.editor.current.content = this.editor.current.content.replace(/<style.*?<\/style>/g, '')
+        },
     }
 }
 </script>   

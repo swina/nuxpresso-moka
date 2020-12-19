@@ -3,28 +3,15 @@
         :id="doc.hasOwnProperty('anchor')? doc.anchor : doc.id"
         v-if="doc" 
         :key="doc.id" 
-        :class="'max-w-screen relative flex flex-no-wrap ' + classe(doc.css)" :style="doc.style + ' ' +  background(doc)" :ref="doc.id">
+        :class="'content max-w-screen relative flex flex-no-wrap ' + classe(doc.css)" :style="doc.style + ' ' +  background(doc)" :ref="doc.id">
         
             <template v-for="(block,i) in doc.blocks">
-                
                 <moka-preview-container
                 class="slide flex-none top-0 left-0 right-0 bottom-0 w-full"
                 v-if="block && block.hasOwnProperty('blocks') && !block.hasOwnProperty('menu')" 
-                :doc="block" @action="hasSlideAction"/>
+                :doc="block" @action="hasSlideAction" :current="current"/>
             </template>
             
-            <!--
-            <moka-element
-                v-if="block && !block.hasOwnProperty('blocks') || block.hasOwnProperty('items')"
-                :key="block.id"
-                :element="block"
-                :coords="[b]"
-                :develop="false"/> 
-
-            <moka-preview-slider
-                v-if="block && block.hasOwnProperty('blocks') && !block.hasOwnProperty('menu')" 
-                :doc="block"/>
-            -->
             <div class="fixed bottom-0 right-0 z-top p-4 bg-black bg-opacity-50 opacity-0 hover:opacity-100">
             <i class="material-icons nuxpresso-icon-circle mr-2" @click="$emit('save')">save</i>
             <i class="material-icons nuxpresso-icon-circle" @click="$emit('close')">close</i>
@@ -42,17 +29,19 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin ( ScrollTrigger )
 const plugins = [ScrollTrigger];
+
 export default {
     name: 'MokaPreviewSlider',
     data:()=>({
-        index: -1
+        index: -1,
+        timer: null,
+        current: null
     }),
     components: { MokaElement , MokaPreviewContainer },
     props: [ 'doc'  ],
     computed:{
         ...mapState(['moka']),
         animations(){
-            
             return gsapEffects
         },
         slides(){
@@ -60,7 +49,16 @@ export default {
         },
         
     },
+
     methods:{
+        playslides ( sec ){
+            console.log ( 'playing each ' + sec + ' secs' )
+            let vm = this
+            this.timer = window.setInterval( function(){
+                vm.next(1)
+            },parseInt(sec)*1000)
+            
+        },
         hasSlideAction(action){
             action === 'slider_next' ? 
                     this.next(1) : 
@@ -71,8 +69,11 @@ export default {
             this.index < (this.doc.blocks.length + n) ? this.index += n : this.index = 0
             this.index < 0 ? this.index = 0 : null
             this.index >= this.doc.blocks.length ? this.index = 0 : null
+            this.current = this.doc.blocks[this.index].id
             let tl = gsap.timeline()
-            tl.to ( '.slide' , { xPercent: -this.index*100 , opacity:1 , duration: 1.5 } )
+            if ( document.querySelector('.slide') ){
+              tl.to ( '.slide' , { xPercent: -this.index*100 , opacity:1 , duration: 1.5 } )
+            }
             
         },
         classe(css){
@@ -121,11 +122,19 @@ export default {
                     
             }
         },
+        
 
     },
     mounted(){
         this.next()
-
+        if ( parseInt(this.doc.slider.delay) > 0 ){
+          this.playslides ( this.doc.slider.delay )
+        }
+    },
+    beforeDestroy(){
+      console.log ( 'destroy timer ...' )
+      clearInterval(this.timer)
+      this.timer = null
     }
 }
 

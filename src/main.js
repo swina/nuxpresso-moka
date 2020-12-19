@@ -8,10 +8,10 @@ import '@/assets/fonts/fonts.css'
 
 import './plugins'
 import api from "./plugins/api";
+
 import VueUploadComponent from 'vue-upload-component'
 Vue.component('file-upload', VueUploadComponent)
 
-Vue.prototype.$http = api; 
 api.defaults.timeout = 10000;
 Vue.prototype.$http = api 
 

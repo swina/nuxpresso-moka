@@ -1,13 +1,13 @@
 <template>
-    <div class="relative p-2 max-h-screen" style="min-height:20rem;">
-        <i v-if="!$attrs.embeded" class="material-icons absolute top-0 right-0 mt-1 mr-1 rounded-full cursor-pointer bg-red-500 text-white" @click="$emit('close')">highlight_off</i>
+    <div class="relative p-2 border-none max-h-screen" style="min-width:30rem;max-height:20rem;min-height:20rem;">
+        <!--<i v-if="!$attrs.embeded" class="material-icons absolute top-0 right-0 mt-1 mr-1 rounded-full cursor-pointer bg-red-500 text-white" @click="$emit('close')">highlight_off</i>-->
         <i class="material-icons text-sm nuxpresso-icon-btn text-black absolute top-0 right-0 m-1 mt-6 mr-10 cursor-pointer" title="add image" @click="addImage">image</i>
         
        
             <quill-editor
                 v-if="hasContent" 
-                style="min-height:20rem;"
-                class="mt-2 bg-white overflow-y-auto"
+                :style="'min-height:10rem;max-height:15rem;' + stile()"
+                class="mt-2 overflow-y-auto"
                 ref="editor"
                 id="editor"
                 v-model="content"
@@ -38,16 +38,17 @@ import ImageResize from 'quill-image-resize-module'
 Quill.register('modules/imageResize', ImageResize)
 
 import typo from '@/plugins/typo.js'
-
+import { mapState } from 'vuex'
 export default {
     name: 'MokaRichTextEditor',
     components:{
         quillEditor
     },
     data:()=>({
-        editor: false,
+        iseditor: false,
         media: false,
         content: '',
+        font: "Barlow Condensed",
         /*
         editorOptions: {
             modules: {
@@ -99,6 +100,7 @@ export default {
         }
     }),
     computed:{
+        ...mapState ( ['moka','editor']),
         hasContent(){
             this.$attrs.value ? this.content = this.$attrs.value : null
             return true
@@ -149,6 +151,19 @@ export default {
                     this.$refs['editor'].quill.insertEmbed(range.index, 'image', img.url ) :
                         this.$emit('message','Set a position in the editor to place the image')
         }, 
+        stile(){
+            if ( !this.editor.current ) return 
+            let stile = ''
+            if ( this.editor.current.hasOwnProperty('fontFamily')){
+                stile += 'font-family:\"' + block.fontFamily + '\"; '
+            } else {
+                //let ff = document.querySelector('.ql-editor') 
+                //ff.style.fontFamily = '"\Barlow Condensed\",sans-serif'
+                stile = 'font-family:"\Barlow Condensed\",sans-serif;'
+            }
+            console.log (stile )
+            return this.editor.current.hasOwnProperty('style') ? this.editor.current.style + stile : stile
+        }
     },
     beforeMount(){
         const Quill = require("quill");
@@ -171,11 +186,17 @@ export default {
 </script>
 
 <style>
+
 .ql-container {
     font-family: 'Arial';
 }
+.ql-toolbar {
+    min-width: 30rem;
+    padding:1px;
+}
 .ql-editor {
     overflow-y: auto;
-    max-height:30rem;
+    font-family: "Barlow Condensed";
+    border:0;
 }
 </style>

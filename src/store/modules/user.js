@@ -2,7 +2,10 @@ const user = {
     state: {
         login: false,
         user: null,
-        dashboard: 'MokaHome'
+        dashboard: 'MokaHome',
+        production: {
+            url: process.env.VUE_APP_PRODUCTION_URL || null
+        }
     },
     mutations: {
         login ( state , login ){
@@ -13,6 +16,9 @@ const user = {
         },
         dashboard ( state , dashboard ){
             state.dashboard = dashboard
+        },
+        production ( state , production ){
+            state.production = production
         }
     },
     actions: {
@@ -24,6 +30,9 @@ const user = {
         },
         dashboard ( { commit } , dashboard ){
             commit ( 'dashboard' , dashboard )
+        },
+        production ( { commit } , production ){
+            commit ( 'production' , production )
         }
     }
 

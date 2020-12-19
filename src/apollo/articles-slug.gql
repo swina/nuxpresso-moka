@@ -41,5 +41,6 @@ query Articles ( $slug : String){
     component {
       id
     }
+    template_id
   } 
 }

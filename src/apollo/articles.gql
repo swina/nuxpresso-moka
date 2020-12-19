@@ -2,7 +2,8 @@ query Articles {
   articles {
     id
     title
-    slug,
+    slug
     homepage
+    updated_at
   }
 }

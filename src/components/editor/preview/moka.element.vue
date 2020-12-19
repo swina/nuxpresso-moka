@@ -86,6 +86,7 @@ export default {
         opacity: 'opacity-0',
         menuover: -1,
         menu_show: false,
+        gsap_ani: null
     }),
     props: ['current'],
     beforeMount(){
@@ -101,6 +102,7 @@ export default {
     computed:{
         ...mapState ( ['moka'] ),
         element(){
+            
             return this.$attrs.element  ? this.el = this.$attrs.element : false
         },
         tag(){
@@ -111,8 +113,13 @@ export default {
             if (this.el.image ){
                 return 'background-image:url(' + this.el.image.url + ');background-repeat:no-repeat; background-size:cover;background-position:center center; ' + this.el.style  
             }
+            
+            this.$attrs.refreshAnimation ?
+                this.animation ( this.$attrs.element , this.$attrs.element.id ) : null
+            
             return ''
         },
+        
         
         animations(){
             return gsapEffects
@@ -169,6 +176,9 @@ export default {
         //if ( this.$attrs.sub ){
             this.animation(this.element,this.element.id)
         //}
+    },
+    beforeDestroy(){
+        gsap.timeline().kill()
     }
 }
 </script>   

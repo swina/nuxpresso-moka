@@ -34,7 +34,7 @@
                             <span v-else>{{ $moment ( article[col.field].split('T')[0] ) }}</span>
                         </td>
                     </template>
-                    <td><span v-if="article.component">{{ article.component.name }}</span></td>
+                    <td><span v-if="article.component">{{ article.component.name }} <br/>{{article.template_id}}</span></td>
                     <td class="w-20">
                         <!--<span v-if="article.component">
                         {{ article.component.category}}
@@ -230,6 +230,14 @@ export default {
             this.$http.get ( 'articles/' + id ).then ( response => {
                 console.log ( response )
                 this.currentArticle = response.data
+                if ( this.currentArticle.component && !this.currentArticle.template_id ){
+                    let template = this.moka.components.filter ( comp => {
+                        return comp.id === this.currentArticle.component
+                    })[0]
+                    if ( template ){
+                        this.currentArticle.template_id = template.json.id
+                    }
+                }
                 this.slug = this.currentArticle.slug 
             })
         },
@@ -265,8 +273,9 @@ export default {
         category(cat){
             return cat.map(c => { return c.name} ).join(',')
         },
-        setTemplate(id){
+        setTemplate(id,blockID){
             this.currentArticle.component = parseInt(id)
+            this.currentArticle.template_id = blockID
             this.selectTemplate =! this.selectTemplate
         },
         checkTemplate(){
@@ -274,6 +283,7 @@ export default {
                 let template = this.templates.filter ( templ => {
                     return templ.default 
                 })[0].id
+                this.currentArticle.template_id = blockID
                 this.currentArticle.component = template
             }
         },

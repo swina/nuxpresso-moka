@@ -7,7 +7,7 @@
             </div>
         </div>
         <div v-for="n in cols">
-            Col {{n}} <input type="range" min="1" max="10" step="0.05" :name="'col_' + (n-1)" v-model="grid_settings[n-1]" @change="update_style"/>
+            Col {{n}} <input type="range" min="1" max="10" step="0.05" :name="'col_' + (n-1)" v-model="grid_settings[n-1]" @change="grid_style"/>
         </div>
         <button @click="addCol" class="m-auto mt-2">Add column</button>
     </div>
@@ -22,7 +22,7 @@ export default {
     data:()=>({
         classe:'', 
         cols:0,
-        grid_settings:[1,1],
+        grid_settings:[],
         st:''
     }),
     computed:{
@@ -32,13 +32,27 @@ export default {
     mounted(){
         this.st = this.stile
         this.cols = this.$attrs.entity.blocks.length
+        this.editor.current.cols = this.cols
+        this.st = this.$attrs.entity.style
         if ( this.cols > 1 ){
+            this.st = ''
             if ( this.$attrs.entity.style ){
-                let values =this.$attrs.entity.style.split(':')[1]
-                values = this.$clean(values.replace(';',''))
-                values = values.replaceAll('fr','').split(' ')
-                
-                this.grid_settings = values
+                let values = this.editor.current.style.split(':')[1]
+                values = values.replace(';','')
+                values = values.split(' ')
+                console.log ( values , values.length )
+                this.grid_settings = []
+                let str = 'grid-template-columns:'
+                for ( var n=0 ; n < this.cols ; n++ ){
+                    if ( values[n] ){
+                        this.grid_settings.push ( values[n].replace('fr','') )
+                        str += values[n] + ' '
+                    } else {
+                        this.grid_settings.push ( 1 )
+                        str += '1fr '
+                    }
+                }
+                this.st = str + ';'
             } else {
                 this.grid_settings = []
                 for ( var n = 0 ; n < this.cols ; n++ ){
@@ -47,49 +61,38 @@ export default {
             }   
         } else {
             this.st = ''
+            this.grid_settings.push ( 1 )
         }
         this.$attrs.entity.css.container = "flex flex-col md:grid md:grid-cols-" + this.cols
-        /*
-        this.classe = this.$attrs.entity.css.css
-        if ( !this.classe ) return
-        let classi = this.classe.split ( ' ' )
-        classi.forEach ( cl => {
-            if ( this.css.indexOf ( 'gap-') > -1 ){
-                this.gap = this.grid_gaps.indexOf(cl.split('-')[1])
-                this.$emit ( 'input' , 'gap-' + this.gap )
-            }
-        })
-        */
     },
     watch: {
         st(v){
-            this.grid_style()
-        }
-        /*gap(v){
-            v ? this.$emit('input','gap-' + this.grid_gaps[parseInt(v)]) : this.$emit('input','')
-        }
-        */
+            return 
+            //this.editor.current.style = v
+            //this.$emit('stile',v)
+        },
     },
     methods: {
         addCol(){
             let column = this.$flex()
             this.$attrs.entity.blocks.push ( column )
             this.cols++
+            this.grid_settings.push ( 1 )
             this.$attrs.entity.css.container = "flex flex-col md:grid md:grid-cols-" + this.cols
+            this.grid_style()
         },
         grid_style(){
-            if ( this.$attrs.entity.style ){
-                this.grid_settings = []
-                let values =this.$attrs.entity.style.split(':')[1]
-                values = this.$clean(values.replace(';',''))
-                values = values.replaceAll('fr','').split(' ')
-                values.forEach ( (v,index) => {
-                    if ( !v ) values.splice(index,1)
+            let str = 'grid-template-columns:'
+            if ( this.grid_settings.length ) {
+                this.grid_settings.forEach ( fr => {
+                    str += fr + 'fr '
                 })
-                this.grid_settings = values
-                //return this.$attrs.entity.style
-                //this.grid_settings = values.split(' ')
+                str += ';'
+            } else {
+                str = ''
             }
+            this.st = str
+            this.editor.current.style = this.st
         },
         update_style(){
             let str = 'grid-template-columns:'
@@ -98,7 +101,7 @@ export default {
                 this.cols = 1
                 this.grid_settings = [1]
             } else {
-                if ( this.grid_settings ) {
+                if ( this.grid_settings.length ) {
                     this.grid_settings.forEach ( fr => {
                         str += fr + 'fr '
                     })
@@ -107,6 +110,7 @@ export default {
                     str = ''
                 }
             }
+            this.st = str
             this.$attrs.entity.css.container = "flex flex-col md:grid md:grid-cols-" + this.cols
             this.$emit( 'stile' , str )
         },

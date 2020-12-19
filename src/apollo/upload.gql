@@ -4,6 +4,7 @@ query Upload ($limit: Int , $start: Int){
     name
     url
     previewUrl
+    mime
     width
     height
     size

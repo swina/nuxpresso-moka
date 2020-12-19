@@ -1,7 +1,7 @@
 <template>
     <div>
         Font
-        <div class="flex flex-col my-1" :data="fonts">
+        <div class="flex flex-col my-1">
             <div class="flex flex-row flex-wrap mb-1 text-black">
                 <i :class="'material-icons nuxpresso-icon-btn text-black mr-2 ' + getFont('font-bold')" @click="setFont('font-bold')" title="bold">format_bold</i>
                 <i :class="'material-icons nuxpresso-icon-btn text-black mr-2 ' + getFont('italic')" @click="setFont('italic')" title="italic">format_italic</i>

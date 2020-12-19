@@ -45,7 +45,7 @@
                 :doc="block.blocks[0]"/>
         </template>
         
-        <div :class="'absolute transform border border-dashed top-0 left-0 bottom-0 right-0 z-' + zindex + ' scale-x-' + (108-(parseInt($attrs.level))) + ' ' + active(doc.id,doc)" @click="setCurrent(doc)" v-if="doc && !doc.hasOwnProperty('items')">
+        <div :class="'absolute transform border border-dashed top-0 left-0 bottom-0 right-0 z-' + zindex + ' scale-x-' + (106-(parseInt($attrs.level))) + ' ' + active(doc.id,doc)" @click="setCurrent(doc)" v-if="doc && !doc.hasOwnProperty('items')">
             <!--{{ $attrs.level }} {{ $attrs.index }}-->
             <span v-if="doc.hasOwnProperty('loop') && doc.loop" class="text-xs"><i class="material-icons">article</i> Article Grid</span>
             <div class="h-2 w-2 absolute top-0 right-0 bg-black rounded-full -m-1"></div>

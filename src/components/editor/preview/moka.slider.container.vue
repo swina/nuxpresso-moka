@@ -1,7 +1,8 @@
 <template>
     <div
         :id="doc.hasOwnProperty('anchor')? doc.anchor : doc.id"
-        v-if="doc"  
+        v-if="doc"
+        :animateMe="refreshAnimation"  
         :class="classe(doc.css)" :style="doc.style + ' ' +  background(doc)" :ref="doc.id">
         <template v-for="(block,b) in doc.blocks">
              
@@ -11,11 +12,12 @@
                 :key="block.id"
                 :element="block"
                 :coords="[b]"
+                :refreshAnimation="refreshAnimation||$attrs.refreshAnimation"
                 :develop="false"/> 
 
             <moka-slider-container
                 v-if="block && !block.hasOwnProperty('slider') && block.hasOwnProperty('blocks') && !block.hasOwnProperty('menu')" @action="elementAction" 
-                :doc="block"/>
+                :doc="block" :refreshAnimation="refreshAnimation"/>
             <!--<moka-slider :key="block.id" :ref="block.id" v-if="block && block.hasOwnProperty('slider')" :develop="true" :embeded="true" :doc="block" :editor="true"/>-->
             
         </template>
@@ -39,6 +41,15 @@ export default {
         ...mapState(['moka']),
         animations(){
             return gsapEffects
+        },
+        refreshAnimation(){
+            if ( this.$attrs.current ){
+                if ( this.$attrs.current === this.doc.id ){
+                    this.animate ( this.doc , this.doc.id ) 
+                    return true
+                }
+            }
+            return false
         }
     },
     methods:{
@@ -68,7 +79,7 @@ export default {
         animate(element,id){
             let vm = this
             if ( this.$refs && element.hasOwnProperty('gsap') && element.gsap.animation ){
-                console.log ( 'animation for => ' , id , this.$refs[id] )
+                //console.log ( 'animation for => ' , id , this.$refs[id] )
                 let ani = gsap.effects[element.gsap.animation]( this.$refs[id] ,{
                     trigger: this.$refs[id],
                     duration: parseFloat(element.gsap.duration),
@@ -82,7 +93,7 @@ export default {
                     toggleActions: "play pause restart none",
                     animation:ani,
                     onEnter: ()=>{ 
-                        console.log ( 'start playing animation')
+                        //console.log ( 'start playing animation')
                         if ( element.gsap.delay ){
                             ani.play()
                         } else {
@@ -98,7 +109,7 @@ export default {
     mounted(){
         window.scrollTo(0,0)
         if ( this.doc.hasOwnProperty('gsap') && this.doc.gsap.animation ){
-            console.log ( 'REFS=>' , this.$refs , ' => animation => ' , this.doc.gsap.animation )
+            //console.log ( 'REFS=>' , this.$refs , ' => animation => ' , this.doc.gsap.animation )
             this.animate ( this.doc , this.doc.id )
         }
         return

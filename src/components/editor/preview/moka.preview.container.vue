@@ -5,12 +5,20 @@
         v-if="doc"  
         :class="classe(doc.css)" :style="doc.style + ' ' +  background(doc)" :ref="doc.id">
         <template v-for="(block,b) in doc.blocks">
-             
+            <!-- 
             <moka-element
                 @click="elementAction"
                 v-if="block && !block.hasOwnProperty('blocks') || block.hasOwnProperty('items')"
                 :key="block.id"
                 :element="block"
+                :coords="[b]"
+                :develop="false"/> 
+            -->
+            <moka-element
+                @click="elementAction"
+                v-if="block && !block.hasOwnProperty('blocks') || block.hasOwnProperty('items')"
+                :key="block.id"
+                :el="block"
                 :coords="[b]"
                 :develop="false"/> 
 
@@ -24,7 +32,8 @@
 </template>
 
 <script>
-import MokaElement from '@/components/editor/preview/moka.element'
+//import MokaElement from '@/components/editor/preview/moka.element'
+import MokaElement from '@/components/editor/preview/moka.element.component'
 import draggable from 'vuedraggable'
 import MokaSlider from '@/components/editor/preview/moka.slider'//'@/components/editor/preview/moka.preview.slider'
 import { mapState } from 'vuex'

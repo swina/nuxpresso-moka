@@ -537,7 +537,8 @@ export default {
             if ( !classe || typeof classe === 'undefined' )  return ''
             let allCss = classe.split(' ')
             let responsiveCss = ''
-            allCss.forEach ( css => {   
+            allCss.forEach ( css => {  
+                css = css.replace(/\s\s+/g, ' ') 
                 let key = css.split('-')[0]
                 let val = css.split('-')[1]
                 if (  pixelsAttrs[key] ){
@@ -561,7 +562,7 @@ export default {
                     }
                 }
             })
-            return responsiveCss
+            return responsiveCss.replace(/\s\s+/g, ' ')
             
         }
 

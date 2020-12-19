@@ -3,7 +3,7 @@
     <div v-if="templates" class="flex flex-row flex-wrap justify-around p-4">
         
         <template v-for="(template,index) in mokatemplates">
-            <div class="w-48 flex flex-col mb-4 cursor-pointer" v-if="index>=start && index < (start+limit)" @click="$emit('set',template.id)">
+            <div class="w-48 flex flex-col mb-4 cursor-pointer" v-if="index>=start && index < (start+limit)" @click="$emit('set',template.id,template.json.id)">
                 <span class="text-sm font-bold">{{ template.name }}</span>
                 <div v-if="template.image_uri" :style="'background-image:url(' + template.image_uri + ')'" class="h-24 bg-auto bg-no-repeat bg-cover"></div>
             </div>
@@ -22,7 +22,8 @@ export default {
     props:['templates'],
     data:()=>({
         start: 0,
-        limit: 12
+        limit: 12,
+        filter: 'template'
     }),
     computed: {
         mokatemplates(){
@@ -31,7 +32,6 @@ export default {
     },
     methods: {
         next(){
-            console.log ( this.mokatemplates.length )
             if ( this.start < ( this.mokatemplates.length - this.limit ) ){
                 this.start += this.limit
             }

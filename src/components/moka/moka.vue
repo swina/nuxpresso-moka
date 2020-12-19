@@ -78,6 +78,7 @@ export default {
     methods: {
         save(){
             this.loading = true
+            this.component.json.id ? this.component.blocks_id = this.component.json.id : null
             this.$http.put ( 'components/' + this.component.id , this.component ).then ( result => {
                 this.$store.dispatch('loadComponents')
                 this.$emit('message','Component saved')

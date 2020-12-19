@@ -1,15 +1,16 @@
 <template>
     <div class="grid grid-cols-4 grid-flow-cols gap-8 w-full items-start justify-start cursor-pointer object-fit" style="grid-auto-rows: .5fr;">
+        
         <div v-if="comp.enabled" v-for="(comp,c) in $attrs.components" class="mb-2 text-sm border  shadow-lg rounded-lg justify-center flex flex-col h-full" :title="comp.description">
             <div class="flex-1 relative object-cover ">
-                <div class="bg-gray-400 w-full p-1 rounded-tl rounded-tr font-bold flex flex-row items-center">
+                <div class="bg-gray-300 w-full p-1 rounded-tl rounded-tr font-bold flex flex-row items-center">
                     {{comp.name}}
                     <div class="absolute right-0 mt-2 mr-1">
                         <i class="material-icons xs ml-2 hover:text-blue-500" @click="$emit('preview',comp)">preview</i>
                         <i class="material-icons xs ml-2 hover:text-blue-500" @click="$emit('component',comp)">edit</i>
                     </div>
                 </div>
-                <div class="relative pt-64 bg-gray-100">
+                <div class="relative pt-64 bg-gray-600"> 
                     <div class="flex items-center text-center h-full justify-center absolute h-64 top-0 object-contain left-0 right-0 bottom-0">
                         <img  :src="comp.image_uri" v-if="comp.image_uri" style="max-height:100%" class="w-auto h-auto block m-auto" @click="$emit('preview',comp)"/>
                         
@@ -33,6 +34,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
     name: 'MokaComponentsGallery',
     data:()=>({
@@ -41,6 +43,9 @@ export default {
         current: null,
         index: null
     }),
+    computed:{
+        ...mapState ( ['moka'] )
+    },
     methods:{
         background(comp){
             return comp.image_uri ? 'background-image: url(' + comp.image_uri + ');background-size:cover;background-position:center center;background-repeat: no-repeat;' : ''

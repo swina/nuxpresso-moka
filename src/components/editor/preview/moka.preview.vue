@@ -15,7 +15,7 @@
                     :level="b+1" 
                     :coords="b" 
                     />
-                 <moka-slider :key="block.id" v-if="block.hasOwnProperty('slider')" :develop="true" :embeded="true" :doc="block" :editor="true"/>    
+                <moka-slider :key="block.id" v-if="block.hasOwnProperty('slider')" :develop="true" :embeded="true" :doc="block" :editor="true"/>    
             </template>
         <!--
         <div block v-for="(block,b) in doc.blocks" :class="'relative ' + block.css.css + ' ' + block.css.container" :style="stile(block) + background(block)" :key="block.id" :ref="block.id">

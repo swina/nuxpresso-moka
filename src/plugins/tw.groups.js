@@ -3,8 +3,11 @@ const twgroups = [
         { name: 'MokaGrid' , attr: 'grid'  },
         { name: 'MokaOptions' , attr: 'gridgap' , title: 'grid gap'}
     ]},
-    { label: 'flex' , filter: ['flex'] , components: [
+    { label: 'flex' ,  components: [
         { name: 'MokaOptions' , attr: 'flexdirection' , title: 'direction'},
+        { name: 'MokaOptions' , attr: 'flexwrap' , title: 'wrap'},
+        { name: 'MokaOptions' , attr: 'flexgrow' , title: 'grow'},
+        { name: 'MokaOptions' , attr: 'flexshrink' , title: 'shrink'},
         { name: 'MokaOptions' , attr: 'flexorder' , title: 'order'}
     ]},
     {
@@ -35,7 +38,15 @@ const twgroups = [
         { name: 'MokaColor' , attr: 'textcolor' },
         { name: 'MokaRange' , attr: 'textSize' , title: 'size' },
         { name: 'MokaOptions' , attr: 'textAlign' , title: 'Align' },
-        { name: 'MokaTextStyle' , attr: 'textstyle' },
+        //{ name: 'MokaTextStyle' , attr: 'textstyle' },
+        { name: 'MokaButton' , attr: 'font-bold' , title : 'bold' , icon: 'format_bold' , css: 'float-left'},
+        { name: 'MokaButton' , attr: 'italic' , title : 'italic' , icon: 'format_italic' , css: 'float-left'},
+        { name: 'MokaButton' , attr: 'underline' , title : 'underline' , icon: 'format_underline' , css: 'float-left'},
+        { name: 'MokaButton' , attr: 'font-black' , title: 'black' , icon: 'title' , css: 'float-left'},
+        { name: 'MokaButton' , attr: 'uppercase' , title : 'uppercase' , icon: 'arrow_upward', css: 'float-left'},
+        { name: 'MokaButton' , attr: 'lowercase' , title : 'lowercase' , icon: 'arrow_downward', css: 'float-left'},
+        { name: 'MokaButton' , attr: 'capitalize' , title : 'capitalize' , icon: 'text_fields' , css: 'float-none'},
+        
         { name: 'MokaOptions' , attr: 'textlineheight' , title: 'line height'},
         { name: 'MokaTextFont' , attr: 'textfont' },
         { name: 'MokaRange' , attr: 'textOpacity' , title: 'opacity' }

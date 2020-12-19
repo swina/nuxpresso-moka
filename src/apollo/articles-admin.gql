@@ -23,5 +23,6 @@ query Articles ( $limit : Int, $start : Int ) {
       caption
       alternativeText
     }
+    template_id
   }
 }

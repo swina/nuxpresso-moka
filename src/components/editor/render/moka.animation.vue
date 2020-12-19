@@ -37,7 +37,7 @@ export default {
             this.current.gsap = {
                 animation: '',
                 ease: '',
-                duration: 0,
+                duration: 1,
                 delay:0
             } :
             this.current.gsap = Object.assign ( {} , this.$attrs.element.gsap )
