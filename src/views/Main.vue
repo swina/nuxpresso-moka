@@ -82,6 +82,7 @@ export default {
   },
  
   beforeMount(){
+    console.log ( this.$http )
     if ( !this.user.login ){
       console.log ( 'not logged' )
     }
