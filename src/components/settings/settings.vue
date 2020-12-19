@@ -5,7 +5,7 @@
             <div class="flex flex-col w-full md:w-1/3">
                 <h3>MOKAS</h3>
                 <label>Types</label>
-                <select v-if="moka" v-model="currentType" multiple class="h-32" readonly>
+                <select v-if="moka" v-model="currentType" multiple class="h-32 w-full" readonly>
                     <option v-for="(tipo,index) in moka.elements.types.types" :value="index">{{tipo}}</option>
                 </select>
                 <div class="flex flex-row my-1">
@@ -18,7 +18,8 @@
                 </div>
                 <button @click="saveTypes">Save</button>
             </div>
-            <moka-user/>
+            <div class="w-1/2"></div>
+            <!--<moka-user/>-->
             <!--<div class="flex flex-col">
                 <h3>Create MOKAStudio User</h3>
                 <label>Username</label>

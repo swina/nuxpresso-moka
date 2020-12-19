@@ -20,7 +20,7 @@ const menu = {
         { label: 'Media' , icon: 'photo' , component: 'MokaMedia' , filter: '' },
         { label: 'Settings' , icon: 'settings' , component: 'MokaSettings' , filter: '' },
         { label: 'Staging' , icon: 'dns' , component: 'MokaStage' , filter: '' },
-        { label: 'Deploy' , icon: 'dynamic_form' , component: 'MokaStage' , filter: '' }
+        { label: 'Deploy' , icon: 'dynamic_form' , component: 'MokaDeploy' , filter: '' }
     ]
 }
 

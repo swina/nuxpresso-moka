@@ -7,7 +7,7 @@
                 <button @click="importJSON=!importJSON" class="mr-2">Import</button>
                 <button @click="exportComponent=!exportComponent">Export</button>
             </div>
-            
+            <i class="material-icons" @click="refresh">refresh</i>
             <a href="#" @click="gallery=!gallery" class="text-right"><i class="material-icons" v-if="!gallery">grid_on</i><i class="material-icons" v-if="gallery">list</i></a> 
         </div>
         <div v-if="moka.elements && filter!='slider' && filter!='page' && filter!='template'" class="py-2 flex flex-row flex-wrap">
@@ -136,6 +136,9 @@ export default {
         }
     },
     methods: {
+        refresh(){
+            this.$store.dispatch ( 'loadComponents' )
+        },
         setComponent(component){
             this.$store.dispatch ( 'loadComponent' , component )
             this.$store.dispatch ( 'loadMedia' )

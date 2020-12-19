@@ -67,12 +67,13 @@ import categoriesQry from '@/apollo/categories.gql'
 import MokaHome from '@/views/Home'
 import MokaSettings from '@/components/settings/settings'
 import MokaStage from '@/components/settings/stage'
+import MokaDeploy from '@/components/settings/deploy'
 import { mapState } from 'vuex'
 import menu from '@/plugins/app'
 
 export default {
     components: {
-        MokaList,  MokaArticles, MokaMedia,  MokaHome , MokaSettings, MokaStage
+        MokaList,  MokaArticles, MokaMedia,  MokaHome , MokaSettings, MokaStage, MokaDeploy
     },
     data:()=>({
         label: '',
