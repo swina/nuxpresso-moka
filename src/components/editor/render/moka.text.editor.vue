@@ -1,12 +1,12 @@
 <template>
-    <div class="relative p-2 border-none max-h-screen" style="min-width:30rem;max-height:20rem;min-height:20rem;">
+    <div class="relative p-0 border-none max-h-screen" style="min-width:30rem;max-height:25rem;min-height:25rem;">
         <!--<i v-if="!$attrs.embeded" class="material-icons absolute top-0 right-0 mt-1 mr-1 rounded-full cursor-pointer bg-red-500 text-white" @click="$emit('close')">highlight_off</i>-->
         <i class="material-icons text-sm nuxpresso-icon-btn text-black absolute top-0 right-0 m-1 mt-6 mr-10 cursor-pointer" title="add image" @click="addImage">image</i>
         
        
             <quill-editor
                 v-if="hasContent" 
-                :style="'min-height:10rem;max-height:15rem;' + stile()"
+                :style="'' + stile()"
                 class="mt-2 overflow-y-auto"
                 ref="editor"
                 id="editor"
@@ -155,7 +155,7 @@ export default {
             if ( !this.editor.current ) return 
             let stile = ''
             if ( this.editor.current.hasOwnProperty('fontFamily')){
-                stile += 'font-family:\"' + block.fontFamily + '\"; '
+                stile += 'font-size:1rem;font-family:\"' + block.fontFamily + '\"; '
             } else {
                 //let ff = document.querySelector('.ql-editor') 
                 //ff.style.fontFamily = '"\Barlow Condensed\",sans-serif'
@@ -198,5 +198,7 @@ export default {
     overflow-y: auto;
     font-family: "Barlow Condensed";
     border:0;
+    min-height:20rem;
+    max-height:20rem;
 }
 </style>

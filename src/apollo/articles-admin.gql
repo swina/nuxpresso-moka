@@ -1,5 +1,5 @@
-query Articles ( $limit : Int, $start : Int ) {
-  articles ( limit: $limit , start: $start , sort: "updated_at:desc" ){
+query Articles ( $limit : Int, $start : Int , $cat: String) {
+  articles ( where : { categories: { name: $cat } } ,limit: $limit , start: $start ,  sort: "updated_at:desc" ){
     id
     title
     slug

@@ -34,7 +34,13 @@
                             <span v-else>{{ $moment ( article[col.field].split('T')[0] ) }}</span>
                         </td>
                     </template>
-                    <td><span v-if="article.component">{{ article.component.name }} <br/>{{article.template_id}}</span></td>
+                    <td>
+                        <span v-if="article.component">
+                            {{ article.component.name }} 
+                            <br/>
+                            # {{article.template_id}}
+                        </span>
+                    </td>
                     <td class="w-20">
                         <!--<span v-if="article.component">
                         {{ article.component.category}}
@@ -46,7 +52,7 @@
                     <!--<td><i class="material-icons text-sm" @click="articleSlug=article.id,editor=!editor">edit</i></td>-->
                 </tr>    
             </table>
-            <div class="flex flex-row justify-around text-center" v-if="!editor">
+            <div class="flex flex-row justify-around text-center" v-if="!editor && !filter">
                 <i class="material-icons mx-2 text-2xl" @click="prev">chevron_left</i>
                 <i class="material-icons mx-2 text-2xl" @click="next">chevron_right</i>
             </div>
@@ -58,33 +64,30 @@
                         <input type="text" class="w-full text-2xl" v-model="currentArticle.title"/>
                         <label>Slug </label>
                         <input type="text" class="w-full text-2xl" v-model="currentArticle.slug" @blur="slugify()"/>
+                        <label>Excerpt</label>
+                        <textarea class="text-sm w-full" v-model="currentArticle.excerpt"></textarea>
                         <label>Content</label>
-                        <div class="flex flex-col">
-                            <moka-text-editor v-model="currentArticle.content" :embeded="true"/>
-
-                            <label>Excerpt</label>
-                            <textarea class="text-sm" v-model="currentArticle.excerpt"></textarea>
-                        </div>
-
+                        <moka-text-editor v-model="currentArticle.content" :embeded="true"/>
+                        
                     </section>
                 
                 
                     <div class="w-1/5 ml-1 shadow p-2 text-sm bg-gray-200" v-if="currentArticle && editor">
                         <button class="warning mr-2" @click="editor=!editor">Close</button>
-                        <button class="success" @click="save">Save</button>    
-                        <button @click="wordpress=!wordpress">Import WP page</button>
+                        <button class="success mr-2" @click="save">Save</button>    
+                        <button @click="wordpress=!wordpress">WP page</button>
                         <div class="flex flex-col mt-6">
                             <div class="mb-2 flex flex-col">
-                                Template <a href="#" @click="selectTemplate=!selectTemplate">View</a>
-                                <select v-model="currentArticle.component" @change="checkTemplate">
+                                <button class="sm"@click="selectTemplate=!selectTemplate">Template</button> 
+                                <div v-if="templateImage" :style="'background-image:url(' + templateImage + ')'" class="h-24 bg-auto bg-no-repeat bg-cover cursor-pointer" title="Change template" @click="selectTemplate=!selectTemplate"></div>
+                                <select class="w-full" v-model="currentArticle.component" @change="checkTemplate">
                                     <option value="0">default</option>
                                     <option v-if="template.enabled" v-for="(template,t) in templates" :value="template.id"> {{ template.name }} </option>
                                 </select>
-                                <div v-if="currentArticle.component" :style="'background-image:url(' + templateImage + ')'" class="h-24 bg-auto bg-no-repeat bg-cover"></div>
                             </div>
                             <div class="mb-2 flex flex-col">
                                 Category
-                                <select v-model="currentArticle.categories" multiple>
+                                <select class="w-full" v-model="currentArticle.categories" multiple>
                                     <option v-for="(category,c) in categories" :value="category"> {{ category.name }} </option>
                                 </select>
                             </div>
@@ -101,7 +104,7 @@
                                 <label>Title</label>
                                 <input type="text" v-model="currentArticle.SEO.title"/>
                                 <label>Description</label>
-                                <textarea class="text-sm" v-model="currentArticle.SEO.description"/>
+                                <textarea class="text-sm w-full" v-model="currentArticle.SEO.description"/>
                             </div>
                         </div>
                     </div>
@@ -168,9 +171,15 @@ export default {
         templates (){
             return this.moka.components.filter(comp=>{ return comp.category === 'template' || comp.category === 'page' } )
         },
+       
         templateImage(){
             if ( !this.currentArticle.component ) return ''
-            return this.templates.filter ( templ => { return templ.id === this.currentArticle.component } )[0].image_uri
+            if ( this.currentArticle.template_id ){ 
+                let template = this.templates.filter ( templ => { return templ.blocks_id === this.currentArticle.template_id } )
+                if ( template.length && template[0].image_uri ) return template[0].image_uri
+                return false
+            }
+            return false
         },
         categories(){
             return this.moka.categories
@@ -216,9 +225,17 @@ export default {
             prefetch: true,
             query: queryArticles,
             variables(){
-                return {
-                    limit: parseInt(this.limit),
-                    start: parseInt(this.start)
+                if ( !this.filter ){
+                    return {
+                        limit: parseInt(this.limit),
+                        start: parseInt(this.start),
+                    }
+                } else {
+                    return {
+                        limit: parseInt(this.limit),
+                        start: parseInt(this.start),
+                        cat: this.filter
+                    }
                 }
             },
             update: data => data.articles 
@@ -226,9 +243,8 @@ export default {
     },
     watch:{
         articleSlug(id){
-            console.log  ( id )
             this.$http.get ( 'articles/' + id ).then ( response => {
-                console.log ( response )
+                //console.log ( response )
                 this.currentArticle = response.data
                 if ( this.currentArticle.component && !this.currentArticle.template_id ){
                     let template = this.moka.components.filter ( comp => {
@@ -241,11 +257,38 @@ export default {
                 this.slug = this.currentArticle.slug 
             })
         },
-        articles(data){
-            this.$store.dispatch ( 'loadArticles' , data )
+        /*articles(data){
+            this.$store.dispatch('loading',true)
+            this.$store.dispatch ( 'loadArticles' , data ).then ( resp => {
+                this.$store.dispatch ( 'loading' , false)
+            })
+        },
+        */
+        filter(v){
+            if ( v ){
+                this.start = 0
+                this.limit = 100
+            } else {
+                this.limit = 10
+            }
+            //this.$apollo.queries.articles.refetch().then ( resp => {
+            //    console.log ( resp )
+            //    this.articles = resp.data.articles
+            //})
+
         }
     },
     methods:{
+         getTemplatePreview(blocks_id){
+            if ( !blocks_id ) return 'no image'
+            this.templates.forEach ( templ => {
+                if ( templ.blocks_id === blocks_id ){
+                    //console.log ( templ.blocks_id , blocks_id )
+                    return templ
+                }
+            })
+            return false
+        },
         importWPPage(){
             this.$http.get ( this.wprestapi ).then ( response => {
                 this.currentArticle.content = response.data.content.rendered
@@ -253,14 +296,14 @@ export default {
             })
         },
         slugify(){
-            console.log ( 'slugify ...' , this.$slugify(this.currentArticle.slug) )
+            //console.log ( 'slugify ...' , this.$slugify(this.currentArticle.slug) )
             return this.currentArticle.slug = this.$slugify(this.currentArticle.slug)
         },
         isCategory(article){
             if ( !this.filter ) return true
-            console.log ( article.categories.length )
+            //console.log ( article.categories.length )
             if ( article.categories.length ){
-                console.log ( article.categories[0].name , this.filter )
+                //console.log ( article.categories[0].name , this.filter )
                 if ( article.categories[0].name === this.filter ){
                     return true
                 } else {
@@ -275,7 +318,7 @@ export default {
         },
         setTemplate(id,blockID){
             this.currentArticle.component = parseInt(id)
-            this.currentArticle.template_id = blockID
+            this.currentArticle.template_id = blockID 
             this.selectTemplate =! this.selectTemplate
         },
         checkTemplate(){
@@ -297,7 +340,7 @@ export default {
                 this.$apollo.queries.articles.refetch()
             }).catch ( error => {
                 vm.$emit('message','An error occurred. Check you console log')
-                console.log ( error )
+                //console.log ( error )
                 this.createPage = false
             })
             
@@ -308,7 +351,7 @@ export default {
                 this.$apollo.queries.articles.refetch()
             }).catch ( error => {
                 vm.$emit('message','An error occurred. Check you console log')
-                console.log ( error )
+                //console.log ( error )
             })
         },
         addImage(){
@@ -320,7 +363,7 @@ export default {
             this.widgets = true
         },
         setImage(img){
-            console.log ( img )
+            //console.log ( img )
             if ( this.editorImage ){
                 this.$refs['editor'].quill.focus()
                 let range = this.$refs['editor'].quill.getSelection();

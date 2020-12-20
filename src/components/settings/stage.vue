@@ -155,6 +155,7 @@ export default {
         production(){
             return this.remote.get ( this.master + 'articles' ).then ( response => {
                 this.articlesRemote = response.data//this.moka.articles
+                this.$store.dispatch('loading',false)
                 return true// response.data
             })
         },
@@ -175,7 +176,8 @@ export default {
                 this.message = ''
                 this.updateArticle = false
             }
-        }
+        },
+        
     },
     methods: {
         next(){
@@ -261,6 +263,8 @@ export default {
         }
     },
     mounted(){
+        
+        this.$store.dispatch('loading',true)
         this.remote.post ( this.master + 'auth/local' , {
             identifier: this.moka.remote_user,
             password: this.moka.remote_password

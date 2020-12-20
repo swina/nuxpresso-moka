@@ -99,7 +99,7 @@ export default {
         allObjects: null,
         doc: null,
         preview: false,
-        filter:'page',
+        filter:'widget',
         gallery: true,
         objects: null,
         type: ''
