@@ -8,9 +8,9 @@ const menu = {
         },
         { label: 'Mokas' , icon: 'widgets' , component: 'MokaList' , filter: '' , 
             items: [
+                { label: 'Widgets' , icon: '' , component: 'MokaList' , filter: 'widget' },
                 { label: 'Pages' , icon: '' , component: 'MokaList' , filter: 'page' },
                 { label: 'Templates' , icon: '' , component: 'MokaList' , filter: 'template' },
-                { label: 'Widgets' , icon: '' , component: 'MokaList' , filter: 'widget' },
                 { label: 'Sliders' , icon: '' , component: 'MokaList' , filter: 'slider' },
                 { label: 'Components' , icon: '' , component: 'MokaList' , filter: 'component' },
                 { label: 'Archive' , icon: '' , component: 'MokaList' , filter: 'archive' },
@@ -20,7 +20,8 @@ const menu = {
         { label: 'Media' , icon: 'photo' , component: 'MokaMedia' , filter: '' },
         { label: 'Settings' , icon: 'settings' , component: 'MokaSettings' , filter: '' },
         { label: 'Staging' , icon: 'dns' , component: 'MokaStage' , filter: '' },
-        { label: 'Deploy' , icon: 'dynamic_form' , component: 'MokaDeploy' , filter: '' }
+        { label: 'Deploy' , icon: 'dynamic_form' , component: 'MokaDeploy' , filter: '' },
+        
     ]
 }
 

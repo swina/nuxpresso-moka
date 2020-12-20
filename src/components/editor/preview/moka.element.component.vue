@@ -30,7 +30,7 @@ export default {
             if ( ( el.tag === 'element' || el.type === 'button' ) && el.element != 'img' && el.type != 'video' && el.type != 'audio' ) {
                 return MokaText
             }
-            if ( el.tag === 'video' ) {
+            if ( el.type === 'video' ) {
                 return MokaVideo
             }
             if ( el.type === 'svg' ){

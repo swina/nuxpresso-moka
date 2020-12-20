@@ -55,11 +55,11 @@
         </div>
         <div class="text-gray-500 text-sm mt-1 font-hairline">S T U D I O</div>
       </div>
-      <div class="flex flex-col w-1/3 text-sm text-gray-500" v-if="!user.login">
+      <div class="flex flex-col w-full text-sm text-gray-500" v-if="!logged && !loginOK">
         <label>User</label>
-        <input type="email" v-model="email" class="dark"/>
+        <input type="email" v-model="email" class="w-full dark"/>
         <label>Password</label>
-        <input type="password" v-model="password" class="dark"/>
+        <input type="password" v-model="password" class="w-full dark"/>
         <button class="mt-2" @click="login">Login</button>
       </div>
     </div>
@@ -75,20 +75,27 @@ export default {
   },
   data:()=>({
     email: '',
-    password: ''
+    password: '',
+    loginOK: false
   }),
   computed:{
-    ...mapState ( [ 'moka' , 'user'] )
+    ...mapState ( [ 'moka' , 'user'] ),
+    logged(){
+      if ( !this.user.login || !window.localStorage.getItem('nuxpresso-jwt') ){
+        this.user.login = false
+        return false
+      } else {
+        return true
+      }
+    }
+
   },
  
   beforeMount(){
-    console.log ( this.$http )
-    if ( !this.user.login ){
+    if ( !this.user.login || !window.localStorage.getItem('nuxpresso-jwt') ){
+      this.user.login = false
       console.log ( 'not logged' )
     }
-    this.$http.get('components').then( response=> {
-      console.log ( response )
-    })
   },
   methods:{
     login(){
@@ -107,6 +114,7 @@ export default {
           }
           vm.$store.dispatch('login',true)
           vm.$store.dispatch('user',response.data.user)
+          vm.loginOK = true
           //vm.$store.dispatch ( 'authenticatedUser' , authenticated )
           //vm.$axios.defaults.headers.common = {'Authorization': 'Bearer ' + response.jwt};
           window.localStorage.setItem ( 'nuxpresso-jwt' , "Bearer " + response.data.jwt )

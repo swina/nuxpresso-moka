@@ -6,9 +6,12 @@
                 <button @click="create=!create" class="mr-2">Create New</button>
                 <button @click="importJSON=!importJSON" class="mr-2">Import</button>
                 <button @click="exportComponent=!exportComponent">Export</button>
+            </div> 
+            <div class="flex flex-row justify-end">
+                <i class="material-icons" @click="refresh">refresh</i>
+                <i class="material-icons" v-if="!gallery" @click="gallery=!gallery">grid_on</i>
+                <i class="material-icons" v-if="gallery" @click="gallery=!gallery">list</i>
             </div>
-            <i class="material-icons" @click="refresh">refresh</i>
-            <a href="#" @click="gallery=!gallery" class="text-right"><i class="material-icons" v-if="!gallery">grid_on</i><i class="material-icons" v-if="gallery">list</i></a> 
         </div>
         <div v-if="moka.elements && filter!='slider' && filter!='page' && filter!='template'" class="py-2 flex flex-row flex-wrap">
             <button class="mr-2 mt-1 capitalize w-24 border hover:bg-blue-400 hover:text-white border-blue-400 focus:bg-gray-600 focus:text-white focus:outline-none bg-white text-blue-400 rounded-none" @click="type=''">all</button>
@@ -16,8 +19,11 @@
                 <button class="mr-2 mt-1 capitalize w-24 border hover:bg-blue-400 hover:text-white border-blue-400 bg-white text-blue-400 focus:bg-gray-600 focus:text-white focus:outline-none rounded-none" @click="type=tipo">{{ tipo }}</button>
             </template>
         </div>
+        
         <moka-table v-if="!gallery" ctx="components" :components="objects" @component="setComponent" @message="message" @remove="remove"/>
+        
         <moka-gallery v-else :components="objects" @component="setComponent" @preview="setPreview"  @remove="remove"/>
+
         <transition name="fade">
             <div class="nuxpresso-modal w-1/3 bg-gray-800 text-gray-500 p-4 flex flex-col text-sm" v-if="create">
                 <i class="material-icons absolute top-0 right-0 cursor-pointer" @click="create=!create">close</i>
@@ -40,7 +46,9 @@
         </transition>
         <transition name="fade">
             <div class="absolute top-0 left-0 min-h-screen w-screen bg-white" v-if="preview">
-                <moka-preview :category="component.category" :doc="doc" v-if="!doc.hasOwnProperty('slider')" @close="preview=!preview"/>
+                
+                <moka-preview :category="component.category" :doc="doc" v-if="!doc.hasOwnProperty('slider')" @close="preview=!preview" :dashboard="true"/>
+
                 <moka-slider v-if="doc.hasOwnProperty('slider')" :embeded="true" :doc="doc" @close="preview=!preview"/>
                 <!--<i v-if="doc.hasOwnProperty('slider')" class="absolute top-0 right-0 m-1 z-top material-icons nuxpresso-icon-circle text-black" title="Close" @click="preview=!preview">close</i>-->
             </div>
@@ -137,7 +145,10 @@ export default {
     },
     methods: {
         refresh(){
-            this.$store.dispatch ( 'loadComponents' )
+            this.$store.dispatch('loading',true)
+            this.$store.dispatch ( 'loadComponents' ).then ( () => {
+                this.$store.dispatch ( 'loading' , false )
+            })
         },
         setComponent(component){
             this.$store.dispatch ( 'loadComponent' , component )

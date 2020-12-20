@@ -20,14 +20,7 @@
             <label>Category</label>
             <select v-model="newComponent.category">
                 <option v-for="category in $categories()">{{ category }}</option>
-                <!--
-                <option value="element">element</option>
-                <option value="component">component</option>
-                <option value="widget">widget</option>
-                <option value="template">template</option>
-                <option value="page">page</option>
-                <option value="slider">slider</option>
-                <option value="gallery">gallery</option>-->
+                
             </select>
             <label>Description</label>
             <textarea v-model="newComponent.description"/>

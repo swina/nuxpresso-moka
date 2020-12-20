@@ -12,9 +12,7 @@
                 </div>
                 <div class="relative pt-64 bg-gray-600"> 
                     <div class="flex items-center text-center h-full justify-center absolute h-64 top-0 object-contain left-0 right-0 bottom-0">
-                        <img  :src="comp.image_uri" v-if="comp.image_uri" style="max-height:100%" class="w-auto h-auto block m-auto" @click="$emit('preview',comp)"/>
-                        
-                        <!--<img src="../assets/no-image.png" v-if="!comp.image_uri" @click="$emit('preview',comp)"/>-->
+                        <img  :src="comp.image_uri" v-if="comp.image_uri" style="max-height:100%" class="w-auto h-auto block m-auto" title="Click to preview" @click="$emit('preview',comp)"/>
                     </div>
                 </div>
                 <div class="p-1 absolute bottom-0 bg-gray-300 items-center flex flex-row w-full text-left text-xs justify-between">

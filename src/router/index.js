@@ -4,6 +4,7 @@ import Main from '../views/Main.vue'
 import Dashboard from '@/views/Dashboard.vue'
 import Components from '@/views/Components.vue'
 import Moka from '@/views/Moka.vue'
+import Logout from '@/views/Logout.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -26,6 +27,11 @@ const routes = [
     path: '/moka',
     name: 'Moka',
     component: Moka
+  },
+  {
+    path: '/logout',
+    name: 'Logout',
+    component: Logout
   },
   
   {

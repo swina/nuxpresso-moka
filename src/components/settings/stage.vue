@@ -216,7 +216,7 @@ export default {
                     
                     this.mode === 'components' ? 
                         this.blocks.push ( response.data ) :
-                            this.articles.push ( response.data )
+                            this.articlesRemote.push ( response.data )
             }).catch ( error => {
                 console.log ( error )
             })
@@ -241,7 +241,7 @@ export default {
             } else {
                 this.$http.get('articles/' + origin.id ).then ( response=>{
                     let article = response.data
-                    let art = this.articles.filter ( a => a.slug === article.slug )[0]
+                    let art = this.articlesRemote.filter ( a => a.slug === article.slug )[0]
                     if ( art ){
                         
                         this.origin = article

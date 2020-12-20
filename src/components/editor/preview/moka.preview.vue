@@ -49,10 +49,13 @@
               
                         
         
-        <div class="fixed bottom-0 right-0 z-top p-4 bg-black bg-opacity-50 opacity-0 hover:opacity-100">
+        <div v-if="!$attrs.dashboard" class="fixed bottom-0 right-0 z-top p-4 bg-black bg-opacity-50 opacity-0 hover:opacity-100">
             <i class="material-icons nuxpresso-icon-circle mr-2" @click="$emit('save')">save</i>
             <i class="material-icons nuxpresso-icon-circle" @click="$emit('close')">close</i>
         </div> 
+        <div v-else class="fixed bottom-0 right-0 z-top p-4 bg-black bg-opacity-50">
+            <i class="material-icons nuxpresso-icon-circle" @click="$emit('close')">close</i>
+        </div>
     </div>
 </template>
 
@@ -189,6 +192,7 @@ export default {
     },
     mounted(){
         window.scrollTo(0,0)
+        
         this.doc.blocks.forEach ( block => {
             if ( block.hasOwnProperty('gsap') && block.gsap.animation  ){
                 this.animate(block, block.id)

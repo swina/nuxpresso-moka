@@ -55,8 +55,6 @@ export default {
       this.$store.dispatch('loadComponents')
       this.$store.dispatch('loadElements')
       this.$store.dispatch('loadMedia')
-    } else {
-      this.$router.push('/')
     }
   }
 }
