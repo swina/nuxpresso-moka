@@ -82,26 +82,25 @@
             </transition>
             <div v-if="$attrs.develop " :class="'z-max absolute border border-green-500 border-dashed z-4 top-0 left-0 bottom-0 right-0 scale-x-102 scale-y-102 transform ' + active(el.id,el.css) + ' bg-transparent'" @click="select(el)">
                 <div class="h-2 w-2 absolute top-0 right-0 bg-black rounded-full -m-1"></div>
-            <div class="h-2 w-2 absolute top-0 left-0 bg-black rounded-full -m-1"></div>
-            <div class="h-2 w-2 absolute bottom-0 right-0 bg-black rounded-full -m-1"></div>
-            <div class="h-2 w-2 absolute bottom-0 left-0 bg-black rounded-full -m-1"></div>
+                <div class="h-2 w-2 absolute top-0 left-0 bg-black rounded-full -m-1"></div>
+                <div class="h-2 w-2 absolute bottom-0 right-0 bg-black rounded-full -m-1"></div>
+                <div class="h-2 w-2 absolute bottom-0 left-0 bg-black rounded-full -m-1"></div>
                 <!-- 
                     <i class="absolute top-0 right-0 material-icons nuxpresso-icon-circle text-sm text-black -mt-4" @click="$emit('editinline')">{{ el.icon }}</i>-->
-               
+                <div class="absolute bottom-0 left-0 -mb-4 text-xs text-purple-500" v-if="el.gsap && el.gsap.animation">{{ el.gsap.animation }}</div>
             </div>
              <div v-if="el.id===moka.selected" class="z-top absolute top-0 left-0 -mt-8 h-6 bg-gray-800 text-gray-300 text-xs rounded-2xl items-center flex flex-row">
                     
                     <i class="material-icons text-sm text-gray-600 leading-4 ml-2" @click="toolbar=!toolbar" :title="'HTML: <' + el.element + '>'">{{ el.icon }}</i>
                     <i class="material-icons text-sm text-gray-600 hover:text-blue-500 leading-4 mr-2" @click="toolbar=!toolbar" v-if="!toolbar">arrow_right</i>
                     <i class="material-icons text-sm text-gray-600 hover:text-blue-500 leading-4 mr-2" @click="toolbar=!toolbar" v-if="toolbar">arrow_left</i>
-                    <transition name="fade">
                         <div v-if="toolbar||!toolbar" class="flex flex-row items-center">
                         <i class="material-icons hover:text-blue-500 text-sm leading-4 mx-2" @click="$store.dispatch('setAction','edit')" title="Edit content">edit</i>
                         <i class="material-icons hover:text-blue-500 text-sm leading-4 mx-2" @click="$store.dispatch('setAction','customize'),toolbar=!toolbar" title="Customize">brush</i>
                         <i class="material-icons hover:text-blue-500 text-sm leading-4 mx-2" @click="$store.dispatch('setAction','delete')" title="Delete">delete</i> 
                         </div>
-                    </transition>
                 </div>
+            
     </div>
 </template>
 

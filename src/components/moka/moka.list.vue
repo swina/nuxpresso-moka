@@ -134,9 +134,9 @@ export default {
             if ( this.moka.components ){
                 this.$attrs.filter ?
                     this.$store.dispatch ( 'filter' , this.$attrs.filter ) :
-                        this.filter = 'page'
+                        this.filter = 'widget'
 
-                this.moka.filter ? this.filter = this.moka.filter : this.filter = 'page'
+                this.moka.filter ? this.filter = this.moka.filter : this.filter = 'widget'
                 this.objects = this.filter ? this.moka.components.filter(comp=>{ 
                     return comp.category === this.filter } ) : this.moka.components
             }    

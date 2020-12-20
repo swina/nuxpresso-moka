@@ -45,6 +45,7 @@
             @delete="confirmModal=!confirmModal"
             @edit="editContent=!editContent"/>
         
+        <!-- SLIDER -->
         <div v-if="$attrs.category === 'slider'" :data="getSlider">
             <div class="flex flex-row items-center">
                 <h3>Slides</h3>
@@ -53,12 +54,12 @@
                 <button class="danger rounded-none mx-2" v-if="currentSlide">Delete</button>
             </div>
             
-                <draggable :list="doc.blocks" class="flex flex-row">
-                    <div v-for="(slide,index) in doc.blocks" :class="'w-20 h-12 border justify-center items-center flex flex-col mr-4 ' + slideSelected(index)" @click="currentSlide=slide,slideIndex=index">
+                <draggable :list="doc.blocks" class="flex flex-row mb-4">
+                    <div v-for="(slide,index) in doc.blocks" :class="'w-16 h-8 border justify-center items-center flex flex-col mr-4 ' + slideSelected(index)" @click="currentSlide=slide,slideIndex=index">
                         Slide {{ (index+1) }}
                     </div>
                 </draggable>
-            <div v-if="currentSlide" :class="doc.css + ' relative p-4 text-black '" :style="stile(doc,true) + ' ' + background(doc)" id="content">
+            <div v-if="currentSlide" :class="doc.css + ' relative border-2 border-dashed p-4 text-black '" :style="stile(doc,true) + ' ' + background(doc)" id="content">
             
                 <moka-container
                     :key="currentSlide.id" 
@@ -117,7 +118,7 @@
     </transition>
     <div v-if="current && current.entity" class="fixed bottom-0 left-0 p-1">{{ current.tag }} <i class="material-icons">{{ current.icon }}</i></div>
 
-    <!-- RIGHT VERTICAL TOOLBAR -->
+    <!-- TOOLBAR -->
     <transition name="slideright">
         <moka-side-bar 
             :current="editor.current"

@@ -1,9 +1,10 @@
 <template>
     <div class="flex flex-col" :data="init">
         <i class="material-icons m-auto p-2 border" v-if="$attrs.value">{{ $attrs.value }}</i>
+        <div class="text-xs text-center">{{ $attrs.value }}</div>
+        <input type="text" class="w-full" v-model="search" @keyup="iconSearch" placeholder="search icon"/>
         Icon Category
-        <input type="text" v-model="search" @keyup="iconSearch" placeholder="search icon"/>
-        <select v-if="!search"  v-model="groupicon">
+        <select class="w-full" v-if="!search"  v-model="groupicon">
             <option v-for="(group,i) in Object.keys(moka.icons)" :value="group">{{ group }}</option>
         </select> 
         <div class="flex flex-row flex-wrap overflow-y-auto" style="height:10rem;min-height:10rem;max-height:10rem" v-if="!search && groupicon">

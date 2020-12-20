@@ -264,26 +264,27 @@ export default {
     },
     mounted(){
         
-        this.$store.dispatch('loading',true)
-        this.remote.post ( this.master + 'auth/local' , {
-            identifier: this.moka.remote_user,
-            password: this.moka.remote_password
-        } ).then(response => {
-          // Handle success.
-          console.log ( response )
-          let authenticated = {
-              user : response.data.user,
-              jwt : response.data.jwt
-          }
-          window.localStorage.setItem ( 'nuxpresso-production-jwt' , "Bearer " + response.data.jwt )
-          this.remote.headers = {
-            'Authorization': window.localStorage.getItem('nuxpresso-production-jwt')
+        if ( this.enabled ){
+            this.remote.post ( this.master + 'auth/local' , {
+                identifier: this.moka.remote_user,
+                password: this.moka.remote_password
+            } ).then(response => {
+            // Handle success.
+            console.log ( response )
+            let authenticated = {
+                user : response.data.user,
+                jwt : response.data.jwt
             }
-        })
-        .catch(error => {
-          console.log ( error )
-          
-      });
+            window.localStorage.setItem ( 'nuxpresso-production-jwt' , "Bearer " + response.data.jwt )
+            this.remote.headers = {
+                'Authorization': window.localStorage.getItem('nuxpresso-production-jwt')
+                }
+            })
+            .catch(error => {
+            console.log ( error )
+            
+            });
+        }
     },
     apollo: {
         files: {

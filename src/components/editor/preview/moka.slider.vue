@@ -3,7 +3,7 @@
         :id="doc.hasOwnProperty('anchor')? doc.anchor : doc.id"
         v-if="doc" 
         :key="doc.id" 
-        :class="'content max-w-screen relative flex flex-no-wrap ' + classe(doc.css)" :style="doc.style + ' ' +  background(doc)" :ref="doc.id">
+        :class="'content max-w-screen relative flex flex-no-wrap block ' + classe(doc.css)" :style="doc.style + ' ' +  background(doc)" :ref="doc.id">
         
             <template v-for="(block,i) in doc.blocks">
                 <moka-preview-container
@@ -13,9 +13,22 @@
             </template>
             
             <div class="fixed bottom-0 right-0 z-top p-4 bg-black bg-opacity-50 opacity-0 hover:opacity-100">
-            <i class="material-icons nuxpresso-icon-circle mr-2" @click="$emit('save')">save</i>
-            <i class="material-icons nuxpresso-icon-circle" @click="$emit('close')">close</i>
-        </div>
+              <i class="material-icons nuxpresso-icon-circle mr-2" @click="$emit('save')">save</i>
+              <i class="material-icons nuxpresso-icon-circle" @click="$emit('close')">close</i>
+            </div>
+            
+            <div v-if="doc.slider.dots.enable" class="absolute bottom-0 left-0 text-center flex-row justify-center items-center mb-4 w-full">
+              <i :class="'material-icons mr-2 ' + dotActive(n)" v-for="n in doc.blocks.length" @click="goTo(n-1)">fiber_manual_record</i>
+            </div>
+
+            <div v-if="doc.slider.navigation.enable">
+              <div :class="'absolute top-0 left-0 h-full flex justify-center items-center p-1 ' + over" @click="next(-1)">
+                <i class="material-icons text-4xl">{{ doc.slider.navigation.icons[0]}}</i>
+              </div>
+              <div :class="'absolute top-0 right-0 h-full flex justify-center items-center p-1 ' + over" @click="next(1)">
+                <i class="material-icons text-4xl">{{ doc.slider.navigation.icons[1]}}</i>
+              </div>
+            </div>
     </div>
 
 </template>
@@ -47,10 +60,24 @@ export default {
         slides(){
             return this.doc.blocks.length
         },
+        over(){
+          return this.doc.slider.navigation.hover ? 'opacity-0 hover:opacity-100' : ''
+        }
         
     },
 
     methods:{
+        dotActive(n){
+          return (n-1) === this.index ? 'text-black' : 'text-gray-400'
+        },
+        goTo(n){
+          this.index = n
+          this.current = this.doc.blocks[n].id
+          let tl = gsap.timeline()
+            if ( document.querySelector('.slide') ){
+              tl.to ( '.slide' , { xPercent: -this.index*100 , opacity:1 , duration: 1.5 } )
+            }
+        },
         playslides ( sec ){
             console.log ( 'playing each ' + sec + ' secs' )
             let vm = this
@@ -77,7 +104,7 @@ export default {
             
         },
         classe(css){
-            return css.hasOwnProperty('css') ? css.css + ' ' + css.container : css
+          return css.hasOwnProperty('css') ? css.css + ' ' + css.container : css
         },
         stile(block,doc){
             if ( !block || !doc ) return 

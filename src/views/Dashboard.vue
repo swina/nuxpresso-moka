@@ -50,8 +50,7 @@
                 <component v-if="moka.components" :is="component" :component="component" :filter="filter"/>
 
                 <div v-if="!moka.components || moka.loading">
-                    <div class="nuxpresso-modal shadow z-2xtop w-1/4 p-4 bg-blue-300">Loading data ... please wait</div>
-                    <div class="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-75 z-top"></div>
+                    <div class="fixed bottom-0 left-0 shadow z-2xtop w-2/12 p-2 bg-blue-300 text-sm">Loading data ...</div>
                 </div>
             </div>
         </div>
