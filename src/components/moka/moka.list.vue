@@ -13,7 +13,7 @@
                 <i class="material-icons" v-if="gallery" @click="gallery=!gallery">list</i>
             </div>
         </div>
-        <div v-if="moka.elements && filter!='slider' && filter!='page' && filter!='template'" class="py-2 flex flex-row flex-wrap">
+        <div v-if="moka.elements && filter!='slider'" class="py-2 flex flex-row flex-wrap">
             <button class="mr-2 mt-1 capitalize w-24 border hover:bg-blue-400 hover:text-white border-blue-400 focus:bg-gray-600 focus:text-white focus:outline-none bg-white text-blue-400 rounded-none" @click="type=''">all</button>
             <template v-for="tipo in moka.elements.types.types">
                 <button class="mr-2 mt-1 capitalize w-24 border hover:bg-blue-400 hover:text-white border-blue-400 bg-white text-blue-400 focus:bg-gray-600 focus:text-white focus:outline-none rounded-none" @click="type=tipo">{{ tipo }}</button>

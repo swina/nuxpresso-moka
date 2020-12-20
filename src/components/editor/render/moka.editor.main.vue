@@ -34,10 +34,12 @@
                 <div class="pb-10 mt-4 mb-10 mx-5">
                   
                     <moka-editor-selectors 
+                        
                         :doc="doc"
                         :component="current"
                         :develop="true"
                         :category="$attrs.component.category"
+                        :root="true"
                         @save="save" 
                         @preview="preview=!preview"
                         @slider="slider=!slider,disable=false"
@@ -58,7 +60,9 @@
                     <i class="material-icons moka-icons nuxpresso-icon-circle ml-2" @click="grids=!grids" title="Add block">add</i><!--addBlock=true,reusable=!reusable-->
                     <!--<div class="text-xs text-gray-400">Add block</div>-->
                     <i class="material-icons moka-icons nuxpresso-icon-circle ml-2" @click="$store.dispatch('setAction','addreusable'),addBlock=true" title="Add Moka">widgets</i>
-                    <i class="material-icons moka-icons nuxpresso-icon-circle ml-2" @click="preview=!preview" title="Preview">remove_red_eye</i>
+                    <i class="material-icons moka-icons nuxpresso-icon-circle ml-2" v-if="$attrs.component && $attrs.component.category!='slider'" title="Preview" @click="preview=!preview,disable=false">remove_red_eye</i> 
+                    <i class="material-icons moka-icons nuxpresso-icon-circle ml-2" v-if="$attrs.component && $attrs.component.category==='slider'" title="Preview" @click="slider=!slider,disable=false">remove_red_eye</i>
+                    
                 
             </div>
         </div>

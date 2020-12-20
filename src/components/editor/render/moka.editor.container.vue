@@ -23,6 +23,7 @@
                 :key="block.id"
                 :component="$attrs.component"
                 :top="false"
+                :root="$attrs.root||false"
                 :coords="coords"
                 :slide="$attrs.slide" 
                 :index="b"
@@ -36,6 +37,7 @@
                 :key="block.id"
                 :component="$attrs.component"
                 :top="false"
+                :root="$attrs.root||false"
                 :coords="coords"
                 :slide="$attrs.slide" 
                 :index="b"
@@ -45,7 +47,7 @@
                 :doc="block.blocks[0]"/>
         </template>
         
-        <div :class="'absolute transform border border-dashed top-0 left-0 bottom-0 right-0 z-' + zindex + ' scale-x-' + (106-(parseInt($attrs.level))) + ' ' + active(doc.id,doc)" @click="setCurrent(doc)" v-if="doc && !doc.hasOwnProperty('items')">
+        <div :class="'absolute transform border border-dashed top-0 left-0 bottom-0 right-0 z-' + zindex + ' scale-x-' + (106-root) + ' ' + active(doc.id,doc)" @click="setCurrent(doc)" v-if="doc && !doc.hasOwnProperty('items')">
             <!--{{ $attrs.level }} {{ $attrs.index }}-->
             <span v-if="doc.hasOwnProperty('loop') && doc.loop" class="text-xs"><i class="material-icons">article</i> Article Grid</span>
             <div class="h-2 w-2 absolute top-0 right-0 bg-black rounded-full -m-1"></div>
@@ -88,6 +90,9 @@ export default {
             return this.$attrs.level < 1 ? 'auto' : this.$attrs.level < 2 ? 1 : 
                 this.$attrs.level //    this.$attrs.zi
         },
+        root(){
+            return this.$attrs.top ? 0 : parseInt(this.$attrs.level)
+        }
         
     },
     methods:{

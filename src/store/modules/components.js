@@ -77,7 +77,6 @@ const moka = {
         },
         async loadComponents ( { commit } ){
             const comps = await axios.get ( process.env.VUE_APP_API_URL + 'components' )
-            console.log ( 'Loading components ... ' , comps )
             commit ( 'SET_COMPONENTS' , comps.data.sort( (a, b) => a.name < b.name ? -1 : 1) ) 
         },
         async loadElements ( { commit } ){

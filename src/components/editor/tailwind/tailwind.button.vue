@@ -19,7 +19,6 @@ export default {
     },
     watch:{
         selected(v){
-            console.log ( v , this.$attrs.attr )
             if ( v ){
                 this.$emit('input', this.$attrs.attr)
                 this.$emit ( 'css' , this.$attrs.attr )

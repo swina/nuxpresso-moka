@@ -138,8 +138,8 @@ export default {
     computed:{
         ...mapState ( ['moka','user']),
         enabled(){
-            if ( !webpackHotUpdate ) this.$store.dispatch('message','This option is available only in development mode')
-            return webpackHotUpdate ? true : false 
+            if ( typeof webpackHotUpdate === 'undefined' ) this.$store.dispatch('message','This option is available only in development mode')
+            return typeof webpackHotUpdate === 'undefined' ? false : true 
         },
         dragOptions() {
             return {

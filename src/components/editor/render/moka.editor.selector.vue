@@ -3,8 +3,8 @@
 <div class="w-full h-auto pb-10 mb-10 top-0 left-0 relative" data="init">
     
     <div v-if="$attrs.category!='element' && $attrs.category != 'slider'">
-        
-        <div :class="doc.css + ' relative p-4 text-black '" :style="stile(doc,true) + ' ' + background(doc)" id="content">
+          
+        <div :class="doc.css + ' relative border-2 border-dashed p-4 text-black '" :style="stile(doc,true) + ' ' + background(doc)" id="content">
             <template v-for="(block,b) in doc.blocks">
                 
                 <moka-container 
@@ -257,7 +257,7 @@ import MokaHotkeys from '@/components/editor/render/moka.hotkeys'
 import draggable from 'vuedraggable'
 import gsap from 'gsap'
 import gsapEffects from '@/plugins/animations'
-import { mapState } from 'vuex'
+import { mapState } from 'vuex' 
 
 export default {
     name: 'MokaEditorSelectors',
