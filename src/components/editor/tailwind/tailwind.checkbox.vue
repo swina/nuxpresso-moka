@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col">
+    <div :class="'flex flex-col mr-2 ' + $attrs.classe">
         <input type="checkbox" v-model="selected"/> {{ $attrs.title || $attrs.attr }}
     </div>
 </template>

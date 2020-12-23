@@ -6,7 +6,7 @@ const menu = {
                 { label: 'Articles' , icon: 'article' , component: 'MokaArticles' , filter: '' }
             ]
         },
-        { label: 'Mokas' , icon: 'widgets' , component: 'MokaList' , filter: '' , 
+        { label: 'Blocks' , icon: 'widgets' , component: 'MokaList' , filter: '' , 
             items: [
                 { label: 'Widgets' , icon: '' , component: 'MokaList' , filter: 'widget' },
                 { label: 'Pages' , icon: '' , component: 'MokaList' , filter: 'page' },

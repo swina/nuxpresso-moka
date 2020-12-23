@@ -1,7 +1,7 @@
 <template>
     <div class="relative p-0 border-none max-h-screen" style="min-width:30rem;max-height:25rem;min-height:25rem;">
         <!--<i v-if="!$attrs.embeded" class="material-icons absolute top-0 right-0 mt-1 mr-1 rounded-full cursor-pointer bg-red-500 text-white" @click="$emit('close')">highlight_off</i>-->
-        <i class="material-icons text-sm nuxpresso-icon-btn text-black absolute top-0 right-0 m-1 mt-6 mr-10 cursor-pointer" title="add image" @click="addImage">image</i>
+        <i class="material-icons text-sm nuxpresso-icon-btn text-black absolute top-0 right-0 m-1  cursor-pointer" title="add image" @click="addImage">image</i>
         
        
             <quill-editor
@@ -91,6 +91,7 @@ export default {
                         [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
                         //[{ 'font': ['Barlow Condensed','Arial','Verdana','sans-serif','serif'] }],
                         [{ 'align': [] }],
+                        ['link'],
                         ['clean']    
                     ],
                 },
@@ -120,12 +121,12 @@ export default {
                         [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
                         [{ 'color' : typo.typo.colors },{ 'background' : typo.typo.colors }],
                         [{ 'align': [] }],
+                        ['link'],
+                        ['image'],
                         ['clean']    
                     ],
                     
                 },
-                
-                
             },
             placeholder: 'Add your content ...',
             theme: 'snow'}
@@ -159,7 +160,7 @@ export default {
             } else {
                 //let ff = document.querySelector('.ql-editor') 
                 //ff.style.fontFamily = '"\Barlow Condensed\",sans-serif'
-                stile = 'font-family:"\Barlow Condensed\",sans-serif;'
+                stile = 'font-size:1rem;font-family:"\Barlow Condensed\",sans-serif;'
             }
             console.log (stile )
             return this.editor.current.hasOwnProperty('style') ? this.editor.current.style + stile : stile
@@ -181,7 +182,7 @@ export default {
         Quill.register("modules/ImageResize", ImageResize);
         Quill.register("modules/imageDrop", ImageDrop);
 
-    }
+    },
 }
 </script>
 

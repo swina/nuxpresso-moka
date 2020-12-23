@@ -64,6 +64,7 @@ export default {
     },
     mounted(){
         this.component = this.$store.getters.component
+        console.log ( this.component.blocks_id , this.component.json.id )
         this.$http.get('upload/files').then ( response => {
             this.$store.dispatch ( 'loadMedia' , response.data )
         })
@@ -71,7 +72,13 @@ export default {
     methods: {
         save(){
             this.loading = true
-            this.component.json.id ? this.component.blocks_id = this.component.json.id : null
+            console.log ( 'save =>' , this.component.blocks_id , this.component.json.id )
+            this.component.blocks_id ?
+                this.component.blocks_id === this.component.json.id ?
+                    null :
+                        this.component.blocks_id = this.component.json.id 
+                            : this.component.blocks_id = this.component.json.id 
+            //this.component.json.id ? this.component.blocks_id = this.component.json.id : null
             this.$http.put ( 'components/' + this.component.id , this.component ).then ( result => {
                 this.$store.dispatch('loadComponents')
                 this.$emit('message','Component saved')

@@ -5,7 +5,8 @@ const user = {
         dashboard: 'MokaHome',
         production: {
             url: process.env.VUE_APP_PRODUCTION_URL || null
-        }
+        },
+        build: process.env.VUE_APP_NUXPRESSO_BUILD || null
     },
     mutations: {
         login ( state , login ){

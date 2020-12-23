@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col">
         <span class="capitalize">{{$attrs.title||$attrs.attr}}</span> 
-        <select class="dark" v-model="selected" @change="$emit('input',selected)">
+        <select class="w-full dark" v-model="selected" @change="$emit('input',selected)">
             <option value="">not set</option>
             <option v-for="opt in options" :value="opt">{{ option(opt) }}</option>
         </select>

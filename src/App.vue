@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import WebFontLoader from 'webfontloader';
+import FontFaceObserver from 'fontfaceobserver'
 import { mapState } from 'vuex'
 export default {
   name: 'App',
@@ -26,6 +28,7 @@ export default {
   }),
   computed:{
     ...mapState ( ['moka'] ),
+    
   },
   watch: {
     '$store.state.moka.message':function(msg){
@@ -43,7 +46,7 @@ export default {
   methods: {
     setMessage(msg){
       this.message = msg
-    }
+    },
   },
   beforeMount(){
     if ( window.localStorage.getItem('nuxpresso-jwt') ){
@@ -56,6 +59,7 @@ export default {
       this.$store.dispatch('loadElements')
       this.$store.dispatch('loadMedia')
     }
+    
   }
 }
 </script>

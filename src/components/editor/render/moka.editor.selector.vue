@@ -570,6 +570,11 @@ export default {
                     this.$store.dispatch ( 'setAction' , 'addcomponent' )
                 }
             }
+            if ( e.altKey && e.code === 'KeyO' ){
+                if ( this.editor.current ){
+                    this.$store.dispatch ( 'setAction' , 'snapshot' )
+                }
+            }
             if ( e.altKey && e.code === 'KeyR' ){
                 if ( this.editor.current  ){
                     this.confirmModal =! this.confirmModal

@@ -40,6 +40,12 @@ export default {
         })
     },
     methods:{
+        getFont(font){
+            if ( font.split(':') ){
+                return font.split(':')[0].replace('+',' ')
+            } 
+            return font.replace('+',' ')
+        },
         emit(){
             this.fontFamily ?
                 this.$emit('stile' , 'font-family:\"' + this.fontFamily + '\"' ) :

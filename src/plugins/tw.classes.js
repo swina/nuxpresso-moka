@@ -64,9 +64,23 @@ var classes = {
         'Alice',
         'Alegreya',
         'Amethysta',
+        'Lora',
         'Nunito Sans',
+        'PT Sans',
+        'Raleway',
         'Roboto',
-        'Quattrocento'
+        'Quattrocento',
+    ],
+    fontWeight: [
+        'font-thin',
+        'font-extralight',
+        'font-light',
+        'font-normal',
+        'font-medium',
+        'font-semibold',
+        'font-bold',
+        'font-extrabold',
+        'font-black'
     ],
     bgOpacity: setOpacity('bg-opacity'),
     flexdirection : [ 'flex-col' , 'flex-row' , 'flex-col-reverse' , 'flex-row-reverse' ],
@@ -228,6 +242,10 @@ var classes = {
         'relative',
         'sticky'
     ],
+    positionTop: [ 'top-0' ],
+    positionLeft: [ 'left-0' ],
+    positionBottom: [ 'bottom-0'],
+    positionRight: [ 'right-0'] ,
     objectfit: [
         'object-contain',
         'object-cover',
@@ -302,6 +320,13 @@ var classes = {
         'shadow-lg',
         'shadow-xl',
         'shadow-2xl'
+    ],
+    animation: [
+        'animate-none',
+        'animate-ping',
+        'animate-bounce',
+        'animate-spin',
+        'animate-pulse'
     ],
     clipPath: [
         'clip-path-angle-left', 

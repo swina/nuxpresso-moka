@@ -26,6 +26,10 @@ const twgroups = [
     },
     { label: 'position', components : [ 
         { name: 'MokaOptions' , attr: 'positionelement' , title: 'position' },
+        { name: 'MokaCheckbox' , attr: 'positionTop' , title: 'top' , css: 'float-left'},
+        { name: 'MokaCheckbox' , attr: 'positionLeft' , title: 'left' , css: 'float-left' },
+        { name: 'MokaCheckbox' , attr: 'positionBottom' , title: 'bottom' , css: 'float-left' },
+        { name: 'MokaCheckbox' , attr: 'positionRight' , title: 'right' , css: 'float-none' },
         { name: 'MokaPosition' , attr: 'position' },
         { name: 'MokaRange' , attr: 'zindex' , title: 'z index'},
         { name: 'MokaOptions' , attr: 'objectfit' , title: 'Object fit' }
@@ -38,17 +42,19 @@ const twgroups = [
         { name: 'MokaColor' , attr: 'textcolor' },
         { name: 'MokaRange' , attr: 'textSize' , title: 'size' },
         { name: 'MokaOptions' , attr: 'textAlign' , title: 'Align' },
+        { name: 'MokaTextFont' , attr: 'textfont' },
+        { name: 'MokaOptions' , attr: 'fontWeight' , title: 'weight' },
         //{ name: 'MokaTextStyle' , attr: 'textstyle' },
-        { name: 'MokaButton' , attr: 'font-bold' , title : 'bold' , icon: 'format_bold' , css: 'float-left'},
+        //{ name: 'MokaButton' , attr: 'font-bold' , title : 'bold' , icon: 'format_bold' , css: 'float-left'},
         { name: 'MokaButton' , attr: 'italic' , title : 'italic' , icon: 'format_italic' , css: 'float-left'},
         { name: 'MokaButton' , attr: 'underline' , title : 'underline' , icon: 'format_underline' , css: 'float-left'},
-        { name: 'MokaButton' , attr: 'font-black' , title: 'black' , icon: 'title' , css: 'float-left'},
+        //{ name: 'MokaButton' , attr: 'font-black' , title: 'black' , icon: 'title' , css: 'float-left'},
         { name: 'MokaButton' , attr: 'uppercase' , title : 'uppercase' , icon: 'arrow_upward', css: 'float-left'},
         { name: 'MokaButton' , attr: 'lowercase' , title : 'lowercase' , icon: 'arrow_downward', css: 'float-left'},
         { name: 'MokaButton' , attr: 'capitalize' , title : 'capitalize' , icon: 'text_fields' , css: 'float-none'},
         
         { name: 'MokaOptions' , attr: 'textlineheight' , title: 'line height'},
-        { name: 'MokaTextFont' , attr: 'textfont' },
+        
         { name: 'MokaRange' , attr: 'textOpacity' , title: 'opacity' }
     ]},
     { label: 'background' , components: [ 
@@ -86,6 +92,9 @@ const twgroups = [
     { label: 'rounded / shadow', components : [ 
         { name: 'MokaOptions' , attr: 'rounded' },
         { name: 'MokaOptions' , attr: 'shadow' }, 
+    ]},
+    { label: 'CSS Animation', components : [ 
+        { name: 'MokaOptions' , attr: 'animation' , title: 'animation'}
     ]},
     { label: 'transform', components : [ 
         { name: 'MokaOptions' , attr: 'skewX' , required: 'transform' , title: 'Skew X' },

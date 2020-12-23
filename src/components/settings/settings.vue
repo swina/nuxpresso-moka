@@ -2,9 +2,8 @@
     <div class="p-4">
         <h3>Settings</h3>
         <div class="flex flex-row justify-around">
-            <div class="flex flex-col w-full md:w-1/3">
-                <h3>MOKAS</h3>
-                <label>Types</label>
+            <div class="flex flex-col p-2 w-full md:w-1/2">
+                <h3>BLOCKS Types</h3>
                 <select v-if="moka" v-model="currentType" multiple class="h-32 w-full" readonly>
                     <option v-for="(tipo,index) in moka.elements.types.types" :value="index">{{tipo}}</option>
                 </select>
@@ -18,7 +17,21 @@
                 </div>
                 <button @click="saveTypes">Save</button>
             </div>
-            <div class="w-1/2"></div>
+            <div class="flex flex-col p-2 w-full md:w-1/2">
+                <h3>FONTS</h3>
+                <select v-if="moka" v-model="currentFont" multiple class="h-32 w-full" readonly>
+                    <option v-for="(font,index) in moka.elements.types.fonts" :value="index">{{font}}</option>
+                </select>
+                <div class="flex flex-row my-1">
+                    <input type="text" class="w-4/5" v-model="new_font" placeholder="set the webfont name"/>
+                    <button class="ml-2 sm"  @click="moka.elements.types.fonts.push(new_font)">Add</button>
+                    <button v-if="currentFont.length" class="ml-2 sm danger" @click="removeFont()">Remove</button>
+                </div>
+                <div class="text-xs">
+                    Input the google font name: i.e. Lora, Montserrat, PT+Sans (you can specify also specific attributes like Monteserrat:400italic )
+                </div>
+                <button @click="saveTypes">Save</button>
+            </div>
             <!--<moka-user/>-->
             <!--<div class="flex flex-col">
                 <h3>Create MOKAStudio User</h3>
@@ -48,6 +61,8 @@ export default {
         types: null,
         new_type:'',
         currentType: [],
+        currentFont: [],
+        new_font:'',
         newUser: {
             username: '',
             email: '',

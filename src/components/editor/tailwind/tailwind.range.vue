@@ -2,7 +2,9 @@
     <div class="flex flex-col">
             <div class="flex flex row">
                 <input class="w-3/4" type="range" :min="min" :max="le" v-model="selected">
-                <label class="capitalize">{{ $attrs.title || $attrs.attr }}</label>
+                <label class="capitalize">{{ $attrs.title || $attrs.attr }} 
+                    {{valore}}
+                </label>
             </div>
     </div>
 </template>
@@ -18,6 +20,11 @@ export default {
         values:[]
     }),
     computed:{
+        valore(){
+            if ( this.min < -1 ){
+                return this.selected === 0 ? '' : '[' + (parseInt(this.selected)-1) + ']'
+            }
+        },
         options(){
             if ( this.$attrs.negative ){
                 this.le = parseInt((this.le/2))

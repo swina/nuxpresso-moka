@@ -155,6 +155,7 @@
                 <select v-model="fontFamily">
                     <option value="Arial">sans</option>
                     <option value="serif">serif</option>
+                    <option v-for="gfont in moka.elements.types.fonts">{{gfont}}</option>
                     <option v-for="font in moka.fonts" :value="font">{{font}}</option>
                     
                 </select>
@@ -287,7 +288,12 @@
         </div>
     </transition>
 
-
+    <transition name="fade">
+        <div :class="'nuxpresso-modal moka-block-preview w-full z-2xtop p-2 '" v-if="editor && ( editor.action==='snapshot') && ( editor.current.type==='flex' || editor.current.type === 'grid')">
+             <moka-editor-preview v-if="!snapshot" :class="'w-full ' + editor.current.css.css + ' ' + editor.current.css.container" :category="$attrs.component.category" :doc="editor.current"  @save="printElement(editor.current.id)" :loop="false" :develop="false" @close="$store.dispatch('setAction',null)"/>
+             <a ref="blockprint" v-if="snapshot" id="saveSnapshot" :href="snapshot" :download="$attrs.component.name" @click="$store.dispatch('setAction',null)"><img class="m-auto" :src="snapshot"/></a>
+        </div>
+    </transition>
 </div>
 </template>
 
@@ -362,7 +368,8 @@ export default {
             description: 'A new component by MOKA',
             category: '',
             enabled: true
-        }
+        },
+        snapshot: null
     }),
    
     computed:{
@@ -376,7 +383,7 @@ export default {
         hasblocks(){
             if ( !this.$attrs.component ) this.$router.push('dashboard')
             this.doc = this.$attrs.component.json
-            this.doc.id = this.$randomID()
+            this.doc.id ? null : this.doc.id = this.$randomID()
             this.mycomponent = this.$attrs.component
             return true
         },
@@ -390,6 +397,7 @@ export default {
         schema(){
             return this.moka.elements.moka
         },
+        
     },
     methods:{
         saveNewType(){
@@ -605,13 +613,24 @@ export default {
             let el , options
             el = document.querySelector('#' + block)
             if (!el){
-                document.querySelector('.content')
+                document.querySelector(block)
             }
             options = { type: "dataURL" , useCORS: true , scale: 0.50 }
             let screenshot = await this.$html2canvas(el, options)
             //this.printScreen = screenshot
             this.save(screenshot)
             return screenshot
+        }, 
+        async printElement(id) {
+            let el , options
+            console.log ( id )
+            el = document.querySelector('.moka-block-preview')
+            el = el.querySelector('#content')
+            console.log ( el )
+            options = { type: "dataURL" , useCORS: true , scale: .70 }
+            this.snapshot = await this.$html2canvas(el, options)
+            this.$store.dispatch('message','Click on the image to download')
+            
         }, 
         sub(element,coords){
             this.customize = false
@@ -665,6 +684,7 @@ export default {
             document.querySelector('#content').style.fontFamily = font
             this.doc.fontFamily = font
         },
-    }
+    },
+    
 }
 </script>

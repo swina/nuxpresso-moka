@@ -21,7 +21,7 @@ const moka = {
         icons: icons.icons,
         selected: null,
         current: null,
-        fonts: [ 'Barlow Condensed','Abel','Alice','Alegreya','Amethysta','Nunito Sans','Roboto','Quattrocento'],
+        fonts: process.env.VUE_APP_FONT_FAMILIES.split('|'),
         slide: 0
     },
     mutations: {

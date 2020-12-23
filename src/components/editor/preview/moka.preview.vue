@@ -1,5 +1,5 @@
 <template> 
-    <div :ref="doc.id" :class="doc.css" :style="stile(doc,true) + ' ' + background(doc)" id="content">
+    <div :ref="doc.id" :class="doc.css.css + ' ' + doc.css.container" :style="stile(doc,true) + ' ' + background(doc)" id="content">
         <!-- 1st level - BLOCKS LOOP -->
         
             <template v-for="(block,b) in doc.blocks">
@@ -202,6 +202,7 @@ export default {
                     if ( container.hasOwnProperty('gsap') && container.gsap.animation ){
                         this.animate ( container , container.id )
                     }
+                    if ( container.hasOwnProperty('blocks') ){
                     container.blocks.forEach ( el => {
                         if ( el.hasOwnProperty('gsap') && el.gsap.animation ){
                             this.animate ( el , el.id   )
@@ -215,6 +216,7 @@ export default {
                         }
                         
                     })
+                    }
                 })
             }
         })
