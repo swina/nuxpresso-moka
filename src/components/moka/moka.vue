@@ -73,6 +73,9 @@ export default {
         save(){
             this.loading = true
             console.log ( 'save =>' , this.component.blocks_id , this.component.json.id )
+            this.$http.defaults.headers.common = {
+                'Authorization': window.localStorage.getItem('nuxpresso-jwt')
+            }
             this.component.blocks_id ?
                 this.component.blocks_id === this.component.json.id ?
                     null :

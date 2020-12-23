@@ -156,11 +156,11 @@ export default {
             if ( !this.editor.current ) return 
             let stile = ''
             if ( this.editor.current.hasOwnProperty('fontFamily')){
-                stile += 'font-size:1rem;font-family:\"' + block.fontFamily + '\"; '
+                stile += ''//'font-size:1rem;font-family:\"' + block.fontFamily + '\"; '
             } else {
                 //let ff = document.querySelector('.ql-editor') 
                 //ff.style.fontFamily = '"\Barlow Condensed\",sans-serif'
-                stile = 'font-size:1rem;font-family:"\Barlow Condensed\",sans-serif;'
+                stile = ''//'font-size:1rem;font-family:"\Barlow Condensed\",sans-serif;'
             }
             console.log (stile )
             return this.editor.current.hasOwnProperty('style') ? this.editor.current.style + stile : stile
@@ -197,7 +197,7 @@ export default {
 }
 .ql-editor {
     overflow-y: auto;
-    font-family: "Barlow Condensed";
+    
     border:0;
     min-height:20rem;
     max-height:20rem;
