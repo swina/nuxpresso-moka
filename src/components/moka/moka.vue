@@ -65,6 +65,9 @@ export default {
     mounted(){
         this.component = this.$store.getters.component
         console.log ( this.component.blocks_id , this.component.json.id )
+        this.$http.defaults.headers.common = {
+            'Authorization': window.localStorage.getItem('nuxpresso-jwt')
+        }
         this.$http.get('upload/files').then ( response => {
             this.$store.dispatch ( 'loadMedia' , response.data )
         })
