@@ -22,7 +22,7 @@
         
         <moka-table v-if="!gallery" ctx="components" :components="objects" @component="setComponent" @message="message" @remove="remove"/>
         
-        <moka-gallery v-else :components="objects" @component="setComponent" @preview="setPreview"  @remove="remove"/>
+        <moka-gallery v-else :components="objects" @component="setComponent" @preview="setPreview"  @remove="remove" @duplicate="duplicate"/>
 
         <transition name="fade">
             <div class="nuxpresso-modal w-1/3 bg-gray-800 text-gray-500 p-4 flex flex-col text-sm" v-if="create">
@@ -165,6 +165,21 @@ export default {
             this.loading = true
             
         },
+        duplicate(comp){
+            let component = Object.assign ( {} , comp )
+            component.id = this.$randomID()
+            component.blocks_id = null
+            component.name = comp.name + ' COPY'
+            this.$http.post ( 'components' , component ).then ( result => {
+                this.$store.dispatch('loadComponents')
+                this.$store.dispatch('message','Component copied')
+                this.loading = false
+            }).catch ( error => {
+                this.$store.dispatch('message','An error occured. Check you console log.')
+                console.log ( error )
+                this.loading = false
+            })
+        },
         saveNewComponent(){
             this.create = false
             let component = {
@@ -200,11 +215,11 @@ export default {
             console.log ( 'new component' , component )    
             this.$http.post ( 'components' , component ).then ( result => {
                 this.$store.dispatch('loadComponents')
-                this.$emit('message','New component saved')
+                this.$store.dispatch('message','New component saved')
                 console.log ( result )
                 this.loading = false
             }).catch ( error => {
-                this.$emit('message','An error occured. Check you console log.')
+                this.$store.dispatch('message','An error occured. Check you console log.')
                 console.log ( error )
                 this.loading = false
             })

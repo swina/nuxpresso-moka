@@ -162,7 +162,6 @@ export default {
                 //ff.style.fontFamily = '"\Barlow Condensed\",sans-serif'
                 stile = ''//'font-size:1rem;font-family:"\Barlow Condensed\",sans-serif;'
             }
-            console.log (stile )
             return this.editor.current.hasOwnProperty('style') ? this.editor.current.style + stile : stile
         }
     },

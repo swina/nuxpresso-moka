@@ -6,7 +6,7 @@
       <div class="text-center">
         <div v-if="currentFile" class="progress">
           <div
-            class="bg-blue-400 h-4 my-1"
+            class="bg-blue-400 h-2 my-2 rounded-lg z-2xtop"
             role="progressbar"
             :aria-valuenow="progress"
             aria-valuemin="0"

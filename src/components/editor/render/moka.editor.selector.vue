@@ -224,6 +224,7 @@
             <moka-edit-media class="z-max" @newimage="setImage" :modal="true" @close="media=!media"/>
         </div>
     </transition>
+    
 
     <!-- TREE -->
     <transition name="slideright">
@@ -282,7 +283,7 @@ export default {
         copiedCSS: '',
         currentSlide: null,
         slideIndex: 0,
-        help: false
+        help: false,
     }),
     components: { 
         MokaElement,
@@ -330,21 +331,21 @@ export default {
             return null
         },
         customizeElement(flag){
-            console.log ( 'customize=>' , flag )
+            ////console.log ( 'customize=>' , flag )
         },
         customizeSwitch(v){
             v ? this.customizePos = 'left-0' : this.customizePos = 'right-0'
         },
         moka:()=>{
             handler:(old,obj)=>{
-                console.log ( obj )
+                //////console.log ( obj )
                 this.current = obj.current
             }
             deep: true
         },
         editor:()=>{
             handler:(old,obj)=>{
-                console.log ( obj )
+                //console.log ( obj )
                 this.current = obj.current
             }
             deep: true
@@ -359,17 +360,17 @@ export default {
         },
         dropdown(v){
             this.dropdownView = v
-            console.log(this.dropdownView)
+            //console.log(this.dropdownView)
         },
         edit(block){
             this.$emit ( 'edit' , block )
         },
         copy(block){
-            console.log ( 'copied element=>' , block )
+            //console.log ( 'copied element=>' , block )
             this.$emit ( 'copy' , block )
         },
         selected(el){
-            console.log ( 'current =>' , el.type , el.id)
+            //console.log ( 'current =>' , el.type , el.id)
             this.current = el 
             this.$store.dispatch('current',el)
         },
@@ -390,12 +391,14 @@ export default {
             }
         },
         keyUp(event){
-            console.log ( event )
+            //console.log ( event )
         },
+        
         setImage(img){
             this.current = this.editor.current
             this.editor.current.image = img
             this.current.image = img
+            this.selectThumbnail = false
             this.$store.dispatch('setCurrent', this.current)
         },
         activeDoc(id){
@@ -413,11 +416,11 @@ export default {
             }
         },
         setCurrent ( element ){
-            console.log ( element )
+            //console.log ( element )
             if ( !element ) return 
             this.customizerID = this.$randomID()
             this.current.entity = element
-            console.log ( element )
+            //console.log ( element )
             
             !element.hasOwnProperty('gsap') ? 
                 this.current.entity.gsap = {
@@ -495,7 +498,7 @@ export default {
             this.$emit('save',screenshot)
         },
         animate(){
-            console.log ( this.current.entity.gsap )
+            //console.log ( this.current.entity.gsap )
             if ( this.current.entity.gsap && this.current.entity.gsap.animation ){
                 gsap.effects[this.current.entity.gsap.animation]( this.$refs['aniDemo'] ,{
                     trigger: this.$refs['aniDemo'],

@@ -7,7 +7,7 @@
 
             <i v-if="current.type != 'grid'  && current.type != 'flex'" class="material-icons text-gray-400 hover:text-blue-400 ml-2" @click="$emit('edit',current),$store.dispatch('setAction','edit')" title="Edit content">edit</i>
 
-            <i v-if="current.type === 'flex'" class="material-icons text-gray-400 hover:text-blue-400 ml-2" @click="$emit('reusable')" title="Add component">add</i>
+            <i v-if="current.type === 'flex'" class="material-icons text-gray-400 hover:text-blue-400 ml-2" @click="$store.dispatch('setAction','addcomponent')" title="Add component">add</i>
             
             <i class="material-icons text-gray-400 hover:text-blue-400 ml-2" @click="copiedElement=current,$emit('copy',current)" title="Copy element">content_copy</i>
 

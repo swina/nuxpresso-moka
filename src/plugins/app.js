@@ -15,9 +15,9 @@ const menu = {
                 { label: 'Components' , icon: '' , component: 'MokaList' , filter: 'component' },
                 { label: 'Archive' , icon: '' , component: 'MokaList' , filter: 'archive' },
                 { label: 'Favorites' , icon: '' , component: 'MokaList' , filter: 'starred' },
-            ]
+            ] 
         },
-        { label: 'Media' , icon: 'photo' , component: 'MokaMedia' , filter: '' },
+        { label: 'Media' , icon: 'photo' , component: 'MokaMedia' , filter: 'manager' },
         { label: 'Settings' , icon: 'settings' , component: 'MokaSettings' , filter: '' },
         { label: 'Staging' , icon: 'dns' , component: 'MokaStage' , filter: '' },
         { label: 'Deploy' , icon: 'dynamic_form' , component: 'MokaDeploy' , filter: '' },

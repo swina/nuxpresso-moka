@@ -16,8 +16,9 @@
                     </div>
                 </div>
                 <div class="p-1 absolute bottom-0 bg-gray-300 items-center flex flex-row w-full text-left text-xs justify-between">
-                        <div>{{$moment(comp.updated_at)}}</div>
-                        <i class="material-icons" @click="index=c,current=comp.id,confirmModal=!confirmModal">delete</i>
+                    <div>{{$moment(comp.updated_at)}}</div>
+                    <i class="material-icons" title="Delete" @click="index=c,current=comp.id,confirmModal=!confirmModal">delete</i>
+                    <i class="material-icons" title="Duplicate" @click="$emit('duplicate',comp)">file_copy</i>
                 </div>
             </div>
         </div>

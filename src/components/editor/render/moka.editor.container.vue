@@ -54,19 +54,19 @@
             <div class="h-2 w-2 absolute top-0 left-0 bg-black rounded-full -m-1"></div>
             <div class="h-2 w-2 absolute bottom-0 right-0 bg-black rounded-full -m-1"></div>
             <div class="h-2 w-2 absolute bottom-0 left-0 bg-black rounded-full -m-1"></div>
-            <div v-if="doc.id===moka.selected" class="z-2xtop absolute top-0 left-0 ml-4 p-1 -mt-3  h-6 w-auto bg-gray-800 text-gray-300 text-xs rounded-2xl items-center flex flex-row justify-around">
-                <i class="transform scale-100 material-icons text-sm " v-if="doc.icon">{{doc.icon}}</i>
-                <i class="transform scale-100 material-icons text-sm" v-if="!doc.icon">select_all</i>
-                <i v-if="doc.type==='flex'" class="material-icons hover:text-blue-500 text-sm leading-4" @click="$store.dispatch('setAction','addcomponent')">add</i>
-                <i v-if="doc.tag==='form'" class="material-icons hover:text-blue-500 text-sm leading-4" @click="$store.dispatch('setAction','formsetting')">settings</i>
-                <i class="material-icons hover:text-blue-500 text-sm leading-4 " @click="$store.dispatch('setAction','customize')" title="Customize">brush</i>
-                <i class="material-icons hover:text-blue-500 text-sm leading-4 " @click="$store.dispatch('setAction','delete')" title="Customize">delete</i>
+            <div v-if="doc.id===moka.selected" class="z-2xtop absolute top-0 left-0 ml-4 p-1 -mt-5  h-6 w-auto bg-gray-800 text-gray-300 text-xs rounded-2xl items-center flex flex-row justify-around">
+                <i class="transform scale-100 material-icons text-sm mr-2" v-if="doc.icon">{{doc.icon}}</i>
+                <i class="transform scale-100 material-icons text-sm mr-2" v-if="!doc.icon">select_all</i>
+                <i v-if="doc.type==='flex'" class="mr-2 material-icons hover:text-blue-500 text-sm leading-4" @click="$store.dispatch('setAction','addcomponent')" title="Add element">add</i>
+                <i v-if="doc.tag==='form'" class="mr-2 material-icons hover:text-blue-500 text-sm leading-4" @click="$store.dispatch('setAction','formsetting')" title="Settings">settings</i>
+                <i class="mr-2 material-icons hover:text-blue-500 text-sm leading-4 " @click="$store.dispatch('setAction','customize')" title="Customize">brush</i>
+                <i class="mr-2 material-icons hover:text-blue-500 text-sm leading-4 " @click="$store.dispatch('setAction','delete')" title="Delete">delete</i>
             </div>
             <div class="absolute bottom-0 left-0 -mb-4 text-xs" v-if="doc.gsap && doc.gsap.animation">{{ doc.gsap.animation }}</div>
             <span v-if="doc.hasOwnProperty('slider')">SLIDER</span>
             <div v-if="doc.type==='grid' && this.$attrs.level < 3" class="opacity-100 hover:opacity-100 border absolute left-0 top-0 -mx-5 text-black flex flex-col" style="top:50%;transform:translateY(-50%)">
-                <i class="material-icons hover:bg-blue-200 text-gray-700 " @click="move(true)">expand_less</i>
-                <i class="material-icons hover:bg-blue-200 text-gray-700" @click="move(false)">expand_more</i>
+                <i class="mr-2 material-icons hover:bg-blue-200 text-gray-700 " @click="move(true)">expand_less</i>
+                <i class="mr-2 material-icons hover:bg-blue-200 text-gray-700" @click="move(false)">expand_more</i>
             </div>
         </div>
         

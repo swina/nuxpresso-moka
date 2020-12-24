@@ -1,5 +1,5 @@
 <template>
-    <div class="p-2 grid grid-cols-2">
+    <div class="p-2 grid grid-cols-2" v-if="image">
         <div class="flex flex-col justify-center p-1">
             <img :src="image.url"/>
         </div>

@@ -93,7 +93,6 @@ export default {
         classi.forEach ( cl => {
             this.bgsizes.forEach ( size => {
                 if ( cl.indexOf ( size ) > -1 ){
-                    console.log ( 'found=>' , size )
                     this.bgposition['size'] = size
                     this.$emit('css',size)
                 }

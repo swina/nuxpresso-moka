@@ -10,10 +10,10 @@
 
             <!-- MENU DEFINED IN @/plugins/app.js -->
             <template v-if="menu && menu.items" v-for="item in menu.items">
-                 <div :key="item.label" v-if="item.component" class="flex flex-row items-center py-1 font-thin text-sm p-2 hover:bg-gray-700" @click="section=item.component,label=item.label">
+                 <div :key="item.label" v-if="item.component" class="flex flex-row items-center py-1 font-thin text-sm p-2 hover:bg-gray-700" @click="section=item.component,label=item.label,filter=item.filter">
                     <i v-if="item.icon" class="material-icons mr-2">{{ item.icon }}</i> {{ item.label }}
                  </div>
-                 <div v-else :key="item.label" class="flex flex-row items-center py-1 font-thin text-sm p-2 hover:bg-gray-700" @click="label=item.label">
+                 <div v-else :key="item.label" class="flex flex-row items-center py-1 font-thin text-sm p-2 hover:bg-gray-700" @click="label=item.label,filter=item.filter">
                     <i v-if="item.icon" class="material-icons mr-2">{{ item.icon }}</i> {{ item.label }}
                  </div>
                  <transition name="fade">

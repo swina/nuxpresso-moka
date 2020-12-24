@@ -48,11 +48,18 @@ export default {
       this.message = msg
     },
   },
-  beforeMount(){
+  mounted(){
     if ( window.localStorage.getItem('nuxpresso-jwt') ){
       this.$http.defaults.headers.common = {
           'Authorization': window.localStorage.getItem('nuxpresso-jwt')
       }
+      this.$http.get('users/me').then ( resp => {
+        console.log ( 'Authenticated => ',resp.data )
+        this.$store.dispatch ( 'message' , 'Welcome back ' + resp.data.username )
+      }).catch ( error => {
+        this.$store.dispatch('message','You are not authenticated!')
+        console.log ( error )
+      })
       this.$store.dispatch('login',true)
       this.$store.dispatch('user',JSON.parse(JSON.stringify(window.localStorage.getItem('nuxpresso-user'))))   
       this.$store.dispatch('loadComponents')
