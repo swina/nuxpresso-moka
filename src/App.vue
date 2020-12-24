@@ -54,7 +54,6 @@ export default {
           'Authorization': window.localStorage.getItem('nuxpresso-jwt')
       }
       this.$http.get('users/me').then ( resp => {
-        console.log ( 'Authenticated => ',resp.data )
         this.$store.dispatch ( 'message' , 'Welcome back ' + resp.data.username )
       }).catch ( error => {
         this.$store.dispatch('message','You are not authenticated!')

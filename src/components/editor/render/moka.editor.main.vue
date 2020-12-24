@@ -423,8 +423,7 @@ export default {
             element.id = this.$randomID()
             this.copiedElement = element
             this.current = current
-            console.log ( 'copied=>' , current )
-            this.$emit('copy')
+            this.$store.dispatch('message','Element copied')
         },
         duplicateElement(current){
             delete this.editor.current.parent 
@@ -638,19 +637,27 @@ export default {
             this.current.coords = coords
         },
         saveBlockAsNewComponent(){
+            let id = this.$randomID()
+            let newComponent = {
+                blocks_id : id,
+                name: this.newComponent.name,
+                description: this.newComponent.description,
+                category: this.newComponent.category,
+                enabled: true,
+                json: {
+                        blocks : [ this.editor.current ],
+                        css: '',
+                        id: id,
+                        image: null,
+                        tag: 'document'
+                },
+                loop: null,
+                loop_limit: null,
+                loop_type: null                
+            }
             
-            this.loading = true
-            //if ( this.current.coords.length === 1 ){
+                /*
                 let newComponent = {}
-                //newComponent = {}JSON.parse(JSON.stringify(this.editor.current))
-                /*let block = {}
-                if ( this.editor.current.hasOwnProperty('blocks') ){
-                    block = this.$unique(this.editor.current)
-                } else {
-                    block = Object.assign({} , this.editor.current)
-                    block.id = this.$randomID()
-                }
-                */
                 newComponent = {
                     json: {
                         blocks : [ this.editor.current ]
@@ -660,13 +667,14 @@ export default {
                     category : this.newComponent.category,
                     enabled : true
                 }
-                this.saveBlockAsComponent = false
-                this.$emit('saveasreusable', newComponent)
-                return null
+            */
+            this.saveBlockAsComponent = false
+            this.$emit('saveasreusable', newComponent)
+            return null
                
             //}
-            this.saveBlockAsComponent = false
-            return null
+            //this.saveBlockAsComponent = false
+            //return null
         }
         
     },
