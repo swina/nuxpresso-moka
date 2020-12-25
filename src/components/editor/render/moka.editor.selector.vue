@@ -49,13 +49,14 @@
         <div v-if="$attrs.category === 'slider'" :data="getSlider">
             <div class="flex flex-row items-center">
                 <h3>Slides</h3>
-                <button class="rounded-none mx-2">Add slide</button>
-                <button class="rounded-none mx-2" v-if="currentSlide">Duplicate</button>
-                <button class="danger rounded-none mx-2" v-if="currentSlide">Delete</button>
+                <button class="mx-2" @click="addSlide()">Add slide</button>
+                <button class="danger mx-2" v-if="!slideDelete && slideIndex > -1" @click="slideDelete=!slideDelete">Delete</button>
+                <button class="danger" v-if="slideDelete" @click="doc.blocks.splice(slideIndex,1),slideIndex=0,slideDelete=!slideDelete">Confirm to delete this slide?</button>
+                <!--<button class="rounded-none mx-2" v-if="currentSlide">Duplicate</button>-->
             </div>
             
                 <draggable :list="doc.blocks" class="flex flex-row mb-4">
-                    <div v-for="(slide,index) in doc.blocks" :class="'w-16 h-8 border justify-center items-center flex flex-col mr-4 ' + slideSelected(index)" @click="currentSlide=slide,slideIndex=index">
+                    <div v-for="(slide,index) in doc.blocks" :class="'w-16 h-8 border justify-center items-center flex flex-col mr-4 ' + slideSelected(index)" @click="slideDelete=false,currentSlide=slide,slideIndex=index">
                         Slide {{ (index+1) }}
                     </div>
                 </draggable>
@@ -283,6 +284,7 @@ export default {
         copiedCSS: '',
         currentSlide: null,
         slideIndex: 0,
+        slideDelete: false,
         help: false,
     }),
     components: { 
@@ -353,6 +355,9 @@ export default {
 
     },
     methods: {
+        addSlide(){
+            this.doc.blocks.push ( this.$grid(1) )
+        },
         slideSelected(index){
             return this.currentSlide && index === this.slideIndex ?
                 'bg-blue-500 text-white' : ''

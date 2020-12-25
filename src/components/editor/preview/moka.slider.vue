@@ -18,7 +18,7 @@
             </div>
             
             <div v-if="doc.slider.dots.enable" class="absolute bottom-0 left-0 text-center flex-row justify-center items-center mb-4 w-full">
-              <i :class="'material-icons mr-2 ' + dotActive(n)" v-for="n in doc.blocks.length" @click="goTo(n-1)">fiber_manual_record</i>
+              <i :class="'ring-2 material-icons mr-2 ' + dotActive(n)" v-for="n in doc.blocks.length" @click="goTo(n-1)">fiber_manual_record</i>
             </div>
 
             <div v-if="doc.slider.navigation.enable">
@@ -68,7 +68,7 @@ export default {
 
     methods:{
         dotActive(n){
-          return (n-1) === this.index ? 'text-black' : 'text-gray-400'
+          return (n-1) === this.index ? 'text-black animate-ping' : 'text-gray-300 shadow rounded-full'
         },
         goTo(n){
           this.index = n

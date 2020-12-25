@@ -1,24 +1,23 @@
 <template>
-    <div class="grid grid-cols-4 grid-flow-cols gap-8 w-full items-start justify-start cursor-pointer object-fit" style="grid-auto-rows: .5fr;">
+    <div class="flex flex-col md:grid md:grid-cols-4 md:grid-flow-cols md:gap-8 w-full items-start justify-start cursor-pointer object-fit" style="grid-auto-rows: .5fr;">
         
         <div v-if="comp.enabled" v-for="(comp,c) in $attrs.components" class="mb-2 text-sm border  shadow-lg rounded-lg justify-center flex flex-col h-full" :title="comp.description">
             <div class="flex-1 relative object-cover ">
-                <div class="bg-gray-300 w-full p-1 rounded-tl rounded-tr font-bold flex flex-row items-center">
+                <div class="px-1 bg-gray-700 text-gray-300 w-full rounded-tl rounded-tr  flex flex-row items-center">
                     {{comp.name}}
-                    <div class="absolute right-0 mt-2 mr-1">
-                        <i class="material-icons xs ml-2 hover:text-blue-500" @click="$emit('preview',comp)">preview</i>
-                        <i class="material-icons xs ml-2 hover:text-blue-500" @click="$emit('component',comp)">edit</i>
-                    </div>
                 </div>
-                <div class="relative pt-64 bg-gray-600"> 
-                    <div class="flex items-center text-center h-full justify-center absolute h-64 top-0 object-contain left-0 right-0 bottom-0">
-                        <img  :src="comp.image_uri" v-if="comp.image_uri" style="max-height:100%" class="w-auto h-auto block m-auto" title="Click to preview" @click="$emit('preview',comp)"/>
-                    </div>
+                
+                <div class="h-48 bg-contain bg-center bg-no-repeat" v-if="comp.image_uri" :style="'background-image:url(' + comp.image_uri + ')'" title="Click to preview" @click="$emit('preview',comp)">
                 </div>
-                <div class="p-1 absolute bottom-0 bg-gray-300 items-center flex flex-row w-full text-left text-xs justify-between">
+                
+                <div v-else class="h-48" title="Click to preview" @click="$emit('preview',comp)"></div>
+                
+                <div class="px-1 absolute bottom-0 rounded-br rounded-bl bg-gray-300 items-center flex flex-row w-full text-left text-xs justify-between">
                     <div>{{$moment(comp.updated_at)}}</div>
-                    <i class="material-icons" title="Delete" @click="index=c,current=comp.id,confirmModal=!confirmModal">delete</i>
-                    <i class="material-icons" title="Duplicate" @click="$emit('duplicate',comp)">file_copy</i>
+                    <i class="ml-2 material-icons text-gray-500 hover:text-blue-500" title="Delete" @click="index=c,current=comp.id,confirmModal=!confirmModal">delete</i>
+                    <i class="ml-2 material-icons text-gray-500 hover:text-blue-500" title="Duplicate" @click="$emit('duplicate',comp)">file_copy</i>
+                    <i class="material-icons xs ml-2 text-gray-500 hover:text-blue-500" title="Preview" @click="$emit('preview',comp)">preview</i>
+                        <i class="material-icons xs ml-2 text-gray-500 hover:text-blue-500" title="Edit" @click="$emit('component',comp)">edit</i>
                 </div>
             </div>
         </div>

@@ -2,7 +2,7 @@
     <div 
         v-if="doc"
         :level="$attrs.level"  
-        :class="'p-2 relative ' + classe(doc.css)" :style="doc.style + ' ' +  background(doc)" >
+        :class="'p-2 relative fill-current ' + classe(doc.css)" :style="doc.style + ' ' +  background(doc)" >
         
         <template v-for="(block,b) in doc.blocks">
             
@@ -206,12 +206,19 @@ export default {
         },
         background(block){
             if ( !block ) return 
+            
             return block.hasOwnProperty('image') ?
                 block.image && block.image.url ? 
-                    block.image.previewUrl ? 
-                        ' background-image:url(' + block.image.previewUrl + ');background-size:cover;background-repeat:no-repeat;' :
-                            ' background-image:url(' + block.image.url + ');' : ''  : ''        
+                    this.setImageBackground ( block.image ) : '' : ''
+
+                        //' background-image:url(' + block.image.previewUrl + ');background-size:cover;background-repeat:no-repeat;' + this.isSvg(block.image) :
+                        //    ' background-image:url(' + block.image.url + ');' : ''  : ''        
         },
+        setImageBackground(image){
+            let theImg = image.hasOwnProperty('previewUrl')  && image.previewUrl ? image.previewUrl : image.url
+            let response = ' background-image:url(' + theImg + ');'
+            return response
+        }
     }
 
 }

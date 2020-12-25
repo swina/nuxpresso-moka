@@ -54,22 +54,22 @@
             </div>
         </transition>
         <transition name="fade">
-            <div v-if="importJSON" class="nuxpresso-modal w-full md:w-1/3 bg-gray-800 rounded-xl shadow-xl p-2 text-gray-600 text-sm">
+            <div v-if="importJSON" class="nuxpresso-modal w-full md:w-1/3 bg-gray-800 rounded border-4 border-gray-500  shadow-xl p-2 text-gray-600 text-sm">
                 <moka-upload @close="importJSON=!importJSON"/>
             </div>
         </transition>
         <!-- EXPORT COMPONENT -->
         <transition name="fade">
-            <div v-if="exportComponent" class="nuxpresso-modal rounded w-full md:w-1/4  p-4 flex flex-col bg-white z-2xtop">
-                <i class="material-icons absolute top-0 right-0 cursor-pointer" @click="exportComponent=!exportComponent">close</i>
+            <div v-if="exportComponent" class="nuxpresso-modal w-full  border-4 border-gray-500 md:w-1/3 bg-gray-800 rounded shadow-xl p-2 text-gray-600 text-sm z-2xtop">
+                <i class="material-icons absolute top-0 right-0 m-1 cursor-pointer" @click="exportComponent=!exportComponent">close</i>
                 <h4>Export Library</h4>
                 <vue-blob-json-csv
                     file-type="json"
                     :file-name="filter + ' library'"
-                    :data="[exportJSON]"
+                    :data="objects"
                     confirm="Do you want to download it?"
                 >
-                <button class="my-2" @click="exportComponent=!exportComponent">Download Library</button>
+                <button class="my-2 success" @click="exportComponent=!exportComponent">Download Library</button>
                 </vue-blob-json-csv>
             </div>
         </transition>
@@ -124,7 +124,7 @@ export default {
             let json = {
                 objects : []
             }
-            this.objects.map ( obj => {
+            this.objects.forEach ( obj => {
                 json.objects.push ( obj )
             })
             this.$store.dispatch('loading')
