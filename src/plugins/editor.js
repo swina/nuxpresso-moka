@@ -184,6 +184,23 @@ function cssFound(css,str){
 }
 */
 
+
+//clone object and reassign any id to a new random id
+var traverse = function(o) {
+    for (var i in o) {
+      //fn.apply(this,[i,o[i]]);  
+      if (o[i] !== null && typeof(o[i])=="object") {
+        traverse(o[i]);
+      } else {
+          if ( i === 'id' ){
+              o[i] = randomID()
+          }
+      }
+    }
+    return o
+  }
+  
+
 function randomID(){
     return 'moka-' + Math.random().toString(36).substr(2, 5)
 }
@@ -229,7 +246,10 @@ function getObj(obj,index){
 
 export default {
     install: function (Vue) {
-        
+        Vue.prototype.$clone = ( obj )=>{
+            if ( !obj ) return null
+            return traverse ( obj )
+        }
         Vue.prototype.$categories = ()=>{
             return categories
         }
@@ -570,6 +590,7 @@ export default {
             if ( !component ) return false
             let obj = Object.assign( {} , component )
             obj.id = randomID()
+            return traverse(obj)
             if ( !obj.hasOwnProperty('blocks') ) return obj
             let objblocks = []
             obj.blocks.forEach ( block => {

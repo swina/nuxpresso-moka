@@ -390,14 +390,23 @@ export default {
         },
         copyElement(current){
             let element = {}
-            element = Object.assign( {} , current )
+            //element = Object.assign( {} , current )
+            element = JSON.parse(JSON.stringify(this.editor.current))
+            element = this.$clone ( element )
             element.id = this.$randomID()
             this.copiedElement = element
             this.current = current
             this.$store.dispatch('message','Element copied')
         },
+        removeElement(){
+            this.$findNode ( this.editor.current.id , this.doc , true  )
+        },
+        pasteElement(){
+            //console.log ( 'Cloned object => ' , this.$clone ( this.copiedElement ) )
+            this.addReusable ( this.copiedElement )
+        },
         duplicateElement(current){
-            delete this.editor.current.parent 
+            delete this.editor.current.parent             
             let el = JSON.parse(JSON.stringify(this.editor.current))
             let o = this.$copy ( this.editor.current )
             this.$findNode ( el.id , this.moka.component.json )
@@ -496,11 +505,13 @@ export default {
                 } else {
                     imported = obj.json
                 }            
-                json = this.$unique ( imported )
-                component = JSON.parse(JSON.stringify(json))
+                //json = this.$unique ( imported )
+                //component = JSON.parse(JSON.stringify(json))
+                component = this.$clone(imported)
             } else {
-                json = this.$unique ( obj )
-                component = JSON.parse(JSON.stringify(json))
+                component = this.$clone(obj) //this.$unique ( obj )
+                //console.log ( obj , json )
+                //component = JSON.parse(JSON.stringify(json))
             }
             component['gsap'] = {
                 animation: '',
@@ -517,6 +528,7 @@ export default {
             console.log ( 'component => ' , component )
             target.blocks.push ( component )
             this.addBlock = false
+            this.copiedElement = null
             this.$store.dispatch('setAction',null)
         },
         addComponent(component){
@@ -548,12 +560,7 @@ export default {
             this.doc = this.moka.component.json
         },
         */
-        removeElement(){
-            this.$findNode ( this.editor.current.id , this.doc , true  )
-        },
-        pasteElement(){
-            this.addReusable ( this.copiedElement )
-        },
+        
         /*
         setImage(img){
             let image = img ? this.$cleanImage(img) : null
