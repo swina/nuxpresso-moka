@@ -450,7 +450,7 @@ export default {
             let component , json , imported
             if ( obj.hasOwnProperty ( 'json' ) ){
                 if ( obj.category != 'slider' ){
-                    imported = obj.json.blocks
+                    imported = obj.json.blocks[0]
                 } else {
                     imported = obj.json
                 }            

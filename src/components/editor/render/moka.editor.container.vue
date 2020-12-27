@@ -66,10 +66,11 @@
             </div>
             <!--<div class="absolute bottom-0 left-0 -mb-4 text-xs" v-if="doc.gsap && doc.gsap.animation">{{ doc.gsap.animation }}</div>
             <span v-if="doc.hasOwnProperty('slider')">SLIDER</span>
+            -->
             <div v-if="doc.type==='grid' && this.$attrs.level < 3" class="opacity-100 hover:opacity-100 border absolute left-0 top-0 -mx-5 text-black flex flex-col" style="top:50%;transform:translateY(-50%)">
                 <i class="mr-2 material-icons hover:bg-blue-200 text-gray-700 " @click="move(true)">expand_less</i>
                 <i class="mr-2 material-icons hover:bg-blue-200 text-gray-700" @click="move(false)">expand_more</i>
-            </div>-->
+            </div>
         </div>
         
     </div>
