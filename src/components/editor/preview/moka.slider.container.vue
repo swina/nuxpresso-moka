@@ -21,6 +21,7 @@
             <!--<moka-slider :key="block.id" :ref="block.id" v-if="block && block.hasOwnProperty('slider')" :develop="true" :embeded="true" :doc="block" :editor="true"/>-->
             
         </template>
+        
     </div>
 
 </template>

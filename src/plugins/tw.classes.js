@@ -57,6 +57,14 @@ var classes = {
         'leading-relaxed',
         'leading-loose'
     ],
+    textSpacing: [
+        'tracking-tighter',
+        'tracking-tight',
+        'tracking-normal',
+        'tracking-wide',
+        'tracking-wider',
+        'tracking-widest'
+    ],
     textOpacity: setOpacity('text-opacity'),
     fontfamily: [
         'Barlow Condensed',

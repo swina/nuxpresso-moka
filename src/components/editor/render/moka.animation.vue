@@ -52,7 +52,6 @@ export default {
     },
     methods: {
          animate(){
-            console.log ( this.current.gsap )
             if ( this.current.gsap && this.current.gsap.animation ){
                 gsap.effects[this.current.gsap.animation]( this.$refs['aniDemo'] ,{
                     trigger: this.$refs['aniDemo'],

@@ -14,6 +14,7 @@
                 :develop="true"
                 @selected="setCurrent(block),$store.dispatch('setCurrent',block),$store.dispatch('selected',block.id)"
                 @customize="customize"
+                :parent="[doc.blocks,b]"
                 @copy="$emit('copy')"
                 @animation="$emit('animations')"
                 @delete="$emit('delete')" 
@@ -47,7 +48,7 @@
                 :doc="block.blocks[0]"/>
         </template>
         
-        <div :class="'absolute transform border border-dashed top-0 left-0 bottom-0 right-0 z-' + zindex + ' scale-x-' + (106-root) + ' ' + active(doc.id,doc)" @click="setCurrent(doc)" v-if="doc && !doc.hasOwnProperty('items')">
+        <div :class="'absolute transform border-2 border-dashed top-0 left-0 bottom-0 right-0 z-' + zindex + ' scale-x-' + (106-root) + ' ' + active(doc.id,doc)" @click="setCurrent(doc)" v-if="doc && !doc.hasOwnProperty('items')">
             <!--{{ $attrs.level }} {{ $attrs.index }}-->
             <span v-if="doc.hasOwnProperty('loop') && doc.loop" class="text-xs"><i class="material-icons">article</i> Article Grid</span>
             <div class="h-2 w-2 absolute top-0 right-0 bg-black rounded-full -m-1"></div>
@@ -58,16 +59,17 @@
                 <i class="transform scale-100 material-icons text-sm mr-2" v-if="doc.icon">{{doc.icon}}</i>
                 <i class="transform scale-100 material-icons text-sm mr-2" v-if="!doc.icon">select_all</i>
                 <i v-if="doc.type==='flex'" class="mr-2 material-icons hover:text-blue-500 text-sm leading-4" @click="$store.dispatch('setAction','addcomponent')" title="Add element">add</i>
-                <i v-if="doc.tag==='form'" class="mr-2 material-icons hover:text-blue-500 text-sm leading-4" @click="$store.dispatch('setAction','formsetting')" title="Settings">settings</i>
+                <i v-if="doc.tag==='form'" class="mr-2 material-icons hover:text-blue-500 text-sm leading-4" @click="$store.dispatch('setAction','formsetting')" title="Settings">settings</i> 
                 <i class="mr-2 material-icons hover:text-blue-500 text-sm leading-4 " @click="$store.dispatch('setAction','customize')" title="Customize">brush</i>
+                <i v-if="doc.type === 'flex'" class="material-icons text-gray-400 hover:text-blue-400 mr-2" title="Add block" @click="$store.dispatch('setAction','addreusable')">widgets</i> 
                 <i class="mr-2 material-icons hover:text-blue-500 text-sm leading-4 " @click="$store.dispatch('setAction','delete')" title="Delete">delete</i>
             </div>
-            <div class="absolute bottom-0 left-0 -mb-4 text-xs" v-if="doc.gsap && doc.gsap.animation">{{ doc.gsap.animation }}</div>
+            <!--<div class="absolute bottom-0 left-0 -mb-4 text-xs" v-if="doc.gsap && doc.gsap.animation">{{ doc.gsap.animation }}</div>
             <span v-if="doc.hasOwnProperty('slider')">SLIDER</span>
             <div v-if="doc.type==='grid' && this.$attrs.level < 3" class="opacity-100 hover:opacity-100 border absolute left-0 top-0 -mx-5 text-black flex flex-col" style="top:50%;transform:translateY(-50%)">
                 <i class="mr-2 material-icons hover:bg-blue-200 text-gray-700 " @click="move(true)">expand_less</i>
                 <i class="mr-2 material-icons hover:bg-blue-200 text-gray-700" @click="move(false)">expand_more</i>
-            </div>
+            </div>-->
         </div>
         
     </div>
@@ -187,9 +189,9 @@ export default {
         active(id,doc){
             if ( !doc ) return 
             let color = 'border-blue-500 '
-            doc && !doc.hasOwnProperty('type') ? color = 'border-red-500 ' : null
+            doc && !doc.hasOwnProperty('type') ? color = 'border-red-500 border-2 bg-gray-300 bg-opacity-25' : null
             doc.type === 'flex' ?
-                color = 'border-red-500 ' : ' '
+                color = 'border-red-500 border-2 bg-gray-300 bg-opacity-25 ' : ' '
             if ( this.moka && this.moka.selected ) {
                 return this.moka.selected === id ? color + 'opacity-100' : color + 'opacity-0 hover:opacity-100'
             } else {

@@ -49,6 +49,8 @@
             </div>
              <!-- slider link next prev -->
             <div class="flex flex-col my-1 text-left" v-if="$attrs.component.category==='slider'">
+                <label>Slide name</label>
+                <input type="text" class="dark" v-model="editor.current.name"/>
                 <label>Slider Action</label>
                 <select class="dark" v-model="$attrs.element.action">
                     <option value=""></option>
@@ -105,7 +107,7 @@ export default {
     }),
     components: { MokaImagePlaceholder , MokaIcons },
     computed:{
-        ...mapState ( ['moka'] )
+        ...mapState ( ['moka','editor'] )
     }
 
 }

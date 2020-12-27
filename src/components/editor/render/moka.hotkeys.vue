@@ -42,6 +42,9 @@
         <label class="font-bold">Alt + a</label>
         <div>Animation </div>
 
+        <label class="font-bold">Alt + o</label>
+        <div>Current block screenshot </div>
+
         <label class="font-bold">Alt + r</label>
         <div>Remove </div>
 

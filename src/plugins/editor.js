@@ -199,7 +199,6 @@ var traverse = function(o) {
     }
     return o
   }
-  
 
 function randomID(){
     return 'moka-' + Math.random().toString(36).substr(2, 5)
@@ -246,10 +245,13 @@ function getObj(obj,index){
 
 export default {
     install: function (Vue) {
+
         Vue.prototype.$clone = ( obj )=>{
             if ( !obj ) return null
             return traverse ( obj )
         }
+
+        
         Vue.prototype.$categories = ()=>{
             return categories
         }

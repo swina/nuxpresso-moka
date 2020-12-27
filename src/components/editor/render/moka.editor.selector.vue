@@ -56,10 +56,11 @@
             </div>
             
                 <draggable :list="doc.blocks" class="flex flex-row mb-4">
-                    <div v-for="(slide,index) in doc.blocks" :class="'w-16 h-8 border justify-center items-center flex flex-col mr-4 ' + slideSelected(index)" @click="slideDelete=false,currentSlide=slide,slideIndex=index">
-                        Slide {{ (index+1) }}
+                    <div v-for="(slide,index) in doc.blocks" :class="'w-auto px-1 h-8 border justify-center items-center flex flex-col mr-4 ' + slideSelected(index)" @click="slideDelete=false,currentSlide=slide,slideIndex=index,$store.dispatch('setCurrent',slide),$store.dispatch('selected',slide.id)">
+                        {{ 'Slide ' + (index+1) }}
                     </div>
                 </draggable>
+                <input type="text" v-model="doc.blocks[slideIndex].name"/>
             <div v-if="currentSlide" :class="doc.css + ' relative border-2 border-dashed p-4 text-black '" :style="stile(doc,true) + ' ' + background(doc)" id="content">
             
                 <moka-container
@@ -140,7 +141,8 @@
             @delete="confirmModal=!confirmModal"
             @help="help=!help"/>
     </transition>
-   
+
+    <!-- Customizer -->
     <transition name="fade">
         <div v-if="editor.action==='customize'" :class="'fixed right-0 top-0 w-1/5 z-2xtop min-h-screen bg-gray-800 text-xs text-gray-500 ' + customizePos" ref="aContainer">
              <moka-customize-drawer
@@ -153,7 +155,6 @@
                 @close="$store.dispatch('setAction',null)"
                 @switch="customizeSwitch=!customizeSwitch"
                 @dropwdown="dropdown"/>
-                <!--customizeElement-->
         </div>
     </transition>
 
@@ -219,6 +220,7 @@
             <moka-animation :key="editor.current.id" v-model="editor.current" :element="editor.current" @close="animations=!animations"/>
         </div>
     </transition> 
+    
     <!-- MEDIA --->
     <transition name="fade">
         <div v-if="media" draggable="true" class="nuxpresso-modal h-4/5 w-10/12 border shadow-lg text-sm z-2xtop rounded-lg">
@@ -521,6 +523,11 @@ export default {
         this.current = this.moka.current
         window.addEventListener("keydown", e => {
             if ( e.altKey && e.code === 'KeyB' ){
+                !this.doc.hasOwnProperty('slider') ?
+                    vm.$emit('preview') :
+                        vm.$emit('slider')
+            }
+             if ( e.altKey && e.code === 'Keyspace' ){
                 !this.doc.hasOwnProperty('slider') ?
                     vm.$emit('preview') :
                         vm.$emit('slider')

@@ -7,6 +7,7 @@
         
             <template v-for="(block,i) in doc.blocks">
                 <moka-preview-container
+                
                 class="slide flex-none top-0 left-0 right-0 bottom-0 w-full"
                 v-if="block && block.hasOwnProperty('blocks') && !block.hasOwnProperty('menu')" 
                 :doc="block" @action="hasSlideAction" :current="current"/>
@@ -18,17 +19,23 @@
             </div>
             
             <div v-if="doc.slider.dots.enable" class="absolute bottom-0 left-0 text-center flex-row justify-center items-center mb-4 w-full">
-              <i :class="'ring-2 material-icons mr-2 ' + dotActive(n)" v-for="n in doc.blocks.length" @click="goTo(n-1)">fiber_manual_record</i>
+              <i :class="'slider-dot ring-2 material-icons mr-2 ' + dotActive(n)" v-for="n in doc.blocks.length" @click="goTo(n-1)">fiber_manual_record</i>
             </div>
 
             <div v-if="doc.slider.navigation.enable">
-              <div :class="'absolute top-0 left-0 h-full flex justify-center items-center p-1 ' + over" @click="next(-1)">
-                <i class="material-icons text-4xl">{{ doc.slider.navigation.icons[0]}}</i>
+              <div :class="'absolute top-0 left-0 h-full flex justify-center items-center p-1 ' + over" @click="goTo(index-1)">
+                <i class="slider-navigation-icon material-icons text-4xl">{{ doc.slider.navigation.icons[0]}}</i>
               </div>
-              <div :class="'absolute top-0 right-0 h-full flex justify-center items-center p-1 ' + over" @click="next(1)">
-                <i class="material-icons text-4xl">{{ doc.slider.navigation.icons[1]}}</i>
+              <div :class="'absolute top-0 right-0 h-full flex justify-center items-center p-1 ' + over" @click="goTo(index+1)">
+                <i class="slider-navigation-icon material-icons text-4xl">{{ doc.slider.navigation.icons[1]}}</i>
               </div>
             </div>
+            <div v-if="doc.slider.buttons" :class="'absolute left-0 text-center hidden md:flex md:flex-row justify-center items-center my-2 w-full ' + doc.slider.buttons_position">
+              <template v-for="(slide,n) in doc.blocks">
+                <button :class="'slider-buttons mx-1 capitalize '  + doc.slider.buttons_css" @click="goTo(n)">{{ slide.name || 'slide' + (n+1) }}</button>
+              </template>
+
+        </div>
     </div>
 
 </template>
@@ -71,11 +78,15 @@ export default {
           return (n-1) === this.index ? 'text-black animate-ping' : 'text-gray-300 shadow rounded-full'
         },
         goTo(n){
+          if ( n < 0 ) return 
+          if ( n > this.doc.blocks.length -1 ) return
           this.index = n
           this.current = this.doc.blocks[n].id
           let tl = gsap.timeline()
             if ( document.querySelector('.slide') ){
-              tl.to ( '.slide' , { xPercent: -this.index*100 , opacity:1 , duration: 1.5 } )
+              tl.to ( '.slide' , { opacity:0 , duration: .4 } ),
+              tl.to ( '.slide' , { xPercent: -this.index*100 , opacity:0 , duration: .5 } ),
+              tl.to ( '.slide' , { opacity:1 , duration: .5 })
             }
         },
         playslides ( sec ){
