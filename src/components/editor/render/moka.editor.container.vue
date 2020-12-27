@@ -190,7 +190,7 @@ export default {
         active(id,doc){
             if ( !doc ) return 
             let color = 'border-blue-500 '
-            doc && !doc.hasOwnProperty('type') ? color = 'border-red-500 border-2 bg-gray-300 bg-opacity-25' : null
+            doc && !doc.hasOwnProperty('type') ? color = 'border-red-500 ' : null
             doc.type === 'flex' ?
                 color = 'border-red-500 border-2 bg-gray-300 bg-opacity-25 ' : ' '
             if ( this.moka && this.moka.selected ) {
