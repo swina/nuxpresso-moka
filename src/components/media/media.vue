@@ -108,7 +108,7 @@ export default {
                 this.edit = true
                 return
             } else {
-                if ( img.formats && img.formats.thumbnail.url ){
+                if ( img.formats && img.formats.thumbnail ){
                     this.selectThumbnail = true
                     this.selectedImage= img
                 } else {
