@@ -1,9 +1,12 @@
 const twgroups = [
     { label: 'grid' , filter: ['grid'] , components: [
-        { name: 'MokaGrid' , attr: 'grid'  },
+        //{ name: 'MokaOptions' , attr: 'gridcols' , title: 'columns' },
+        //{ name: 'MokaGrid' , attr: 'grid'  },
+        
         { name: 'MokaOptions' , attr: 'gridgap' , title: 'grid gap'}
     ]},
     { label: 'flex' ,  components: [
+        { name: 'MokaOptions' , attr: 'colspan' , title: 'grid column span' },
         { name: 'MokaOptions' , attr: 'flexdirection' , title: 'direction'},
         { name: 'MokaOptions' , attr: 'flexwrap' , title: 'wrap'},
         { name: 'MokaOptions' , attr: 'flexgrow' , title: 'grow'},
@@ -98,10 +101,7 @@ const twgroups = [
         { name: 'MokaOptions' , attr: 'rotate' , required: 'transform' },
         { name: 'MokaOptions' , attr: 'clipPath' , required: 'transform' , title: 'clip path'},
     ]}, 
-    { label: 'html semantic' , components : [
-        { name: 'MokaOptions' , attr: 'semantics' , title: 'semantic tag'}
-    ]}  
-
+    
 ]
 
 export default twgroups

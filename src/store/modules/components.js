@@ -11,6 +11,7 @@ const moka = {
         loading: false,
         message: '',
         filter: '',
+        settings: null,
         components: null,
         elements:null,
         component: null,
@@ -25,6 +26,9 @@ const moka = {
         slide: 0
     },
     mutations: {
+        SET_SETTINGS ( state , settings ){
+            state.settings = settings
+        },
         SET_LOADING ( state ){
             state.loading =! state.loading
         },
@@ -78,6 +82,8 @@ const moka = {
         async loadComponents ( { commit } ){
             const comps = await axios.get ( process.env.VUE_APP_API_URL + 'components' )
             commit ( 'SET_COMPONENTS' , comps.data.sort( (a, b) => a.name < b.name ? -1 : 1) ) 
+            const settings = await axios.get ( process.env.VUE_APP_API_URL + 'settings' )
+            commit ( 'SET_SETTINGS' , settings.data )
         },
         async loadElements ( { commit } ){
             axios.get ( process.env.VUE_APP_API_URL + 'elements' ).then ( response => {

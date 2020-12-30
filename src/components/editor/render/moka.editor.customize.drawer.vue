@@ -1,12 +1,12 @@
 <template>
-    <div :data="component" class="w-full relative h-screen overflow-y-auto mb-2 p-1 shadow">
+    <div :data="component" class="w-full relative h-screen overflow-y-auto z-2xtop mb-2 p-1 shadow">
         <div v-if="$attrs.element && entity && entity.entity" class="absolute top-0 left-0 overflow-y-auto h-auto w-full p-1 z-2xtop h-screen">
             
             <div class="bg-teal-700 text-white flex flex-row items-center p-1 shadow relative p-1">
                 <div class="flex flex-row items-center" @dblclick="$emit('switch')">
                     
                     <div>
-                        <span v-if="entity.entity.tag!='menu'">{{ entity.entity.type }}</span>
+                        <span v-if="entity.entity.tag!='menu'" class="capitalize">{{ entity.entity.type || entity.entity.tag }}</span>
                         <span v-else>Menu <span v-if="customizeDropdown">Dropdown</span></span>
                     </div>
                     <i class="material-icons text-sm ml-2">{{entity.entity.icon}}</i> 
@@ -18,7 +18,7 @@
                 </div>
             </div>
             <moka-tw 
-                v-if="entity && entity.entity.tag!='menu' && !entity.entity.css.hasOwnProperty('css')" 
+                v-if="entity && entity.entity.tag!='document' && entity.entity.tag!='menu' && !entity.entity.css.hasOwnProperty('css')" 
                 :css="$clean(entity.entity.css)" 
                 :entity="entity.entity"
                 :key="entity.entity.id"
@@ -27,7 +27,7 @@
                 @css="setCSS"/>
             
             <moka-tw 
-                v-if="entity && entity.entity.tag !='menu' && entity.entity.css.hasOwnProperty('css')" 
+                v-if="entity && entity.entity.tag!='document' && entity.entity.tag !='menu' && entity.entity.css.hasOwnProperty('css')" 
                 :css="$clean(entity.entity.css.css)" 
                 :entity="entity.entity"
                 :key="entity.entity.id"
@@ -36,7 +36,7 @@
                 @css="setCSS"/>
 
             <moka-tw 
-                v-if="entity && entity.entity.tag ==='menu'" 
+                v-if="entity && entity.entity.tag!='document' && entity.entity.tag ==='menu'" 
                 :css="!customizeDropdown?$clean(entity.entity.css.css):$clean(entity.entity.css.submenu)" 
                 :allCss="!customizeDropdown?$clean(entity.entity.css.css):$clean(entity.entity.css.submenu)"
                 :entity="entity.entity"
@@ -44,6 +44,14 @@
                 :columns="true"
                 :submenu="customizeDropdown"
                 @stile="set_style"
+                @css="setCSS"/>
+            <moka-tw 
+                v-if="entity && entity.entity.tag==='document'"
+                :css="$clean(entity.entity.css)"
+                :allCss="$clean(entity.entity.css)"
+                :entity="entity.entity"
+                :key="entity.entity.id"
+                :columns="false"
                 @css="setCSS"/>
             <!--
             <moka-tw 

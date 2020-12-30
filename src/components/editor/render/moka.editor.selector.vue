@@ -4,10 +4,11 @@
     
     <div v-if="$attrs.category!='element' && $attrs.category != 'slider'">
           
-        <div :class="doc.css + ' relative border-2 border-dashed p-4 text-black '" :style="stile(doc,true) + ' ' + background(doc)" id="content">
+        <div :class="'relative border-4 border-dashed p-4 text-black ' + docCss" :style="stile(doc,true) + ' ' + background(doc)" id="content">
             <template v-for="(block,b) in doc.blocks">
                 
                 <moka-container 
+                    v-if="!block.hasOwnProperty('slider')"
                     :key="block.id" 
                     :doc="block"
                     :component="doc" 
@@ -24,7 +25,19 @@
                     @customize="customize" 
                     @animations="animation=!animation"
                     @edit="edit"/>
-            
+                
+                <div v-if="block.hasOwnProperty('slider')">
+                    <h3>SLIDER</h3>
+                    <moka-editor-selectors 
+                        :doc="block"
+                        :component="current"
+                        :develop="true"
+                        category="slider"
+                        :root="true"
+                        />  
+                    <!--<moka-container :doc="block.blocks[0]"/>
+                    {{block.blocks[0]}}-->
+                </div>
             </template>
         </div>
         
@@ -48,7 +61,8 @@
         <!-- SLIDER -->
         <div v-if="$attrs.category === 'slider'" :data="getSlider">
             <div class="flex flex-row items-center">
-                <h3>Slides</h3>
+                <h3>Slider</h3>
+                <i title="Slider settings" class="material-icons mx-2" @click="$emit('slidersettings')">settings</i>
                 <button class="mx-2" @click="addSlide()">Add slide</button>
                 <button class="danger mx-2" v-if="!slideDelete && slideIndex > -1" @click="slideDelete=!slideDelete">Delete</button>
                 <button class="danger" v-if="slideDelete" @click="doc.blocks.splice(slideIndex,1),slideIndex=0,slideDelete=!slideDelete">Confirm to delete this slide?</button>
@@ -60,7 +74,8 @@
                         {{ 'Slide ' + (index+1) }}
                     </div>
                 </draggable>
-                <input type="text" v-model="doc.blocks[slideIndex].name"/>
+                <label class="text-sm">Slide title </label> 
+                <input type="text" class="my-1" v-model="doc.blocks[slideIndex].name"/>
             <div v-if="currentSlide" :class="doc.css + ' relative border-2 border-dashed p-4 text-black '" :style="stile(doc,true) + ' ' + background(doc)" id="content">
             
                 <moka-container
@@ -86,12 +101,12 @@
     </div>
     
     <!-- STATUS BAR -->
-    <div editorstatus class="fixed bg-gray-300 z-top bottom-0 left-0 p-1 border-t w-full flex flex-row items-center text-sm bg-white z-max uppercase divide-x divide-gray-400">
+    <div editorstatus class="fixed bg-gray-300 z-top bottom-0 left-0 p-1 border-t w-full flex flex-row items-center text-sm bg-white z-max uppercase h-10 divide-x divide-gray-400">
+        <i class="material-icons text-gray-800 hover:bg-black hover:text-blue-400 mx-2" @click="help=!help" title="Hotkeys">keyboard</i>
         <div v-if="editor.current" class="pl-1 w-full flex flex-row items-center">
             
-            <i class="material-icons text-gray-800 hover:bg-black hover:text-blue-400 mx-2" @click="help=!help" title="Hotkeys">keyboard</i>
 
-            <span v-if="editor.current.type">{{ editor.current.type }}</span>
+            <span v-if="editor.current.type">{{ editor.current.tag }}</span> 
             <!--<i v-if="moka.current" class="material-icons" @click="swap(false)">expand_less</i>
             <i v-if="moka.current" class="material-icons" @click="swap(true)">expand_more</i>
             -->
@@ -104,10 +119,12 @@
             <input v-if="!editor.current.css.hasOwnProperty('css')" type="text" class="ml-2 w-5/12" v-model="editor.current.css"/>
             <input v-else type="text" class="ml-2 w-5/12" v-model="editor.current.css.css"/>
             <i class="material-icons moka-icon-circle ml-2" title="Edit CSS classes" @click="editCSS=!editCSS">edit</i>
+
+            <i class="material-icons moka-icon-circle ml-2" title="Customize" @click="$store.dispatch('setAction','customize')">brush</i>
             
             
         </div>
-        <div v-else>COMPONENT</div>
+        
     </div>
     <!-- edit CSS -->
     <transition name="fade">
@@ -220,7 +237,7 @@
             <moka-animation :key="editor.current.id" v-model="editor.current" :element="editor.current" @close="animations=!animations"/>
         </div>
     </transition> 
-    
+
     <!-- MEDIA --->
     <transition name="fade">
         <div v-if="media" draggable="true" class="nuxpresso-modal h-4/5 w-10/12 border shadow-lg text-sm z-2xtop rounded-lg">
@@ -309,8 +326,11 @@ export default {
         ...mapState ( ['moka','editor'] ),
         init(){
             this.current = this.editor.current
-            
+
             return true
+        },
+        docCss(){
+            return this.doc.id === this.moka.selected ? 'border-orange-300' : ''
         },
         getSlider(){
             if ( this.doc.hasOwnProperty('slider') ){
@@ -522,11 +542,13 @@ export default {
         let vm = this
         this.current = this.moka.current
         window.addEventListener("keydown", e => {
+            
             if ( e.altKey && e.code === 'KeyB' ){
                 !this.doc.hasOwnProperty('slider') ?
                     vm.$emit('preview') :
                         vm.$emit('slider')
             }
+           
              if ( e.altKey && e.code === 'Keyspace' ){
                 !this.doc.hasOwnProperty('slider') ?
                     vm.$emit('preview') :

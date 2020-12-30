@@ -7,7 +7,7 @@
         <template v-for="(block,b) in doc.blocks">
             
             <moka-element
-                v-if="block && !block.hasOwnProperty('blocks') || block.hasOwnProperty('items')"
+                v-if="block && !block.hasOwnProperty('blocks') || block.hasOwnProperty('items') && !doc.hasOwnProperty('slider')"
                 :key="block.id"
                 :element="block" 
                 :coords="[b]"
@@ -19,7 +19,7 @@
                 @animation="$emit('animations')"
                 @delete="$emit('delete')" 
                 @editinline="setCurrent(block),edit"/> 
-
+            
             <moka-container
                 :key="block.id"
                 :component="$attrs.component"
@@ -33,7 +33,8 @@
                 v-if="block && block.hasOwnProperty('blocks') && !block.hasOwnProperty('items')  && !block.hasOwnProperty('slider')" 
                 :doc="block"
                 @copy="$emit('copy')"/>
-
+            <!-- v-if="block && block.hasOwnProperty('blocks') && !block.hasOwnProperty('items')  && !block.hasOwnProperty('slider')" 
+                 -->
             <moka-container
                 :key="block.id"
                 :component="$attrs.component"
@@ -47,10 +48,10 @@
                 v-if="block && block.hasOwnProperty('slider')" 
                 :doc="block.blocks[0]"/>
         </template>
-        
+       
         <div :class="'absolute transform border-2 border-dashed top-0 left-0 bottom-0 right-0 z-' + zindex + ' scale-x-' + (106-root) + ' ' + active(doc.id,doc)" @click="setCurrent(doc)" v-if="doc && !doc.hasOwnProperty('items')">
             <!--{{ $attrs.level }} {{ $attrs.index }}-->
-            <span v-if="doc.hasOwnProperty('loop') && doc.loop" class="text-xs"><i class="material-icons">article</i> Article Grid</span>
+            <span v-if="doc && doc.hasOwnProperty('loop') && doc.loop" class="text-xs"><i class="material-icons">article</i> Article Grid</span>
             <div class="h-2 w-2 absolute top-0 right-0 bg-black rounded-full -m-1"></div>
             <div class="h-2 w-2 absolute top-0 left-0 bg-black rounded-full -m-1"></div>
             <div class="h-2 w-2 absolute bottom-0 right-0 bg-black rounded-full -m-1"></div>
@@ -65,11 +66,11 @@
                 <i class="mr-2 material-icons hover:text-blue-500 text-sm leading-4 " @click="$store.dispatch('setAction','delete')" title="Delete">delete</i>
             </div>
             <!--<div class="absolute bottom-0 left-0 -mb-4 text-xs" v-if="doc.gsap && doc.gsap.animation">{{ doc.gsap.animation }}</div>
-            <span v-if="doc.hasOwnProperty('slider')">SLIDER</span>
             -->
-            <div v-if="doc.type==='grid' && this.$attrs.level < 3" class="opacity-100 hover:opacity-100 border absolute left-0 top-0 -mx-5 text-black flex flex-col" style="top:50%;transform:translateY(-50%)">
-                <i class="mr-2 material-icons hover:bg-blue-200 text-gray-700 " @click="move(true)">expand_less</i>
-                <i class="mr-2 material-icons hover:bg-blue-200 text-gray-700" @click="move(false)">expand_more</i>
+            <span v-if="doc && doc.hasOwnProperty('slider')" class="px-4 py-1 rounded-xl text-sm bg-yellow-500">SLIDER</span>
+            <div v-if="doc.type==='grid'" class="opacity-100 hover:opacity-100 border rounded-tl rounded-bl bg-gray-800 absolute left-0 top-0 -mx-5 text-black flex flex-col" style="top:50%;transform:translateY(-50%)">
+                <i class="material-icons hover:bg-blue-200 text-gray-200 hover:text-gray-700" @click="move(true)">expand_less</i>
+                <i class="material-icons hover:bg-blue-200 text-gray-200 hover:text-gray-700" @click="move(false)">expand_more</i>
             </div>
         </div>
         
@@ -101,6 +102,7 @@ export default {
     },
     methods:{
         classe(css){
+            if ( !css ) return 
             let cl = css.hasOwnProperty('css') ? css.css + ' ' + css.container : css
             cl.replace('z-','')
             return cl
@@ -126,17 +128,12 @@ export default {
             let coord = []
             coord = coord.concat(this.coords)
             coord.push ( this.$attrs.index )
-            console.log ( coord )
             let test = Object.assign({} , this.$attrs.component)
-            !this.$attrs.top ?
-                console.log ( test , coord , test.blocks[coord[1]].blocks[0] ) :
-                    console.log ( this.$attrs.index , test.blocks[this.$attrs.index] ) 
             let arr
             !this.$attrs.top ?
                 arr = test.blocks[coord[1]].blocks[0].blocks :
                     arr = test.blocks 
             
-            //console.log ( arr , coord[coord.length-1] , coord[coord.length-1]-1 )
             let source = arr[coord[coord.length-1]]
             let pos = coord[coord.length-1]
             if ( flag ){
@@ -145,7 +142,6 @@ export default {
                     arr.splice(pos+1,1)
                 }
             } else {
-                console.log ( pos , arr.length-1 )
                 if ( pos < arr.length-1 ){
                     arr.splice(pos,1,arr.splice(pos+1, 1, arr[pos])[0])
                     
@@ -154,13 +150,11 @@ export default {
             !this.$attrs.top ?
                         test.blocks[coord[1]].blocks[0].blocks = arr :
                             test.blocks = arr
-            //test.blocks[coord[0]].blocks[coord[1]].blocks = arr
-            //test.blocks[coord[1]].blocks[0].blocks = arr
-            console.log ( arr , test )
             return
             
             
         },
+        /*
         blocksLen(obj,coord){
             let o = this.doc
             let len = 0
@@ -177,6 +171,7 @@ export default {
                 return obj[index]
             }
         },
+        */
         customize(){
             console.log ( 'element customize')
             this.$emit('customize')
@@ -191,6 +186,7 @@ export default {
             if ( !doc ) return 
             let color = 'border-blue-500 '
             doc && !doc.hasOwnProperty('type') ? color = 'border-red-500 ' : null
+            doc && doc.hasOwnProperty('slider') ? color = 'border-yellow-500 ' : null
             doc.type === 'flex' ?
                 color = 'border-red-500 border-2 bg-gray-300 bg-opacity-25 ' : ' '
             if ( this.moka && this.moka.selected ) {
@@ -218,10 +214,25 @@ export default {
                         //    ' background-image:url(' + block.image.url + ');' : ''  : ''        
         },
         setImageBackground(image){
+            if ( !image ) return
             let theImg = image.hasOwnProperty('previewUrl')  && image.previewUrl ? image.previewUrl : image.url
             let response = ' background-image:url(' + theImg + ');'
             return response
         }
+    },
+    mounted(){
+        window.addEventListener("keydown", e => {
+            if ( e.altKey && e.code === 'ArrowUp' ){
+                this.editor.current && this.editor.current.type === 'grid' ?
+                    this.move(true) :
+                        null
+            }
+            if ( e.altKey && e.code === 'ArrowDown' ){
+                this.editor.current && this.editor.current.type === 'grid' ?
+                    this.move(false) :
+                        null
+            }
+        })
     }
 
 }

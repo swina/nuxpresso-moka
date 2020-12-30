@@ -1,6 +1,6 @@
 <template>
   <div v-if="moka" class="min-h-screen h-screen flex flex-col p-4">
-    <h2>Welcome to MOKAStudio</h2>
+    <h2>Dashboard</h2>
 
     <div class="w-full flex flex-row justify-around" v-if="components">
       <div class="border w-1/4 mr-4 border-t-8 border-blue-400 flex flex-col">
@@ -10,7 +10,7 @@
           <div>{{grouped.counters[index]}}</div>
         </div>
       </template>
-        <button class="m-auto my-2">Import</button>
+        <!-- <button class="m-auto my-2">Import</button> -->
       </div>
 
       <div class="border w-1/4 mr-4 flex flex-col border-t-8 border-orange-400">
@@ -37,6 +37,19 @@
         
       </div>
     </div>
+    <div class="w-full flex mt-4 flex-row justify-around" v-if="user.login">
+      <div class="border w-1/4 mr-4 border-t-8 border-gray-400 flex flex-col p-2 justify-center items-center">
+        <label>Production Host</label>
+        <button :class="production?'success rounded-full h-10 w-10':'danger rounded-full rounded-full h-10 w-10'">{{ production ? 'ON' : 'OFF' }}</button>
+      </div>
+      <div class="border w-1/4 mr-4 border-t-8 border-gray-400 flex flex-col p-2 justify-center items-center">
+        <label>Website Deploy Hook</label>
+        <button :class="build?'success rounded-full h-10 w-10':'danger rounded-full h-10 w-10'">{{ build ? 'ON' : 'OFF' }}</button>
+      </div>
+      <div class="w-1/4 flex flex-col">
+        
+      </div>
+    </div>
   </div>
 </template>
 
@@ -53,7 +66,7 @@ export default {
     password: ''
   }),
   computed:{
-    ...mapState ( [ 'moka' ] ),
+    ...mapState ( [ 'moka' , 'user' ] ),
     grouped(){
       return this.$arrayGroup(this.components,'category','id')
     },
@@ -63,6 +76,12 @@ export default {
         size += parseFloat(m.size)
       })
       return Math.round(size/1000,2) + ' MB'
+    },
+    production(){
+      return this.user.production ? true : false
+    },
+    build(){
+      return this.user.build ? true : false
     }
   },
   apollo:{

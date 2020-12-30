@@ -1,6 +1,6 @@
 <template>
     <div 
-        :id="doc.hasOwnProperty('anchor')? doc.anchor : doc.id"
+        :id="doc && doc.hasOwnProperty('anchor')? doc.anchor : doc.id"
         v-if="doc" 
         :key="doc.id" 
         :class="'content max-w-screen relative flex flex-no-wrap block ' + classe(doc.css)" :style="doc.style + ' ' +  background(doc)" :ref="doc.id">
@@ -115,6 +115,7 @@ export default {
             
         },
         classe(css){
+          if ( !css ) return
           return css.hasOwnProperty('css') ? css.css + ' ' + css.container : css
         },
         stile(block,doc){
@@ -134,6 +135,7 @@ export default {
                             ' background-image:url(' + block.image.url + ');' : ''  : ''        
         },
         animate(element,id){
+            if ( !element ) return 
             let vm = this
             if ( this.$refs && element.hasOwnProperty('gsap') && element.gsap.animation ){
                 let ani = gsap.effects[element.gsap.animation]( this.$refs[id] ,{

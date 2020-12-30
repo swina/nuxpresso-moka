@@ -1,8 +1,12 @@
 <template>
     <div class="w-full flex flex-col">
-        <!-- image -->
-        
+        <!-- Semantic  -->
+        <div class="bg-gray-700 cursor-pointer hover:bg-blue-300 text-gray-100 px-1 mb-1" v-if="$attrs.entity && editor.current.tag != 'document'" @click="semantic=!semantic">
+            HTML Semantic
+        </div>
+        <moka-options class="mb-2" v-if="semantic" attr="semantics" v-model="$attrs.entity.entity.semantic" css=""/>
 
+        <!-- image -->
         <div class="bg-gray-700 cursor-pointer hover:bg-blue-300 text-gray-100 px-1 mb-1" v-if="$attrs.entity && $attrs.entity.entity.hasOwnProperty('image')" @click="image=!image">
             Media
         </div>
@@ -95,17 +99,19 @@
 <script>
 import MokaImagePlaceholder from '@/components/editor/render/moka.editor.image.placeholder'
 import MokaIcons from '@/components/editor/render/moka.customize.icon'
+import MokaOptions from '@/components/editor/tailwind/tailwind.options'
 import { mapState }  from 'vuex'
 export default {
     name: 'MokaEditContent',
     data:()=>({
+        semantic: false,
         image: false,
         video: false,
         link: false,
         icon: false,
         formfield: false
     }),
-    components: { MokaImagePlaceholder , MokaIcons },
+    components: { MokaImagePlaceholder , MokaIcons , MokaOptions },
     computed:{
         ...mapState ( ['moka','editor'] )
     }

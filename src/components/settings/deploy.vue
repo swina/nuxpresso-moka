@@ -1,7 +1,11 @@
 <template>
     <div class="p-4" v-if="enabled">
         <h3>NUXPRESSO DEPLOY</h3>
-        <input type="text" v-model="user.build"/><button @click="deployNuxpresso">Deploy</button>
+        <input type="text" v-model="user.build" class="w-1/2"/><button @click="deployNuxpresso">Deploy</button>
+        <br/>
+        <i class="text-sm">This will deploy nuxpresso front-end website</i>
+        <br/>
+        <i class="text-sm text-red-500">{{error}}</i>
     </div>
 </template>
 
@@ -11,7 +15,8 @@ import { mapState } from 'vuex'
 export default {
     name: 'MokaDeploy',
     data:()=>({
-        deploy: ''
+        deploy: '',
+        error: ''
     }),
     computed:{
         ...mapState ( ['user'] ),
@@ -23,7 +28,10 @@ export default {
     methods:{
         deployNuxpresso(){
             axios.post ( this.user.build ,{}).then ( response => {
-                console.log ( response )
+                this.$store.dispatch ( 'message' , 'Deployment started correctly')
+            }).catch ( error => {
+                this.$store.dispatch ( 'message' , 'An error occured')
+                this.error = error
             })
         }
     }

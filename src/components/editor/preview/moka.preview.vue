@@ -1,5 +1,5 @@
 <template> 
-    <div :ref="doc.id" :class="doc.css.css + ' ' + doc.css.container" :style="stile(doc,true) + ' ' + background(doc)" id="content">
+    <div :ref="doc.id" :class="doc.css + ' overflow-x-hidden '" :style="stile(doc,true) + ' ' + background(doc)" id="content">
         <!-- 1st level - BLOCKS LOOP -->
         
             <template v-for="(block,b) in doc.blocks">
@@ -72,7 +72,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin ( ScrollTrigger )
 const plugins = [ScrollTrigger];
 import gsapEffects from '@/plugins/animations'
-
+import { mapState } from 'vuex'
 export default {
     name: 'MokaPreview',
     data:()=>({
@@ -87,6 +87,7 @@ export default {
         //MokaArticlesLoop
     },
     computed:{
+        ...mapState ( ['moka'] ),
         animations(){
             return gsapEffects
         }
@@ -204,10 +205,10 @@ export default {
                     }
                     if ( container.hasOwnProperty('blocks') ){
                     container.blocks.forEach ( el => {
-                        if ( el.hasOwnProperty('gsap') && el.gsap.animation ){
+                        if ( el && el.hasOwnProperty('gsap') && el.gsap.animation ){
                             this.animate ( el , el.id   )
                         }
-                         if ( el.hasOwnProperty('blocks') ){
+                         if ( el && el.hasOwnProperty('blocks') ){
                             el.blocks.forEach ( element => {
                                  if ( element.hasOwnProperty('gsap') && element.gsap.animation ){
                                     this.animate ( element , element.id   )
@@ -227,8 +228,16 @@ export default {
             if ( e.altKey && e.code === 'KeyS' ){
                 this.$emit('save')
             }
+            if ( e.altKey && e.code === 'KeyK' ){
+                let html = document.getElementById('content').outerHTML
+                this.$emit('html',html)
+            }
         });
-    }
+
+        //let body = document.querySelector('body')
+        //body.classList.add ( this.moka.settings.body_bg.replaceAll(' ',''))
+        //body.classList.add ( this.moka.settings.body_color.replaceAll(' ',''))
+    },
 
 }
 </script>

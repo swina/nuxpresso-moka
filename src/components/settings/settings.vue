@@ -2,6 +2,13 @@
     <div class="p-4">
         <h3>Settings</h3>
         <div class="flex flex-row justify-around">
+            <div class="flex flex-col p-2 w-full md:w-1/2 text-base">
+                <h3>BODY Settings</h3>
+                <label class="font-bold">Text</label>
+                <moka-color attr="textcolor" v-model="moka.settings.body_color" :css="moka.settings.body_color"/>
+                <label class="font-bold">Background</label>
+                <moka-bgcolor attr="bgcolor" v-model="moka.settings.body_bg" :css="moka.settings.body_bg"/>
+            </div>
             <div class="flex flex-col p-2 w-full md:w-1/2">
                 <h3>BLOCKS Types</h3>
                 <select v-if="moka" v-model="currentType" multiple class="h-32 w-full" readonly>
@@ -53,10 +60,12 @@
 <script>
 import settingsQry from '@/apollo/settings.gql'
 import MokaUser from '@/components/settings/user'
+import MokaColor from '@/components/editor/tailwind/tailwind.color'
+import MokaBgcolor from '@/components/editor/tailwind/tailwind.bgcolor'
 import { mapState } from 'vuex'
 export default {
     name: 'NuxpressoSettings',
-    components: { MokaUser },
+    components: { MokaUser , MokaColor , MokaBgcolor },
     data:()=>({
         types: null,
         new_type:'',

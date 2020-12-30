@@ -1,12 +1,12 @@
 <template>
 <div>
-    <div class="w-full top-0 right-0 left-0 bottom-0 flex mx-2 mb-20 flex-row bg-white" v-if="$attrs.component && hasblocks && !preview">
+    <div :class="'top-0 right-0 left-0 bottom-0 flex mx-2 mb-20 flex-row '" v-if="$attrs.component && hasblocks && !preview">
 
         <div class="w-full overflow-y-auto overflow-x-hidden">
             
             <!-- MAIN CONTAINER -->
             <div :class="'relative mt-2 mx-2 p-2 cursor-pointer'">
-                <div class="absolute top-0 left-0 bottom-0 right-0 z-max mb-4 " v-if="disable"></div>
+                <div :class="'main absolute top-0 left-0 bottom-0 right-0 z-max mb-4 '" v-if="disable"></div>
 
                 <!-- TOP BAR -->
                 <div :class="'fixed z-xtop top-0 left-0 bg-gray-500 p-1 grid grid-cols-3 items-center w-full m-auto cursor-pointer'" title="Select component body" @click="$store.dispatch('selected',$attrs.component.id)">
@@ -41,6 +41,7 @@
                         :develop="true"
                         :category="$attrs.component.category"
                         :root="true"
+                        @slidersettings="sliderSettings=!sliderSettings"
                         @save="save" 
                         @preview="preview=!preview"
                         @slider="slider=!slider,disable=false"
@@ -55,19 +56,23 @@
             </div>
                 
             <!-- BOTTOM RIGHT BUTTONS ( Add block, add reusable, preview ) -->
-            <div class="fixed bottom-0 right-0 opacity-100 hover:opacity-100 pb-6 mr-6 mb-6 z-top ">
+            <div class="fixed bottom-0 right-0 opacity-100 hover:opacity-100 mr-6 mb-12 z-xtop ">
+ 
+                    <!-- CLEAR SELECTION -->
+                    <i class="material-icons moka-icons nuxpresso-icon-circle ml-2" @click="$store.dispatch('setCurrent',doc),$store.dispatch('selected',doc.id)"
+ title="Select document">border_clear</i>
 
                     <!-- ADD EMPTY BLOCK (GRID) -->
                     <i class="material-icons moka-icons nuxpresso-icon-circle ml-2" @click="grids=!grids" title="Add block">add</i>
 
                     <!-- IMPORT A BLOCK -->
-                    <i class="material-icons moka-icons nuxpresso-icon-circle ml-2" @click="$store.dispatch('setAction','addreusable'),addBlock=true" title="Add Moka">widgets</i>
+                    <i class="material-icons moka-icons nuxpresso-icon-circle ml-2" @click="$store.dispatch('setAction','addreusable'),addBlock=true" title="Add reusable block">widgets</i>
                     
                     <!-- PREVIEW DOCUMENT -->
                     <i class="material-icons moka-icons nuxpresso-icon-circle ml-2" v-if="$attrs.component && $attrs.component.category!='slider'" title="Preview" @click="preview=!preview,disable=false">remove_red_eye</i> 
 
                     <!-- PREVIEW SLIDER -->
-                    <i class="material-icons moka-icons nuxpresso-icon-circle ml-2" v-if="$attrs.component && $attrs.component.category==='slider'" title="Preview" @click="slider=!slider,disable=false">remove_red_eye</i>
+                    <i class="material-icons bg-green-400 nuxpresso-icon-circle ml-2" v-if="$attrs.component && $attrs.component.category==='slider'" title="Preview" @click="slider=!slider,disable=false">remove_red_eye</i>
                     
                 
             </div>
@@ -81,26 +86,40 @@
         <div class="fixed left-0 top-0 mt-10 flex flex-col shadow-lg p-4 bg-white z-2xtop text-base" v-if="settings">
             <i class="material-icons absolute right-0 mr-2" @click="settings=!settings">close</i>
             <label class="font-bold">Name</label>
-            <input type="text" v-model="$attrs.component.name"/> 
+            <input class="w-full" type="text" v-model="$attrs.component.name"/> 
             <label class="font-bold">Description</label>
-            <textarea v-model="$attrs.component.description"></textarea>
+            <textarea class="w-full" v-model="$attrs.component.description"></textarea>
 
             <!-- Category -->
             <label class="font-bold ">Category</label>
-            <select v-model="$attrs.component.category">
+            <select class="w-full" v-model="$attrs.component.category">
                 <option :key="category" v-for="category in $categories()">{{ category }}</option>
             </select>
             
             <label class="font-bold">Type <i class="material-icons" @click="addType=!addType">add</i></label>
             
             <!-- ADD A NEW TYPE (TAG) -->
-            <input v-if="addType" v-model="newType" @change="saveNewType"/>
+            <input class="w-full" v-if="addType" v-model="newType" @change="saveNewType"/>
             
             <!-- TAGS -->
-            <select v-model="$attrs.component.tags">
+            <select class="w-full" v-model="$attrs.component.tags">
                 <option value=""></option>
                 <option :key="tipo" v-for="tipo in moka.elements.types.types" :value="tipo">{{ tipo }}</option>
             </select>
+
+            <div class="flex flex-col p-2 w-full md:w-1/2 text-base">
+                <label class="font-bold">Body settings</label>
+                <div class="flex flex-row w-full text-sm">
+                    <div class="mr-6">
+                        <label class="font-bold">Text</label>
+                        <moka-color attr="textcolor" v-model="doc.body_color" :css="doc.body_color"/>
+                    </div>
+                    <div>
+                        <label class="font-bold">Background</label>
+                        <moka-bgcolor attr="bgcolor" v-model="doc.body_bg" :css="doc.body_bg"/>
+                    </div>
+                </div>
+            </div>
 
             <!-- DOC IS A TEMPLATE : template settings -->
             <div class="flex flex-col text-sm" v-if="$attrs.component.category === 'template'">
@@ -108,16 +127,16 @@
                 <div class="text-xs text-gray-600"><input type="checkbox" v-model="$attrs.component.default"/> (apply to articles with no template)</div>
             
                 <label class="font-bold">Loop 
-                <input type="checkbox" v-model="$attrs.component.loop"/></label>
+                <input class="w-full" type="checkbox" v-model="$attrs.component.loop"/></label>
                 <div class="flex flex-col" v-if="$attrs.component.loop">
-                    <select v-model="$attrs.component.loop_type">
+                    <select class="w-full" v-model="$attrs.component.loop_type">
                         <option value="">all</option>
                         <option value="articles">articles</option>
                         <option :key="opt.slug" v-for="opt in moka.categories" :value="opt.slug">articles/category/{{opt.name}}</option>
                     </select>
                     <label class="font-bold">Pagination <input type="checkbox" v-model="$attrs.component.loop_pagination"/></label>
                     <div>Articles per page</div>
-                    <input type="number" min="1" max="100" v-model="$attrs.component.loop_limit"/>
+                    <input class="w-full" type="number" min="1" max="100" v-model="$attrs.component.loop_limit"/>
                 </div>
             </div>
 
@@ -132,7 +151,7 @@
                 </div>
                 <!-- Font settings -->
                 <label class="font-bold">Font</label>
-                <select v-model="fontFamily">
+                <select class="w-full" v-model="fontFamily">
                     <option value="Arial">sans</option>
                     <option value="serif">serif</option>
                     <option v-for="gfont in moka.elements.types.fonts">{{gfont}}</option>
@@ -179,14 +198,16 @@
 
     <!-- ADD NEW BLOCK -->
     <transition name="fade">
-        <div class="nuxpresso-modal text-xs p-4 z-2xtop w-1/3 border" v-if="grids">
+        <div class="nuxpresso-modal text-xs p-4 z-2xtop w-3/4 overflow-y-auto border" v-if="grids">
             <i class="material-icons absolute right-0 top-0" @click="grids=!grids">close</i>
+            <moka-grids @grid="addGrid"/>
+            <!--
             <h3>Columns</h3>
             <div class="flex flex-col">
                 Number of cols<br/>
                 <input type="number" min="1" max="12" v-model="grid.cols"/> 
                 <button class="my-2" @click="createGridNew">OK</button>
-            </div>
+            </div>-->
         </div>
     </transition>
 
@@ -221,8 +242,8 @@
 
     <!-- PREVIEW -->
     <transition name="fade">
-        <div class="absolute top-0 left-0 min-h-screen w-screen bg-white" v-if="preview">
-            <moka-editor-preview :category="$attrs.component.category" :doc="doc"  @save="saveprint" :loop="$attrs.component.loop_type" :develop="false" @close="preview=!preview"/>
+        <div :class="'absolute top-0 left-0 min-h-screen w-screen bg-white ' + body_settings" v-if="preview">
+            <moka-editor-preview :category="$attrs.component.category" :doc="doc"  @save="saveprint" :loop="$attrs.component.loop_type" :develop="false" @close="preview=!preview" @html="viewhtml"/>
 
         </div>
     </transition>
@@ -257,6 +278,14 @@
             <a ref="blockprint" v-if="snapshot" id="saveSnapshot" :href="snapshot" :download="$attrs.component.name" @click="$store.dispatch('setAction',null)"><img class="m-auto border border-dashed" :src="snapshot"/></a>
         </div>
     </transition>
+
+    <!-- HTML -->
+    <transition name="fade">
+        <div v-if="html" class="nuxpresso-modal w-1/2 p-4">
+            <i class="material-icons absolute top-0 right-0 m-1" @click="html=null">close</i>
+            <textarea v-model="html" class="w-full h-64"/>
+        </div>
+    </transition>
 </div>
 </template>
 
@@ -267,6 +296,9 @@ import MokaEditorPreview from '@/components/editor/preview/moka.preview'
 import MokaSlider from '@/components/editor/preview/moka.slider'
 import MokaEditorSlider from '@/components/editor/render/moka.editor.slider'
 import MokaEditorSelectors from '@/components/editor/render/moka.editor.selector'
+import MokaGrids from '@/components/editor/render/moka.grids'
+import MokaColor from '@/components/editor/tailwind/tailwind.color'
+import MokaBgcolor from '@/components/editor/tailwind/tailwind.bgcolor'
 import { mapState } from 'vuex'
 export default {
     name: 'MokaEditor',
@@ -277,6 +309,9 @@ export default {
         MokaSlider , 
         MokaEditorSlider , 
         MokaEditorSelectors ,
+        MokaGrids,
+        MokaColor,
+        MokaBgcolor
     },
     data:()=>({
         addType: false,
@@ -314,11 +349,18 @@ export default {
             category: '',
             enabled: true
         },
-        snapshot: null
+        snapshot: null,
+        html: null
     }),
    
     computed:{
         ...mapState ( ['moka','editor'] ),
+        //body settings in preview mode
+        body_settings(){
+            return this.preview ?
+                this.doc.body_bg  + ' ' + this.doc.body_color :
+                    'w-full bg-white'
+        },
         //export blocks as JSON file 
         exportJSON(){
             let json = JSON.parse(JSON.stringify(this.$attrs.component))
@@ -331,6 +373,8 @@ export default {
             if ( !this.$attrs.component ) this.$router.push('dashboard')
             this.doc = this.$attrs.component.json
             this.doc.id ? null : this.doc.id = this.$randomID()
+            this.$store.dispatch ( 'setCurrent' , this.doc )
+            this.$store.dispatch ( 'selected' , this.doc.id )
             this.mycomponent = this.$attrs.component
             return true
         },
@@ -341,6 +385,11 @@ export default {
         
     },
     methods:{
+        //add a grid as new block
+        addGrid(grid){
+            this.doc.blocks.push ( grid )
+            this.grids = false
+        },
         //save new elements type
         saveNewType(){
             this.moka.elements.types.types.push ( this.newType )
@@ -383,11 +432,16 @@ export default {
         },
         //duplicate current element
         duplicateElement(current){
-            delete this.editor.current.parent             
+            
+            delete this.editor.current.parent    
+
             let el = JSON.parse(JSON.stringify(this.editor.current))
-            let o = this.$copy ( this.editor.current )
-            this.$findNode ( el.id , this.moka.component.json )
-            let obj = this.$unique(el)
+            //let o = this.$copy ( this.editor.current )
+            //this.$findNode ( el.id , this.moka.component.json )
+            //let obj = this.$unique(el)
+            let obj = this.$clone ( el )
+            obj.id = this.$randomID()
+            this.$findNode ( this.editor.current.id , this.moka.component.json )
             this.editor.parent.blocks.push ( obj )
             delete this.editor.current.parent
             if ( this.editor.parent.type === 'grid' ){
@@ -417,7 +471,8 @@ export default {
             let obj = JSON.parse(JSON.stringify(this.schema.containers[0]))
             obj['blocks'] = []
             obj.id = this.$randomID()
-            obj.css.container = "flex flex-col md:grid md:grid-cols-" + this.grid.cols
+            //obj.css.container = "flex flex-col md:grid md:grid-cols-" + this.grid.cols
+            obj.css.container = "grid md:grid-rows-1 md:grid-cols-" + this.grid.cols +  " grid-cols-1 grid-rows-" + this.grid.cols 
             obj.css.css = ''
             obj.cols = parseInt(this.grid.cols)
             let content 
@@ -443,37 +498,52 @@ export default {
             console.log ( obj )
             this.grids = false
         },
+        addMultipleBlocks(reusable){
+            reusable.json.blocks.forEach ( block => {
+                console.log ('multiple blocks=>' , block )
+                let obj = { json: { blocks: [ block ] }}
+                this.addReusable( obj )
+            })
+        },
         
         //add a reusable block (copied element or selected from the list)
         addReusable(obj){
+            if ( !obj ) {
+                this.$store.dispatch('message','No objects in the clipboard')
+                return 
+            }
             this.reusable = false
-            let component , json , imported
+            let component = {}
+            let json , imported
             if ( obj.hasOwnProperty ( 'json' ) ){
-                if ( obj.category != 'slider' ){
+                if ( !obj.json.hasOwnProperty('slider' ) ) {
                     imported = obj.json.blocks[0]
+                    component = this.$clone(imported)
                 } else {
                     imported = obj.json
+                    component = this.$clone(imported)
                 }            
-                component = this.$clone(imported)
             } else {
-                component = this.$clone(obj)
+                imported = obj
+                component = this.$clone(imported)
             }
-            component['gsap'] = {
-                animation: '',
-                ease: '',
-                duration: 0,
-                delay:0
+            if ( component ){
+                 component['gsap'] = {
+                    animation: '',
+                    ease: '',
+                    duration: 0,
+                    delay:0
+                }
+                component.id = this.$randomID()
+                let target = this.editor.current
+                if ( !target || this.addBlock ){
+                    target = this.doc
+                }
+                target.blocks.push ( component )
+                this.addBlock = false
+                //this.copiedElement = null
+                this.$store.dispatch('setAction',null)
             }
-            
-            component.id = this.$randomID()
-            let target = this.editor.current
-            if ( !target || this.addBlock ){
-                target = this.doc
-            }
-            target.blocks.push ( component )
-            this.addBlock = false
-            this.copiedElement = null
-            this.$store.dispatch('setAction',null)
         },
         //add an HTML element
         addComponent(component){
@@ -550,6 +620,9 @@ export default {
             this.saveBlockAsComponent = false
             this.$emit('saveasreusable', newComponent)
             return null
+        },
+        viewhtml(html){
+            this.html = this.$beautify ( html.replaceAll('<!---->','').replaceAll('[object Object]','') )
         }
         
     },

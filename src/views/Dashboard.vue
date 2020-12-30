@@ -68,13 +68,14 @@ import MokaHome from '@/views/Home'
 import MokaSettings from '@/components/settings/settings'
 import MokaStage from '@/components/settings/stage'
 import MokaDeploy from '@/components/settings/deploy'
+import MokaGrid from '@/components/editor/render/moka.grids'
 import { mapState } from 'vuex'
 import menu from '@/plugins/app'
 
 export default {
     name: 'MokaDashboard',
     components: {
-        MokaList,  MokaArticles, MokaMedia,  MokaHome , MokaSettings, MokaStage, MokaDeploy
+        MokaList,  MokaArticles, MokaMedia,  MokaHome , MokaSettings, MokaStage, MokaDeploy , MokaGrid
     },
     data:()=>({
         label: '',

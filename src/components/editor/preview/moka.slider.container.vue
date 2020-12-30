@@ -1,6 +1,6 @@
 <template>
     <div
-        :id="doc.hasOwnProperty('anchor')? doc.anchor : doc.id"
+        :id="doc && doc.hasOwnProperty('anchor')? doc.anchor : doc.id"
         v-if="doc"
         :animateMe="refreshAnimation"  
         :class="classe(doc.css)" :style="doc.style + ' ' +  background(doc)" :ref="doc.id">
@@ -8,15 +8,15 @@
              
             <moka-element
                 @click="elementAction"
-                v-if="block && !block.hasOwnProperty('blocks') || block.hasOwnProperty('items')"
+                v-if="block && !block.hasOwnProperty('blocks')"
                 :key="block.id"
                 :element="block"
                 :coords="[b]"
                 :refreshAnimation="refreshAnimation||$attrs.refreshAnimation"
                 :develop="false"/> 
-
+            
             <moka-slider-container
-                v-if="block && !block.hasOwnProperty('slider') && block.hasOwnProperty('blocks') && !block.hasOwnProperty('menu')" @action="elementAction" 
+                v-if="block && block.hasOwnProperty('blocks')" @action="elementAction" 
                 :doc="block" :refreshAnimation="refreshAnimation"/>
             <!--<moka-slider :key="block.id" :ref="block.id" v-if="block && block.hasOwnProperty('slider')" :develop="true" :embeded="true" :doc="block" :editor="true"/>-->
             
@@ -55,6 +55,7 @@ export default {
     },
     methods:{
         classe(css){
+            if ( !css ) return 
             return css.hasOwnProperty('css') ? css.css + ' ' + css.container : css
         },
         stile(block,doc){
@@ -74,10 +75,10 @@ export default {
                             ' background-image:url(' + block.image.url + ');' : ''  : ''        
         },
         elementAction(action){
-            console.log ( action )
             this.$emit('action',action)
         },
         animate(element,id){
+            if ( !element ) return 
             let vm = this
             if ( this.$refs && element.hasOwnProperty('gsap') && element.gsap.animation ){
                 //console.log ( 'animation for => ' , id , this.$refs[id] )
@@ -109,11 +110,12 @@ export default {
     },
     mounted(){
         window.scrollTo(0,0)
+        if ( !this.doc ) return
         if ( this.doc.hasOwnProperty('gsap') && this.doc.gsap.animation ){
-            //console.log ( 'REFS=>' , this.$refs , ' => animation => ' , this.doc.gsap.animation )
             this.animate ( this.doc , this.doc.id )
         }
         return
+        /*
         this.doc.blocks.forEach ( block => {
             if ( block.hasOwnProperty('gsap') && block.gsap.animation  ){
                 this.animate(block, block.id)
@@ -141,6 +143,7 @@ export default {
                 })
             }
         })
+        */
     }
 }
 </script>

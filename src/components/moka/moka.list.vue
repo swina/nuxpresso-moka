@@ -29,9 +29,9 @@
                 <i class="material-icons absolute top-0 right-0 cursor-pointer" @click="create=!create">close</i>
                 <h4>New component</h4>
                 <label>Name*</label>
-                <input class="dark" type="text" v-model="newComponent.name"/>
+                <input class="w-full dark" type="text" v-model="newComponent.name"/>
                 <label>Category</label>
-                <select class="dark" v-model="newComponent.category">
+                <select class="w-full dark" v-model="newComponent.category">
                     <option value="component">component</option>
                     <option value="widget">widget</option>
                     <option value="template">template</option>
@@ -40,7 +40,7 @@
                     <option value="gallery">gallery</option> 
                 </select>
                 <label>Description</label>
-                <textarea class="dark" v-model="newComponent.description"/>
+                <textarea class="w-full dark" v-model="newComponent.description"/>
                 <button @click="saveNewComponent" class="my-2">Save</button>
             </div>
         </transition>

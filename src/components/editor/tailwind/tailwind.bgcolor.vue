@@ -111,7 +111,7 @@ export default {
         */
     },
     mounted(){
-        if ( !this.css.length ) return
+        if ( !this.css || !this.css.length ) return
         this.allCss = this.css
         let classes = this.allCss.split(' ')
         classes.forEach ( cl => {

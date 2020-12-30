@@ -28,27 +28,29 @@
                             <a href="#" class="text-xs" @click="items.splice(i,1)">Remove</a><a href="#" class="text-xs" @click="addSubMenu(i)">Add Submenu</a>
                         </div>
                     </transition>
-                    <div v-if="item.submenu && currentIndex===i" v-for="(sub,s) in item.submenu">
-                        <div  @click="subIndex<0||subIndex!=s?subIndex=s:subIndex=-1" class="ml-2 border p-1 bg-gray-700 mb-1">
-                        {{ sub.label}}
-                        </div>
-                        <transition name="fade">
-                        <div class="bg-gray-800 ml-3 mr-1 flex flex-col mb-1" v-if="subIndex===s">
-                            
-                            <input class="dark" type="text" v-model="items[i].submenu[s].label" @input="subIndex=-1,subIndex=s"/>
-                            <div class="flex flex-col">
-                                <label>URL</label>
-                                <input class="dark" type="text" v-model="items[i].submenu[s].link"/>
-                                <label>Page</label>
-                                <select class="dark" v-model="items[i].submenu[s].link">
-                                    <option v-for="(opt,o) in moka.categories" :value="'/articles/category/' + opt.slug">category/{{ opt.name}}</option>
-                                    <option v-for="(opt,o) in articles" :value="'/articles/' + opt.slug">{{ opt.title }}</option>
-                                </select>
+                    <draggable v-model="item.submenu"   >
+                        <div v-if="item.submenu && currentIndex===i" v-for="(sub,s) in item.submenu">
+                            <div  @click="subIndex<0||subIndex!=s?subIndex=s:subIndex=-1" class="ml-2 border p-1 bg-gray-700 mb-1">
+                            {{ sub.label}}
                             </div>
-                            <a href="#" class="text-xs" @click="items[currentIndex].submenu.splice(s,1),subIndex=-1,subIndex=s">Remove</a>
+                            <transition name="fade">
+                                <div class="bg-gray-800 ml-3 mr-1 flex flex-col mb-1" v-if="subIndex===s">
+                                    
+                                    <input class="dark" type="text" v-model="items[i].submenu[s].label" @input="subIndex=-1,subIndex=s"/>
+                                    <div class="flex flex-col">
+                                        <label>URL</label>
+                                        <input class="dark" type="text" v-model="items[i].submenu[s].link"/>
+                                        <label>Page</label>
+                                        <select class="dark" v-model="items[i].submenu[s].link">
+                                            <option v-for="(opt,o) in moka.categories" :value="'/articles/category/' + opt.slug">category/{{ opt.name}}</option>
+                                            <option v-for="(opt,o) in articles" :value="'/articles/' + opt.slug">{{ opt.title }}</option>
+                                        </select>
+                                    </div>
+                                    <a href="#" class="text-xs" @click="items[currentIndex].submenu.splice(s,1),subIndex=-1,subIndex=s">Remove</a>
+                                </div>
+                            </transition>
                         </div>
-                    </transition>
-                    </div>
+                    </draggable>
                 </div>
             </draggable>
                 <div class="flex flex-col">

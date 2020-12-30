@@ -50,6 +50,7 @@ export default {
         },
         removeElement(){
             if ( this.current && this.confirm ){
+                this.$attrs.components.splice(this.index,1)
                 this.$emit ( 'remove' , this.current )
                 
             }

@@ -283,7 +283,9 @@ export default {
                 let grid = {
                     "css": {
                         "css": "",
-                        "container": "flex flex-col md:grid md:grid-cols-" + cols
+                        //"container": "flex flex-col md:grid md:grid-cols-" + cols
+                        "container" : "grid md:grid-rows-1 md:grid-cols-" + cols +  " grid-cols-1 grid-rows-" + cols
+                        //"container" : "grid sm:grid-rows-" + cols + " md:grid-cols-" + cols
                     },
                     "cols" : cols,
                     "tag": "container",
@@ -368,6 +370,26 @@ export default {
                 "gsap" : { "animation" : null , "ease" : null , "duration" : null , "delay" : null }
             }
             return flex
+        }
+
+        Vue.prototype.$beautify = ( html = '' )=>{
+            if ( !html ) return ''
+            var tab = '\t';
+            var result = '';
+            var indent= '';
+        
+            html.split(/>\s*</).forEach(function(element) {
+                if (element.match( /^\/\w/ )) {
+                    indent = indent.substring(tab.length);
+                }
+        
+                result += indent + '<' + element + '>\r\n';
+        
+                if (element.match( /^<?\w[^>]*[^\/]$/ ) && !element.startsWith("input")  ) { 
+                    indent += tab;              
+                }
+            });
+            return result.substring(1, result.length-3);
         }
         /* 
         Vue.prototype.$hasCss = ( css , arr ) => {
