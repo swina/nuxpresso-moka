@@ -1,7 +1,9 @@
 query Components {
-  components {
+  components ( where: { enabled: true } ){
     name
     id
     category
+    tags
+    image_uri
   }
 }

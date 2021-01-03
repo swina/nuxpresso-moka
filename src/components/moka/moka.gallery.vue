@@ -1,13 +1,14 @@
 <template>
-    <div class="flex flex-col md:grid md:grid-cols-4 md:grid-flow-cols md:gap-8 w-full items-start justify-start cursor-pointer object-fit" style="grid-auto-rows: .5fr;">
+    <div v-if="init">
+    <div v-if="$attrs.gallery" class="moka-components-gallery flex flex-col md:grid md:grid-cols-4 md:grid-flow-cols md:gap-8 w-full items-start justify-start cursor-pointer object-fit" style="grid-auto-rows: .5fr;">
         
-        <div v-if="comp.enabled" v-for="(comp,c) in $attrs.components" class="mb-2 text-sm border  shadow-lg rounded-lg justify-center flex flex-col h-full" :title="comp.description">
+        <div v-for="(comp,c) in objects" class="mb-2 text-sm border  shadow-lg rounded-lg justify-center flex flex-col h-full" :title="comp.description">
             <div class="flex-1 relative object-cover ">
                 <div class="px-1 bg-gray-700 text-gray-300 w-full rounded-tl rounded-tr  flex flex-row items-center">
                     {{comp.name}}
                 </div>
                 
-                <div class="h-48 bg-contain bg-center bg-no-repeat" v-if="comp.image_uri" :style="'background-image:url(' + comp.image_uri + ')'" title="Click to preview" @click="$emit('preview',comp)">
+                <div class="h-48 bg-contain bg-center bg-no-repeat" v-if="comp.image_uri" :style="'background-image:url(' + comp.image_uri + ')'" title="Click to preview" @click="selectComponent(comp.id,'preview')">
                 </div>
                 
                 <div v-else class="h-48" title="Click to preview" @click="$emit('preview',comp)"></div>
@@ -15,12 +16,16 @@
                 <div class="px-1 absolute bottom-0 rounded-br rounded-bl bg-gray-300 items-center flex flex-row w-full text-left text-xs justify-between">
                     <div>{{$moment(comp.updated_at)}}</div>
                     <i class="ml-2 material-icons text-gray-500 hover:text-blue-500" title="Delete" @click="index=c,current=comp.id,confirmModal=!confirmModal">delete</i>
-                    <i class="ml-2 material-icons text-gray-500 hover:text-blue-500" title="Duplicate" @click="$emit('duplicate',comp)">file_copy</i>
-                    <i class="material-icons xs ml-2 text-gray-500 hover:text-blue-500" title="Preview" @click="$emit('preview',comp)">preview</i>
-                        <i class="material-icons xs ml-2 text-gray-500 hover:text-blue-500" title="Edit" @click="$emit('component',comp)">edit</i>
+                    <i class="ml-2 material-icons text-gray-500 hover:text-blue-500" title="Duplicate" @click="selectComponent(comp.id,'duplicate')">file_copy</i>
+                    <i class="material-icons xs ml-2 text-gray-500 hover:text-blue-500" title="Preview" @click="selectComponent(comp.id,'preview')">preview</i>
+                    <i class="material-icons xs ml-2 text-gray-500 hover:text-blue-500" title="Edit" @click="selectComponent(comp.id,'component')">edit</i>
                 </div>
             </div>
         </div>
+    </div>    
+    <moka-table v-if="!$attrs.gallery" :components="objects" ctx="components" @component="selectComponentTable" />
+
+
         <transition name="fade">
             <div class="nuxpresso-modal bg-white border shadow p-4 z-max" v-if="confirmModal">
                 <h5>Delete this object ?</h5>
@@ -32,19 +37,47 @@
 </template>
 
 <script>
+import componentsQry from '@/apollo/components.filter.gql'
+import MokaTable from '@/components/table'
 import { mapState } from 'vuex'
 export default {
-    name: 'MokaComponentsGallery',
+    name: 'MokaBlocksGallery',
+    components: { MokaTable },
     data:()=>({
         confirm: false,
         confirmModal: false,
         current: null,
-        index: null
+        index: null,
+        objects: null,
+        components: null
     }),
+    props: ['filter','type'],
     computed:{
-        ...mapState ( ['moka'] )
+        ...mapState ( ['moka'] ),
+        init(){
+            this.objects = this.blocks
+            return true
+        }
+    },
+    mounted(){
+        this.$apollo.queries.blocks.refetch()
+        this.objects = this.blocks
+    },
+    watch:{
+        type(v){
+            v ? this.objects = this.blocks.filter ( comp => { return comp.tags === v } ) 
+                : this.objects = this.blocks
+        }
     },
     methods:{
+        selectComponent(id,action){
+            this.$http.get('components/' + id ).then ( result => {
+                this.$emit(action,result.data)
+            })
+        },
+        selectComponentTable(comp){
+            this.selectComponent ( comp.id , 'component' )
+        },
         background(comp){
             return comp.image_uri ? 'background-image: url(' + comp.image_uri + ');background-size:cover;background-position:center center;background-repeat: no-repeat;' : ''
         },
@@ -54,6 +87,16 @@ export default {
                 this.$emit ( 'remove' , this.current )
                 
             }
+        }
+    },
+    apollo: {
+        blocks: {
+            fetchPolicy:'no-cache',
+            query: componentsQry,
+            variables(){
+                return { category : this.filter }
+            },
+            update: data => data.components 
         }
     }
 }

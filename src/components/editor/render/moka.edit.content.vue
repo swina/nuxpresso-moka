@@ -1,13 +1,13 @@
 <template>
     <div class="w-full flex flex-col">
         <!-- Semantic  -->
-        <div class="bg-gray-700 cursor-pointer hover:bg-blue-300 text-gray-100 px-1 mb-1" v-if="$attrs.entity && editor.current.tag != 'document'" @click="semantic=!semantic">
+        <div class="bg-gray-400 cursor-pointer hover:bg-blue-300 text-gray-800 px-1 mb-1" v-if="$attrs.entity && editor.current.tag != 'document'" @click="semantic=!semantic">
             HTML Semantic
         </div>
         <moka-options class="mb-2" v-if="semantic" attr="semantics" v-model="$attrs.entity.entity.semantic" css=""/>
 
         <!-- image -->
-        <div class="bg-gray-700 cursor-pointer hover:bg-blue-300 text-gray-100 px-1 mb-1" v-if="$attrs.entity && $attrs.entity.entity.hasOwnProperty('image')" @click="image=!image">
+        <div class="bg-gray-400 cursor-pointer hover:bg-blue-300 text-gray-800 px-1 mb-1" v-if="$attrs.entity && $attrs.entity.entity.hasOwnProperty('image')" @click="image=!image">
             Media
         </div>
         <div class="p-4 text-center" v-if="image && $attrs.entity && $attrs.entity.entity.hasOwnProperty('image')">
@@ -15,7 +15,7 @@
         </div>
 
         <!-- video options -->
-        <div class="bg-gray-700 cursor-pointer hover:bg-blue-300 text-gray-100 px-1 mb-1" v-if="$attrs.element.type==='video'" @click="video=!video">
+        <div class="bg-gray-400 cursor-pointer hover:bg-blue-300 text-gray-800 px-1 mb-1" v-if="$attrs.element.type==='video'" @click="video=!video">
             Video Options
         </div>
         <transition name="fade">
@@ -37,19 +37,19 @@
 
        
         <!-- link and anchor -->
-        <div class="bg-gray-700 cursor-pointer hover:bg-blue-300 mb-1 text-gray-100 px-1" @click="link=!link">
+        <div class="bg-gray-400 cursor-pointer hover:bg-blue-300 mb-1 text-gray-800 px-1" @click="link=!link">
             Link / Anchor
         </div>
         <transition name="fade">
             <div v-if="link" class="flex flex-col">
                 <label>Link</label>
-                <input class="dark" type="text" v-model="$attrs.element.link"/>
+                <input class="nodark" type="text" v-model="$attrs.element.link"/>
                 <label>Article/Page</label>
-                <select class="dark" v-model="$attrs.element.link">
+                <select class="nodark" v-model="$attrs.element.link">
                     <option v-for="(opt,o) in moka.articles" :value="'/articles/' + opt.slug">{{ opt.title }}</option>
                 </select>
                 <label>Anchor</label>
-                <input class="dark" type="text" v-model="$attrs.element.anchor"/>
+                <input class="nodark" type="text" v-model="$attrs.element.anchor"/>
             </div>
              <!-- slider link next prev -->
             <div class="flex flex-col my-1 text-left" v-if="$attrs.component.category==='slider'">

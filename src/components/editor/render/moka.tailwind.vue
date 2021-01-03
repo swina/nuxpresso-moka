@@ -1,7 +1,7 @@
 <template>
     <div class="mt-1" :data="init">
         <template v-for="g in groups">
-             <div :key="g.attr" class="w-full pl-1 mb-1 bg-gray-700 hover:bg-blue-300 hover:text-black text-white capitalize" @click="toggle(g)">
+             <div :key="g.attr" class="w-full pl-1 mb-1 bg-gray-400 hover:bg-blue-300 hover:text-black text-black capitalize" @click="toggle(g)">
                  {{ g.label }}
              </div>
              <div v-if="g === group">

@@ -1,6 +1,37 @@
 const values = [0,0.5,1,1.5,2,2.5,3,3.5,4,5,6,7,8,9,10,11,12,14,16,20,24,28,32,36,40,44,48,52,56,60,64,72,80,96]
 const pixels = [ 1 , 4 , 8 , 12 , 16 , 20 , 24 , 32 , 40 , 48, 64 , 80 , 96 , 128 , 160 , 192 , 224 , 256 ]
+const percs =  [ 'full','1/2',
+'1/3',
+'2/3',
+'1/4',
+'3/4',
+'1/5',
+'2/5',
+'3/5',
+'4/5',
+'1/6',
+'2/6',
+'4/6',
+'5/6',
+'1/12',
+'2/12',
+'3/12',
+'4/12',
+'5/12',
+'7/12',
+'8/12',
+'9/12',
+'10/12',
+'11/12'
+]
 
+function setPercs ( prefix ){
+    let arr = []
+    percs.forEach ( perc => {
+        arr.push ( prefix + '-' + perc)
+    })
+    return arr 
+}
 function setClass ( prefix , negative ){
     let arr = []
     if ( negative ){
@@ -66,6 +97,40 @@ var classes = {
         'tracking-widest'
     ],
     textOpacity: setOpacity('text-opacity'),
+    textcolor: [
+        'text-white',
+        'text-black', 
+        'text-transparent', 
+        'text-gray',
+        'text-bluegray',
+        'text-brown', 
+        'text-red', 
+        'text-orange', 
+        'text-yellow', 
+        'text-green', 
+        'text-lime',
+        'text-teal', 
+        'text-blue', 
+        'text-indigo',
+        'text-purple',
+        'text-pink',
+        'hover:text-white',
+        'hover:text-black', 
+        'hover:text-transparent', 
+        'hover:text-gray', 
+        'hover:text-bluegray',
+        'hover:text-brown',
+        'hover:text-red', 
+        'hover:text-orange', 
+        'hover:text-yellow', 
+        'hover:text-green', 
+        'hover:text-lime',
+        'hover:text-teal', 
+        'hover:text-blue', 
+        'hover:text-indigo',
+        'hover:text-purple',
+        'hover:text-pink'
+        ],
     fontfamily: [
         'Barlow Condensed',
         'Abel',
@@ -91,6 +156,41 @@ var classes = {
         'font-black'
     ],
     bgOpacity: setOpacity('bg-opacity'),
+    colors: [ 'gray' , 'bluegray' , 'brown' , 'red', 'orange' , 'yellow' , 'green' , 'lime' , 'teal' , 'blue' , 'indigo' , 'purple' , 'pink' ],
+    bgcolor : [
+        'bg-white',
+        'bg-black', 
+        'bg-transparent', 
+        'bg-gray', 
+        'bg-bluegray',
+        'bg-brown',
+        'bg-red', 
+        'bg-orange', 
+        'bg-yellow', 
+        'bg-green', 
+        'bg-lime',
+        'bg-teal', 
+        'bg-blue', 
+        'bg-indigo',
+        'bg-purple',
+        'bg-pink',
+        'hover:bg-white',
+        'hover:bg-black', 
+        'hover:bg-transparent', 
+        'hover:bg-gray', 
+        'hover:bg-bluegray',
+        'hover:bg-brown',
+        'hover:bg-red', 
+        'hover:bg-orange', 
+        'hover:bg-yellow', 
+        'hover:bg-green', 
+        'hover:bg-lime', 
+        'hover:bg-teal', 
+        'hover:bg-blue', 
+        'hover:bg-indigo',
+        'hover:bg-purple',
+        'hover:bg-pink'
+        ],
     flexdirection : [ 'flex-col' , 'flex-row' , 'flex-col-reverse' , 'flex-row-reverse' ],
     flexorder:[
         'order-first',
@@ -261,6 +361,11 @@ var classes = {
     paddingBottom: setClass('pb'),
     paddingLeft: setClass('pl'),
     paddingRight: setClass('pr'),
+    spacing: setPercs('p'),
+    spacingTop: setPercs('pt'),
+    spacingBottom: setPercs('pb'),
+    spacingLeft: setPercs('pl'),
+    spacingRight: setPercs('pr'),
     margin: setClass('m',true),
     marginTop: setClass('mt',true),
     marginBottom: setClass('mb',true),

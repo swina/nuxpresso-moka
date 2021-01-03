@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col">
         Height  
-        <select class="dark" v-model="model" @change="$emit('input',model),$emit('css',model)">
+        <select class="w-full nodark" v-model="model" @change="$emit('input',model),$emit('css',model)">
             <option value="">not set</option>
             <option v-for="opt in options" :value="opt.value">{{ opt.label }}</option>
         </select>

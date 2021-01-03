@@ -19,20 +19,20 @@
             </div>
             
             <div v-if="doc.slider.dots.enable" class="absolute bottom-0 left-0 text-center flex-row justify-center items-center mb-4 w-full">
-              <i :class="'slider-dot ring-2 material-icons mr-2 ' + dotActive(n)" v-for="n in doc.blocks.length" @click="goTo(n-1)">fiber_manual_record</i>
+              <i :class="'material-icons mr-2 ' + dotActive(n)" v-for="n in doc.blocks.length" @click="goTo(n-1)">fiber_manual_record</i>
             </div>
 
             <div v-if="doc.slider.navigation.enable">
               <div :class="'absolute top-0 left-0 h-full flex justify-center items-center p-1 ' + over" @click="goTo(index-1)">
-                <i class="slider-navigation-icon material-icons text-4xl">{{ doc.slider.navigation.icons[0]}}</i>
+                <i :class="'slider-navigation-icon material-icons text-4xl ' + doc.slider.navigation.css">{{ doc.slider.navigation.icons[0]}}</i>
               </div>
               <div :class="'absolute top-0 right-0 h-full flex justify-center items-center p-1 ' + over" @click="goTo(index+1)">
-                <i class="slider-navigation-icon material-icons text-4xl">{{ doc.slider.navigation.icons[1]}}</i>
+                <i :class="'slider-navigation-icon material-icons text-4xl ' + doc.slider.navigation.css">{{ doc.slider.navigation.icons[1]}}</i>
               </div>
             </div>
             <div v-if="doc.slider.buttons" :class="'absolute left-0 text-center hidden md:flex md:flex-row justify-center items-center my-2 w-full ' + doc.slider.buttons_position">
               <template v-for="(slide,n) in doc.blocks">
-                <button :class="'slider-buttons mx-1 capitalize '  + doc.slider.buttons_css" @click="goTo(n)">{{ slide.name || 'slide' + (n+1) }}</button>
+                <button :class="'mx-1 capitalize '  + buttonsClass" @click="goTo(n)">{{ slide.name || 'slide' + (n+1) }}</button>
               </template>
 
         </div>
@@ -69,13 +69,18 @@ export default {
         },
         over(){
           return this.doc.slider.navigation.hover ? 'opacity-0 hover:opacity-100' : ''
+        },
+        buttonsClass(){
+          let css = this.doc.slider.buttons_css ? ' ' + this.doc.slider.buttons_css : ''
+          css += this.doc.slider.buttons_text ? ' ' + this.doc.slider.buttons_text : ''
+          return css
         }
-        
     },
 
     methods:{
         dotActive(n){
-          return (n-1) === this.index ? 'text-black animate-ping' : 'text-gray-300 shadow rounded-full'
+          let css = this.doc.slider.dots.css ? this.doc.slider.dots.css : 'text-black'
+          return (n-1) === this.index ? css + ' animate-ping' : css + ' rounded-full'
         },
         goTo(n){
           if ( n < 0 ) return 

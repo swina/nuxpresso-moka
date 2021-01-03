@@ -45,11 +45,12 @@
 </template>
 
 <script>
+import classes from '@/plugins/tw.classes'
 export default {
     name: 'NuxpAdminPalette',
     data:()=>({
         neutral: [ 'transparent' , 'white' , 'black' ],
-        colors: [ 'gray' , 'red', 'orange' , 'yellow' , 'green' , 'teal' , 'blue' , 'indigo' , 'purple' , 'pink' ],
+        //colors: [ 'gray' , 'bluegray' , 'brown' , 'red', 'orange' , 'yellow' , 'green' , 'lime' , 'teal' , 'blue' , 'indigo' , 'purple' , 'pink' ],
         density: {
             extralight : 100 ,
             verylight : 200 ,
@@ -64,6 +65,11 @@ export default {
         css: '',
         opacity: 100
     }),
+    computed:{
+        colors(){
+            return classes['colors']
+        }
+    },
     mounted(){
         this.css = this.$attrs.css
     },

@@ -38,7 +38,7 @@
                 <div v-if="selected && $attrs.filter" class="flex flex-col">
 
                     <div><span class="font-bold">HTML </span>(responsive breakpoint added): <br/>
-                        <textarea class="w-1/2 h-32" type="text" :value="container" />
+                        <textarea class="w-1/2 h-32" style="font-family:monospace" :value="container" />
                     </div>
                     <!--
                     <div>
@@ -85,7 +85,7 @@ export default {
             let html = ''
             html += '<div class="' + this.obj.css.container + '">\n'
             this.obj.blocks.forEach ( block => {
-                html += '\t<div class="' + block.css.container.replace('flex flex-col','') + '"></div>\n'
+                html += '\t<div class="' + this.$clean(block.css.container.replace('flex flex-col','').replace('md:col-span-1','')) + '"></div>\n'
             })
             html += '</div>'
             return html

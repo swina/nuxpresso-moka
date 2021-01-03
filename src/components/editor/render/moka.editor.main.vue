@@ -1,7 +1,7 @@
 <template>
 <div>
     <div :class="'top-0 right-0 left-0 bottom-0 flex mx-2 mb-20 flex-row '" v-if="$attrs.component && hasblocks && !preview">
-
+        <transition name="slideright">
         <div class="w-full overflow-y-auto overflow-x-hidden">
             
             <!-- MAIN CONTAINER -->
@@ -56,7 +56,7 @@
             </div>
                 
             <!-- BOTTOM RIGHT BUTTONS ( Add block, add reusable, preview ) -->
-            <div class="fixed bottom-0 right-0 opacity-100 hover:opacity-100 mr-6 mb-12 z-xtop ">
+            <div class="fixed bottom-0 right-0 opacity-100 hover:opacity-100 mr-6 mb-2 z-top">
  
                     <!-- CLEAR SELECTION -->
                     <i class="material-icons moka-icons nuxpresso-icon-circle ml-2" @click="$store.dispatch('setCurrent',doc),$store.dispatch('selected',doc.id)"
@@ -72,19 +72,19 @@
                     <i class="material-icons moka-icons nuxpresso-icon-circle ml-2" v-if="$attrs.component && $attrs.component.category!='slider'" title="Preview" @click="preview=!preview,disable=false">remove_red_eye</i> 
 
                     <!-- PREVIEW SLIDER -->
-                    <i class="material-icons bg-green-400 nuxpresso-icon-circle ml-2" v-if="$attrs.component && $attrs.component.category==='slider'" title="Preview" @click="slider=!slider,disable=false">remove_red_eye</i>
+                    <i class="material-icons nuxpresso-icon-circle ml-2 bg-green-400 " v-if="$attrs.component && $attrs.component.category==='slider'" title="Preview" @click="slider=!slider,disable=false">remove_red_eye</i>
                     
                 
             </div>
 
         </div>
-      
+        </transition>
     </div>
 
     <!-- COMPONENT SETTINGS -->
     <transition name="slideleft">
-        <div class="fixed left-0 top-0 mt-10 flex flex-col shadow-lg p-4 bg-white z-2xtop text-base" v-if="settings">
-            <i class="material-icons absolute right-0 mr-2" @click="settings=!settings">close</i>
+        <div class="fixed w-1/4 left-0 top-0 mt-8 flex flex-col shadow-lg p-4 bg-white z-2xtop text-base" v-if="settings">
+            <i class="material-icons absolute top-0 right-0 m-1 text-2xl text-gray-400" @click="settings=!settings">close</i>
             <label class="font-bold">Name</label>
             <input class="w-full" type="text" v-model="$attrs.component.name"/> 
             <label class="font-bold">Description</label>
@@ -217,6 +217,7 @@
         <moka-reusable-elements v-if="editor.action==='addcomponent'" 
             :importReusable="false" 
             :newblock="false" 
+            @grid="addGrid"
             @close="reusable=false,addBlock=false,$store.dispatch('setAction',null)" 
             @add="addReusable" 
             @importreusable="addReusable"/>
@@ -250,12 +251,12 @@
 
     <!-- SLIDER SETTINGS -->
     <transition name="fade">
-        <div v-if="sliderSettings" class="nuxpresso-modal w-1/3 p-2 bg-white z-2xtop border rounded shadow-lg">
-            <i class="material-icons absolute top-0 right-0 cursor-pointer" @click="sliderSettings=!sliderSettings">close</i>
+        <div v-if="editor.action === 'slidersettings'" class="nuxpresso-modal w-1/2 lg:w-1/2 xl:w-1/3 p-2 bg-white z-2xtop border rounded shadow-lg">
+            <i class="material-icons absolute top-0 right-0 cursor-pointer" @click="$store.dispatch('setAction',null)">close</i>
             <h4>Slider Settings</h4>
             <div class="p-2">
                 <moka-editor-slider v-if="doc.hasOwnProperty('slider')" :slider="doc"/>
-                <moka-editor-slider v-if="!doc.hasOwnProperty('slider') && current && current.entity && current.entity.hasOwnProperty('slider')" :slider="current.entity"/>
+                <moka-editor-slider v-if="!doc.hasOwnProperty('slider') && editor.current && editor.current.hasOwnProperty('slider')" :slider="editor.current"/>
             </div>
         </div>
     </transition>
@@ -281,9 +282,10 @@
 
     <!-- HTML -->
     <transition name="fade">
-        <div v-if="html" class="nuxpresso-modal w-1/2 p-4">
+        <div v-if="html" class="nuxpresso-modal w-3/4 p-4">
             <i class="material-icons absolute top-0 right-0 m-1" @click="html=null">close</i>
-            <textarea v-model="html" class="w-full h-64"/>
+            <h4>HTML</h4>
+            <textarea v-model="html" style="font-family:monospace" class="w-full h-64"/>
         </div>
     </transition>
 </div>
@@ -365,7 +367,7 @@ export default {
         exportJSON(){
             let json = JSON.parse(JSON.stringify(this.$attrs.component))
             delete json.id
-            this.$store.dispatch('loading')
+            //this.$store.dispatch('loading')
             return JSON.stringify(json)
         },
         //check if loaded component has blocks
@@ -373,8 +375,8 @@ export default {
             if ( !this.$attrs.component ) this.$router.push('dashboard')
             this.doc = this.$attrs.component.json
             this.doc.id ? null : this.doc.id = this.$randomID()
-            this.$store.dispatch ( 'setCurrent' , this.doc )
-            this.$store.dispatch ( 'selected' , this.doc.id )
+            //this.$store.dispatch ( 'setCurrent' , this.doc )
+            //this.$store.dispatch ( 'selected' , this.doc.id )
             this.mycomponent = this.$attrs.component
             return true
         },
@@ -387,7 +389,9 @@ export default {
     methods:{
         //add a grid as new block
         addGrid(grid){
-            this.doc.blocks.push ( grid )
+            this.editor.current.blocks.push ( grid )
+            console.log ( grid )
+            //this.doc.blocks.push ( grid )
             this.grids = false
         },
         //save new elements type
@@ -505,13 +509,7 @@ export default {
                 this.addReusable( obj )
             })
         },
-        
-        //add a reusable block (copied element or selected from the list)
-        addReusable(obj){
-            if ( !obj ) {
-                this.$store.dispatch('message','No objects in the clipboard')
-                return 
-            }
+        addObject(obj){
             this.reusable = false
             let component = {}
             let json , imported
@@ -528,7 +526,7 @@ export default {
                 component = this.$clone(imported)
             }
             if ( component ){
-                 component['gsap'] = {
+                component['gsap'] = {
                     animation: '',
                     ease: '',
                     duration: 0,
@@ -544,6 +542,56 @@ export default {
                 //this.copiedElement = null
                 this.$store.dispatch('setAction',null)
             }
+        },
+        //add a reusable block (copied element or selected from the list)
+        addReusable(id){
+            console.log ( id )
+            if ( typeof id != 'object' ){
+                this.$http.get('components/' + id ).then ( resp => {
+                    let obj = resp.data
+                    if ( !obj ) {
+                        this.$store.dispatch('message','No objects in the clipboard')
+                        return 
+                    }
+                    this.addObject ( obj )
+                })
+            } else {
+                this.addObject ( id )
+            }
+            /*
+                this.reusable = false
+                let component = {}
+                let json , imported
+                if ( obj.hasOwnProperty ( 'json' ) ){
+                    if ( !obj.json.hasOwnProperty('slider' ) ) {
+                        imported = obj.json.blocks[0]
+                        component = this.$clone(imported)
+                    } else {
+                        imported = obj.json
+                        component = this.$clone(imported)
+                    }            
+                } else {
+                    imported = obj
+                    component = this.$clone(imported)
+                }
+                if ( component ){
+                    component['gsap'] = {
+                        animation: '',
+                        ease: '',
+                        duration: 0,
+                        delay:0
+                    }
+                    component.id = this.$randomID()
+                    let target = this.editor.current
+                    if ( !target || this.addBlock ){
+                        target = this.doc
+                    }
+                    target.blocks.push ( component )
+                    this.addBlock = false
+                    //this.copiedElement = null
+                    this.$store.dispatch('setAction',null)
+                }
+            */
         },
         //add an HTML element
         addComponent(component){

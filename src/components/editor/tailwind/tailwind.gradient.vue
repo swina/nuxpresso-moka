@@ -16,7 +16,7 @@
             </div>
         </div>
         Direction                            
-        <select class="dark" v-model="direction" @change="update">
+        <select class="nodark" v-model="direction" @change="update">
             <option value="">reset</option>
             <option v-for="(dr,index) in directions" :value="dr.value" :key="dr.label">{{dr.label}}</option>
         </select>

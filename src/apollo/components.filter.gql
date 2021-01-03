@@ -1,0 +1,12 @@
+query Components ( $category: String ){
+    components (  where : { category: $category , enabled: true } , sort: "updated_at:desc"  ){
+        id
+        name
+        category
+        description
+        enabled
+        updated_at
+        tags
+        image_uri
+    }
+}

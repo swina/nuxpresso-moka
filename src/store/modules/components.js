@@ -29,8 +29,8 @@ const moka = {
         SET_SETTINGS ( state , settings ){
             state.settings = settings
         },
-        SET_LOADING ( state ){
-            state.loading =! state.loading
+        SET_LOADING ( state , loading ){
+            state.loading = loading || true
         },
         SET_MESSAGE ( state , message ){
             state.message = message
@@ -82,10 +82,11 @@ const moka = {
         async loadComponents ( { commit } ){
             const comps = await axios.get ( process.env.VUE_APP_API_URL + 'components' )
             commit ( 'SET_COMPONENTS' , comps.data.sort( (a, b) => a.name < b.name ? -1 : 1) ) 
-            const settings = await axios.get ( process.env.VUE_APP_API_URL + 'settings' )
-            commit ( 'SET_SETTINGS' , settings.data )
+            
         },
         async loadElements ( { commit } ){
+            const settings = await axios.get ( process.env.VUE_APP_API_URL + 'settings' )
+            commit ( 'SET_SETTINGS' , settings.data )
             axios.get ( process.env.VUE_APP_API_URL + 'elements' ).then ( response => {
                 commit ( 'SET_ELEMENTS' , response.data )
             }).catch ( error => {

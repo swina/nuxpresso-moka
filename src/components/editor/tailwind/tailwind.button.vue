@@ -14,7 +14,7 @@ export default {
     computed:{
         active(){
             return this.selected ? 
-                'border-white bg-white text-blue-800' : 'border-transparent text-gray-200'
+                'border-white bg-blue-300 text-white' : 'border-transparent text-gray-600'
         }
     },
     watch:{

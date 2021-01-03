@@ -8,7 +8,7 @@
                         </template>
                         <th></th>
                     </thead>
-                    <tr :key="'row_' + w" v-for="(widget,w) in $attrs.components" class="hover:bg-blue-200 p-1 border-b-2 cursor-pointer" @click="$emit('component',widget,w)" v-if="widget.json">
+                    <tr :key="'row_' + w" v-for="(widget,w) in $attrs.components" class="hover:bg-blue-200 p-1 border-b-2 cursor-pointer" @click="$emit('component',widget,w)">
                        
                         <template v-for="(col,c) in wcolumns[$attrs.ctx]">
                             <td :key="'td_' + c" class="p-2 align-top" v-if="!col.type && col.type != 'json'">

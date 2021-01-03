@@ -155,7 +155,7 @@ export default {
         production(){
             return this.remote.get ( this.master + 'articles' ).then ( response => {
                 this.articlesRemote = response.data//this.moka.articles
-                this.$store.dispatch('loading',false)
+                //this.$store.dispatch('loading',false)
                 return true// response.data
             })
         },

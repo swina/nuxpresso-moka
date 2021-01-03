@@ -1,10 +1,10 @@
 <template>
 <div class="fixed overflow-y-auto border-l top-0 right-0 w-1/3 z-2xtop h-screen bg-white p-1 flex flex-col">
     <i class="material-icons z-2xtop absolute top-0 right-0 m-1" @click="$emit('close')">close</i>
-    <div v-if="mokatemplates" class="mb-10 flex flex-row flex-wrap justify-around p-4">
+    <div v-if="mokacomponents" class="mb-10 flex flex-row flex-wrap justify-around p-4">
         
         <template v-for="(template,index) in mokatemplates">
-            <div class="w-1/2 flex flex-col mb-4 cursor-pointer relative p-1 justify-center items-center" v-if="index>=start && index < (start+limit)" @click="$emit('add',template)">
+            <div class="w-1/2 flex flex-col mb-4 cursor-pointer relative p-1 justify-center items-center" v-if="index>=start && index < (start+limit)" @click="$emit('add',template.id)">
                 <span v-if="!template.image_uri" class="text-sm p-1">{{ template.name }}</span>
                 <div v-if="template.image_uri" :style="'background-image:url(' + template.image_uri + ')'" class="h-24 w-full bg-center bg-no-repeat bg-contain shadow" :title="template.name"></div>
             </div>
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import componentsQry from '@/apollo/components.gql'
 import { mapState } from 'vuex'
 export default {
     name: 'NuxpressoMokaTemplates',
@@ -43,13 +44,13 @@ export default {
     computed: {
         ...mapState ( ['moka'] ),
         categories(){
-            let arr = this.$arrayGroup ( this.moka.components , 'category' , 'id' )
+            let arr = this.$arrayGroup ( this.mokacomponents , 'category' , 'id' )
             return arr.keys
         },
         mokatemplates(){
             this.start = 0
             this.limit = 12
-            return this.moka.components.filter(comp=>{ return comp.category === this.filter || comp.tags === this.filter } )
+            return this.mokacomponents.filter(comp=>{ return comp.category === this.filter || comp.tags === this.filter } )
         }
     },
     methods: {
@@ -63,6 +64,12 @@ export default {
                 this.start -= this.limit
             }
             
+        }
+    },
+    apollo:{
+        mokacomponents: {
+            query: componentsQry,
+            update: data => data.components
         }
     }
 }

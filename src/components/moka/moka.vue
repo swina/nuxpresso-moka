@@ -85,7 +85,9 @@ export default {
                             : this.component.blocks_id = this.component.json.id 
             //this.component.json.id ? this.component.blocks_id = this.component.json.id : null
             this.$http.put ( 'components/' + this.component.id , this.component ).then ( result => {
-                this.$store.dispatch('loadComponents')
+                //this.$store.dispatch('loadComponents')
+                //this.$apollo.queries.refresh()
+                //console.log ( this )
                 this.$emit('message','Component saved')
                 this.loading = false
             }).catch ( error => {
@@ -97,7 +99,7 @@ export default {
         saveAsReusable(component){
             this.loading = true
             this.$http.post ( 'components' , component ).then ( result => {
-                this.$store.dispatch('loadComponents')
+                //this.$store.dispatch('loadComponents')
                 this.$emit('message','New reusable component saved')
                 this.loading = false
             }).catch ( error => {
@@ -119,7 +121,8 @@ export default {
             newComponent.category = this.newComponent.category
             this.$http.post ( 'components' , newComponent ).then ( response => {
                 this.message = 'Component created'
-                this.$store.dispatch ( 'loadComponents' )
+                this.$emit('message', this.message )
+                //this.$store.dispatch ( 'loadComponents' )
                 this.loading = false
                 this.saveAsNew = false
             }).catch ( error => {

@@ -3,35 +3,35 @@
         
         <div class="w-1/2">
         <div>Size</div>
-            <select class="dark" v-model="bgposition.size" @change="updateCSS()">
+            <select class="nodark" v-model="bgposition.size" @change="updateCSS()">
                 <option value=""></option>
                 <option :key="size" v-for="size in bgsizes" :value="size">{{ size.replace('bg-','') }}</option>
             </select>
         </div>
         <div class="w-1/2">
             <div>Position</div>
-            <select class="dark" v-model="bgposition.position" @change="updateCSS()">
+            <select class="nodark" v-model="bgposition.position" @change="updateCSS()">
                 <option value=""></option>
                 <option :key="pos" v-for="pos in bgpositions" :value="pos">{{ pos.replace('bg-','') }}</option>
             </select>
         </div>
         <div class="w-1/2">
             <div>Repeat</div>
-            <select class="dark" v-model="bgposition.repeat" @change="updateCSS()">
+            <select class="nodark" v-model="bgposition.repeat" @change="updateCSS()">
                 <option value=""></option>
                 <option :key="rep" v-for="rep in bgrepeats" :value="rep">{{ rep.replace('bg-','') }}</option>
             </select>
         </div>
         <div class="w-1/2">
             <div>Attachment</div>
-            <select class="dark" v-model="bgposition.attachment" @change="updateCSS()">
+            <select class="nodark" v-model="bgposition.attachment" @change="updateCSS()">
                 <option value=""></option>
                 <option :key="att" v-for="att in bgattachments" :value="att">{{ att.replace('bg-','') }}</option>
             </select>
         </div>
         <div class="w-1/2">
             <div>Clip</div>
-            <select class="dark" v-model="bgposition.clip" @change="updateCSS()">
+            <select class="nodark" v-model="bgposition.clip" @change="updateCSS()">
                 <option value=""></option>
                 <option :key="clip" v-for="clip in bgclips" :value="clip">{{ clip.replace('bg-','') }}</option>
             </select>

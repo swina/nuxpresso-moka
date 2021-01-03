@@ -10,16 +10,16 @@
 
             <!-- MENU DEFINED IN @/plugins/app.js -->
             <template v-if="menu && menu.items" v-for="item in menu.items">
-                 <div :key="item.label" v-if="item.component" class="flex flex-row items-center py-1 font-thin text-sm p-2 hover:bg-gray-700" @click="section=item.component,label=item.label,filter=item.filter">
+                 <div :key="item.label" v-if="item.component" :class="'flex flex-row items-center py-1 font-thin text-sm p-2 hover:bg-gray-700 ' + activeItem(item.component)" @click="section=item.component,label=item.label,filter=item.filter,$store.dispatch('dashboard_filter','')">
                     <i v-if="item.icon" class="material-icons mr-2">{{ item.icon }}</i> {{ item.label }}
                  </div>
                  <div v-else :key="item.label" class="flex flex-row items-center py-1 font-thin text-sm p-2 hover:bg-gray-700" @click="label=item.label,filter=item.filter">
                     <i v-if="item.icon" class="material-icons mr-2">{{ item.icon }}</i> {{ item.label }}
                  </div>
                  <transition name="fade">
-                 <div v-if="item.hasOwnProperty('items') && label===item.label">
+                 <div v-if="item.hasOwnProperty('items') && ( label===item.label || user.dashboard === item.component)">
                     <template v-for="sub in item.items">
-                        <div :key="sub.label" class="flex flex-row items-center py-1 pl-10 font-thin text-sm p-2 hover:bg-gray-700" @click="section=sub.component,filter=sub.filter">
+                        <div :key="sub.label" :class="'flex flex-row items-center py-1 pl-10 font-thin text-sm p-2 hover:bg-gray-700 ' + active(sub.filter)" @click="section=sub.component,filter=sub.filter,$store.dispatch('dashboard_filter',filter)">
                             {{ sub.label }}
                         </div>
                     </template>
@@ -47,9 +47,9 @@
         <div class="w-full flex flex-row">
             <div class="w-2/12"></div>
             <div class="w-10/12">
-                <component v-if="moka.components" :is="component" :component="component" :filter="filter"/>
-
-                <div v-if="!moka.components || moka.loading">
+                <!-- <component v-if="moka.components" :is="component" :component="component" :filter="filter"/> -->
+                <component :is="component" :component="component" :filter="filter"/>
+                <div v-if="moka.loading">
                     <div class="fixed bottom-0 left-0 shadow z-2xtop w-2/12 p-2 bg-blue-300 text-sm">Loading data ...</div>
                 </div>
             </div>
@@ -106,18 +106,25 @@ export default {
         }
     },
     beforeMount(){
-      this.$store.dispatch('loadComponents')
+      //this.$store.dispatch('loadComponents')
       this.$store.dispatch('loadElements')
-      this.$store.dispatch('loadMedia')
+      //this.$store.dispatch('loadMedia')
     },
-   
+    methods:{
+        activeItem(component){
+            return component === this.user.dashboard && !this.user.dashboard_filter ? 'bg-gray-600' : ''
+        },
+        active(filter){
+            return filter === this.user.dashboard_filter ? 'bg-gray-600' : ''
+        }
+    },
     apollo:{
         articles:{
             query: articlesQry
         },
         categories:{
             query: categoriesQry
-        }
+        },
     }
 }
 </script>

@@ -1,9 +1,12 @@
 <template>
     <div class="p-4 relative bg-white" v-if="files">
-        <div class="grid grid-cols-3 grid-flow-row items-center" style="grid-template-columns:1fr .2fr .2fr;">
+        <div class="grid grid-cols-4 grid-flow-row items-center">
             <h3 class="">Media <span class="text-xs">[{{total}} files]</span></h3> 
-            <button @click="uploadFile=!uploadFile">Upload</button>
-            <div class="text-right">
+            <div class="col-span-2">
+                <button @click="uploadFile=!uploadFile">Upload</button>
+            </div>
+            <div class="text-right text-sm">
+                Search <input type="text" v-model="search" placeholder="search" class="mr-2"/>
                 <i class="material-icons cursor-pointer text-xl" title="Refresh" @click="refresh()">cached</i>
             </div>
             <!--<a href="#" @click="gallery=!gallery" class="text-right"><i class="material-icons" v-if="!gallery">grid_on</i><i class="material-icons" v-if="gallery">list</i></a>-->
@@ -83,6 +86,7 @@ export default {
     components: { MokaUpload , MokaEditMedia },
     data:()=>({
         selected:null,
+        search:'',
         start: 0,
         limit: 12,
         gallery: true,
@@ -151,7 +155,11 @@ export default {
         files: {
             query: uploadQry,
             variables(){
-                return { limit : this.limit , start: this.start }
+                return { 
+                    limit : this.limit , 
+                    start: this.start ,
+                    search: this.search
+                }
             },
             update: data => data.files
         }

@@ -69,6 +69,13 @@ const twgroups = [
         { name: 'MokaRange' , attr: 'paddingLeft' , title: 'left'},
         { name: 'MokaRange' , attr: 'paddingRight' , title: 'right'},
     ] }, 
+    { label: 'spacing', components : [ 
+        { name: 'MokaOptions' , attr: 'spacing' , title: 'all' },
+        { name: 'MokaOptions' , attr: 'spacingTop' , title: 'top' },
+        { name: 'MokaOptions' , attr: 'spacingBottom' , title: 'bottom' },
+        { name: 'MokaOptions' , attr: 'spacingLeft' , title: 'left' },
+        { name: 'MokaOptions' , attr: 'spacingRight' , title: 'right' },
+    ] },
     { label: 'margin', components : [ 
         { name: 'MokaRange' , attr: 'margin' , title: 'all' , negative: true},
         { name: 'MokaRange' , attr: 'marginTop' , title: 'top', negative: true},
@@ -76,7 +83,6 @@ const twgroups = [
         { name: 'MokaRange' , attr: 'marginLeft' , title: 'left', negative: true},
         { name: 'MokaRange' , attr: 'marginRight' , title: 'right', negative: true},
         { name: 'MokaCheckbox' , attr: 'mauto' , title: 'auto' }
-
     ] },
     { label: 'border', components : [ 
         { name: 'MokaRange' , attr: 'border' , title: 'all' },

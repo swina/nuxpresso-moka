@@ -4,6 +4,7 @@
 
     <div class="w-full flex flex-row justify-around" v-if="components">
       <div class="border w-1/4 mr-4 border-t-8 border-blue-400 flex flex-col">
+      <div class="bg-gray-300 p-1">BLOCKS</div>
       <template v-for="(group,index) in grouped.keys">
         <div class="capitalize flex flex-row justify-between p-2 border-b">
           <div>{{ group }}s </div>
@@ -17,7 +18,7 @@
         
         <div class="capitalize flex flex-row justify-between p-2 border-b">
           <div>Media  </div>
-          <div>{{ moka.media.length }}</div>
+          <div>{{ media.length }}</div>
         </div>
         <div class="capitalize flex flex-row justify-between p-2 border-b">
           <div>Space  </div>
@@ -56,6 +57,7 @@
 <script>
 // @ is an alias to /src
 import qryComponents from '@/apollo/components.gql'
+import qryMedia from '@/apollo/upload.gql'
 import { mapState } from 'vuex'
 export default {
   name: 'Home',
@@ -72,7 +74,7 @@ export default {
     },
     total(){
       let size = 0
-      this.moka.media.forEach( m => {
+      this.media.forEach( m => {
         size += parseFloat(m.size)
       })
       return Math.round(size/1000,2) + ' MB'
@@ -87,6 +89,10 @@ export default {
   apollo:{
     components: {
       query: qryComponents
+    },
+    media: {
+      query: qryMedia,
+      update: data => data.files
     }
   },
   methods:{

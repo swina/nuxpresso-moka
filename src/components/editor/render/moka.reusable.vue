@@ -1,7 +1,8 @@
 <template>
 <div class="z-2xtop">
 
-        <div class="fixed right-0 w-1/5 z-2xtop top-0 cursor-pointer h-screen border-l shadow overflow-y-auto bg-white" v-if="moka.components">
+        <div class="fixed right-0 w-1/5 z-2xtop top-0 cursor-pointer h-screen border-l shadow overflow-y-auto bg-white">
+            <!--
             <div v-if="components && $attrs.importReusable">
                 <div class="p-1 bg-gray-200 flex flex-row items-center">
                     Reusable Components
@@ -23,7 +24,7 @@
                     </div>
                 </div>
             </div>
-
+            -->
             <i v-if="!$attrs.importReusable" class="material-icons z-top absolute right-0 m-2 cursor-pointer text-gray-500" @click="$emit('close')">close</i>
             <template v-if="schema && !$attrs.importReusable"  v-for="(group,g) in schema.keys">
                 
@@ -51,12 +52,14 @@
             <transition name="fade">
                 <div class="nuxpresso-modal text-xs p-4 z-50 w-1/3 border" v-if="grids">
                     <i class="material-icons absolute right-0 top-0" @click="grids=!grids">close</i>
+                    <moka-grids @grid="addGrid"/>
+                    <!--
                     <h3>Columns</h3>
                     <div class="flex flex-col">
                         Number of cols<br/>
                         <input type="number" min="1" max="12" v-model="grid.cols"/> 
                         <button class="my-2" @click="createGridNew">OK</button>
-                    </div>
+                    </div>-->
                 </div>
             </transition>
             
@@ -101,10 +104,15 @@
 
 
 <script>
+import componentsQry from '@/apollo/components.gql'
+import MokaGrids from '@/components/editor/render/moka.grids'
 import waves from '@/plugins/svg' 
 import { mapState } from 'vuex'
 export default {
     name: 'MokaReusable',
+    components: {
+        MokaGrids
+    },
     data:()=>({
         elements: [
             { label: 'Columns' , element: 'grid' , tag: 'grid' , css: '' , content : '' , link: '' , type: 'grid' , icon: 'view_column' },
@@ -197,7 +205,7 @@ export default {
             'gallery',
             'related'
         ],
-        components:null,
+        //components:null,
         media: false,
         columns: false,
         headings:false,
@@ -221,7 +229,7 @@ export default {
             return true
         },
         schema(){
-            this.components = this.$arrayGroup ( this.moka.components , 'category' , 'id' )
+            this.components = this.$arrayGroup ( this.mokacomponents , 'category' , 'id' )
             return this.moka.elements.moka
         },
         svgs(){
@@ -343,6 +351,10 @@ export default {
                 }
             }
             
+        },
+        addGrid(obj){
+            this.grids = false
+            this.$emit('grid',obj)
         },
         createColumns ( ){
             let comp = 
@@ -583,6 +595,12 @@ export default {
             this.$emit ( 'add' , obj )
         }
 
+    },
+    apollo:{
+        mokacomponents: {
+            query: componentsQry,
+            update: data => data.components
+        }
     }
 }
 </script>

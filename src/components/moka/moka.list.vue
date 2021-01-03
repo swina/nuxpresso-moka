@@ -1,7 +1,7 @@
 <template>
     <div class="p-2 flex flex-col" :data="dataload">
         <div class="grid grid-cols-3 grid-flow-row items-center" style="grid-template-columns:1fr 2fr 1fr;">
-            <h3 class="">Mokas <span v-if="filter||$attrs.filter"><span class="capitalize">{{ filter||$attrs.filter }}s</span></span></h3> 
+            <h3 class="">Blocks <span v-if="filter||$attrs.filter"><span class="capitalize">{{ $attrs.filter || filter }}s</span></span></h3> 
             <div class="flex justify-center">
                 <button @click="create=!create" class="mr-2">Create New</button>
                 <button @click="importJSON=!importJSON" class="mr-2">Import</button>
@@ -19,10 +19,17 @@
                 <button class="mr-2 mt-1 capitalize w-24 border hover:bg-blue-400 hover:text-white border-blue-400 bg-white text-blue-400 focus:bg-gray-600 focus:text-white focus:outline-none rounded-none" @click="type=tipo">{{ tipo }}</button>
             </template>
         </div>
-        
-        <moka-table v-if="!gallery" ctx="components" :components="objects" @component="setComponent" @message="message" @remove="remove"/>
-        
-        <moka-gallery v-else :components="objects" @component="setComponent" @preview="setPreview"  @remove="remove" @duplicate="duplicate"/>
+        <!--
+        <moka-table v-if="!gallery" ctx="components"  @component="setComponent" @message="message" @remove="remove"/>
+        -->
+        <moka-gallery 
+            :gallery="gallery"
+            :filter="$attrs.filter||filter" 
+            :type="type"
+            @component="setComponent" 
+            @preview="setPreview"  
+            @remove="remove" 
+            @duplicate="duplicate"/>
 
         <transition name="fade">
             <div class="nuxpresso-modal w-1/3 bg-gray-800 text-gray-500 p-4 flex flex-col text-sm" v-if="create">
@@ -104,22 +111,26 @@ export default {
         objects: null,
         type: ''
     }),
-    watch:{
+    /*watch:{
         type(v){
             if ( v ){
                 this.objects = this.filter ? this.moka.components.filter(comp=>{ 
                     return comp.category === this.filter } ) : this.moka.components
                 this.objects = this.objects.filter ( obj => { return obj.tags === v } )
-                console.log ( this.objects )
             } else {
                 this.objects = this.allObjects
                 this.objects = this.filter ? this.moka.components.filter(comp=>{ 
                     return comp.category === this.filter } ) : this.moka.components
             }
         }
+    },*/
+    mounted(){
+        this.user.dashboard_filter && this.user.dashboard === 'MokaList' ? 
+                this.filter = this.user.dashboard_filter : 
+                    this.$store.dispatch ( 'dashboard_filter' , this.filter )
     },
     computed:{
-        ...mapState ( ['moka'] ),
+        ...mapState ( ['moka','user'] ),
         exportJSON(){
             let json = {
                 objects : []
@@ -127,10 +138,12 @@ export default {
             this.objects.forEach ( obj => {
                 json.objects.push ( obj )
             })
-            this.$store.dispatch('loading')
+            //this.$store.dispatch('loading')
             return json.objects
         },
         dataload (){
+            
+
             if ( this.moka.components ){
                 this.$attrs.filter ?
                     this.$store.dispatch ( 'filter' , this.$attrs.filter ) :
@@ -145,7 +158,7 @@ export default {
     },
     methods: {
         refresh(){
-            this.$store.dispatch('loading',true)
+            //this.$store.dispatch('loading',true)
             this.$store.dispatch ( 'loadComponents' ).then ( () => {
                 this.$store.dispatch ( 'loading' , false )
             })
@@ -212,7 +225,6 @@ export default {
                     "css":""
                     }
                 } : null
-            console.log ( 'new component' , component )    
             this.$http.post ( 'components' , component ).then ( result => {
                 this.$store.dispatch('loadComponents')
                 this.$store.dispatch('message','New component saved')
@@ -239,6 +251,6 @@ export default {
         message(message){
             this.$emit('message',message)
         }
-    }
+    },
 }
 </script>

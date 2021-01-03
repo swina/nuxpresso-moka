@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import classes from '@/plugins/tw.classes'
 import palette from '@/components/palette'
 export default {
     name: 'MokaTailwindBGColor',
@@ -27,38 +28,12 @@ export default {
             hover: '',
         },
         color_over: '',
-        colors : [
-            'bg-white',
-            'bg-black', 
-            'bg-transparent', 
-            'bg-gray', 
-            'bg-red', 
-            'bg-orange', 
-            'bg-yellow', 
-            'bg-green', 
-            'bg-teal', 
-            'bg-blue', 
-            'bg-indigo',
-            'bg-purple',
-            'bg-pink',
-            'hover:bg-white',
-            'hover:bg-black', 
-            'hover:bg-transparent', 
-            'hover:bg-gray', 
-            'hover:bg-red', 
-            'hover:bg-orange', 
-            'hover:bg-yellow', 
-            'hover:bg-green', 
-            'hover:bg-teal', 
-            'hover:bg-blue', 
-            'hover:bg-indigo',
-            'hover:bg-purple',
-            'hover:bg-pink'
-            ]
-
     }),
     props: ['css','attr'],
     computed:{
+        colors(){
+            return classes[this.attr]
+        },
         context(){
             return 'bg-'
         }

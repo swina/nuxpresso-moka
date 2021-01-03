@@ -3,6 +3,7 @@ const user = {
         login: false,
         user: null,
         dashboard: 'MokaHome',
+        dashboard_filter: '',
         production: {
             url: process.env.VUE_APP_PRODUCTION_URL || null
         },
@@ -18,6 +19,9 @@ const user = {
         dashboard ( state , dashboard ){
             state.dashboard = dashboard
         },
+        dashboard_filter ( state , filter ){
+            state.dashboard_filter = filter
+        },
         production ( state , production ){
             state.production = production
         }
@@ -31,6 +35,9 @@ const user = {
         },
         dashboard ( { commit } , dashboard ){
             commit ( 'dashboard' , dashboard )
+        },
+        dashboard_filter ( { commit } , filter ){
+            commit ( 'dashboard_filter' , filter )
         },
         production ( { commit } , production ){
             commit ( 'production' , production )

@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col">
         <label class="font-bold">Font</label>
-        <select class="dark" v-model="fontFamily" @change="emit">
+        <select class="nodark" v-model="fontFamily" @change="emit">
             <option value=""></option>
             <option value="Arial">sans-serif</option>
             <option value="serif">serif</option>

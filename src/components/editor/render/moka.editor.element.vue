@@ -11,7 +11,7 @@
             
             <span v-else>
                 -->
-            <moka-inline-editor v-if="(el.tag==='element' || el.type==='button' || ( el.tag === 'article' && !el.hasOwnProperty('article') ) )  && el.element !='img' && el.type != 'video' && el.type != 'audio'" :element="el"/>
+            <moka-inline-editor v-if="(el.tag==='element' || el.type==='button' || el.type==='download' || ( el.tag === 'article' && !el.hasOwnProperty('article') ) )  && el.element !='img' && el.type != 'video' && el.type != 'audio'" :element="el"/>
             <!--
             <div  class="relative z-2xtop"  v-if="editor.current && editor.current.id === el.id && editor.current.tag === 'element' && editor.current.element === 'div'">
                 <moka-inline-editor v-if="editor.current && editor.current.tag === 'element' && editor.current.element != 'p'"/>
@@ -44,6 +44,7 @@
             <a v-if="el.link && el.tag==='icon'" :href="el.link">
                 <i v-if="el.tag==='icon'" :class="'material-icons moka-icons ' + $cssResponsive(el.css)">{{el.content}}</i>
             </a>
+
 
 
             <textarea v-if="el.element === 'textarea'" :class="$cssResponsive(el.css)"></textarea>
@@ -80,7 +81,7 @@
                 </div>
             </nav>
             </transition>
-            <div v-if="$attrs.develop " :class="'z-max absolute border border-green-500 border-dashed z-4 top-0 left-0 bottom-0 right-0 scale-x-102 scale-y-102 transform ' + active(el.id,el.css) + ' bg-transparent'" @click="select(el)">
+            <div v-if="$attrs.develop " :class="'z-max absolute border border-green-500 border-dashed z-4 top-0 left-0 bottom-0 right-0 scale-x-102 scale-y-102 transform ' + active(el.id,el.css) + ' bg-transparent'" style="min-height:2rem" @click="select(el)">
                 <div class="h-2 w-2 absolute top-0 right-0 bg-black rounded-full -m-1"></div>
                 <div class="h-2 w-2 absolute top-0 left-0 bg-black rounded-full -m-1"></div>
                 <div class="h-2 w-2 absolute bottom-0 right-0 bg-black rounded-full -m-1"></div>

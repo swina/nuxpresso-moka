@@ -26,8 +26,8 @@
                     @animations="animation=!animation"
                     @edit="edit"/>
                 
-                <div v-if="block.hasOwnProperty('slider')">
-                    <h3>SLIDER</h3>
+                <div v-if="block.hasOwnProperty('slider')" class="border p-1">
+                    <div class="p-2 bg-gray-300">SLIDER <button class="danger" @click="removeSlider(block)">Remove</button></div>
                     <moka-editor-selectors 
                         :doc="block"
                         :component="current"
@@ -60,11 +60,10 @@
         
         <!-- SLIDER -->
         <div v-if="$attrs.category === 'slider'" :data="getSlider">
-            <div class="flex flex-row items-center">
-                <h3>Slider</h3>
-                <i title="Slider settings" class="material-icons mx-2" @click="$emit('slidersettings')">settings</i>
+            <div class="flex flex-row items-center p-1">
+                <i title="Slider settings" class="material-icons mx-2" @click="$store.dispatch('setCurrent',doc),$store.dispatch('setAction','slidersettings')">settings</i>
                 <button class="mx-2" @click="addSlide()">Add slide</button>
-                <button class="danger mx-2" v-if="!slideDelete && slideIndex > -1" @click="slideDelete=!slideDelete">Delete</button>
+                <button class="danger mx-2" v-if="!slideDelete && slideIndex > -1" @click="slideDelete=!slideDelete">Delete slide</button>
                 <button class="danger" v-if="slideDelete" @click="doc.blocks.splice(slideIndex,1),slideIndex=0,slideDelete=!slideDelete">Confirm to delete this slide?</button>
                 <!--<button class="rounded-none mx-2" v-if="currentSlide">Duplicate</button>-->
             </div>
@@ -131,8 +130,13 @@
         <div class="z-xtop fixed bg-gray-800 text-gray-400 bottom-0 right-0 w-3/12 p-2 border shadow bg-white" v-if="editCSS">
             <i class="material-icons absolute top-0 right-0 m-1" @click="editCSS=!editCSS">close</i>
             <div>CSS</div>
-            <textarea v-if="!editor.current.css.hasOwnProperty('css')" class="dark w-full h-64 text-gray-400" v-model="editor.current.css"/>
-            <textarea v-else class="dark w-full h-64 text-gray-400 outline-none border-none" v-model="editor.current.css.css"/>
+            <textarea v-if="!editor.current.css.hasOwnProperty('css')" class="dark w-full h-32 text-gray-400" v-model="editor.current.css"/>
+            <textarea v-else class="dark w-full h-32 text-gray-400 outline-none border-none" v-model="editor.current.css.css"/>
+            <div v-if="editor.current.css.hasOwnProperty('css')">Container CSS</div>
+            <textarea v-if="editor.current.css.hasOwnProperty('css')" class="dark w-full h-32 text-gray-400" v-model="editor.current.css.container"/>
+
+            <div>Style</div>
+            <textarea class="dark w-full h-32 text-gray-400" v-model="editor.current.style"/>
         </div>
     </transition>
     <div v-if="current && current.entity" class="fixed bottom-0 left-0 p-1">{{ current.tag }} <i class="material-icons">{{ current.icon }}</i></div>
@@ -161,7 +165,7 @@
 
     <!-- Customizer -->
     <transition name="fade">
-        <div v-if="editor.action==='customize'" :class="'fixed right-0 top-0 w-1/5 z-2xtop min-h-screen bg-gray-800 text-xs text-gray-500 ' + customizePos" ref="aContainer">
+        <div v-if="editor.action==='customize'" :class="'fixed right-0 top-0 w-1/5 z-2xtop min-h-screen bg-gray-100 text-xs text-gray-800 ' + customizePos" ref="aContainer">
              <moka-customize-drawer
                 :position="customizeSwitch"
                 class=""
@@ -240,7 +244,7 @@
 
     <!-- MEDIA --->
     <transition name="fade">
-        <div v-if="media" draggable="true" class="nuxpresso-modal h-4/5 w-10/12 border shadow-lg text-sm z-2xtop rounded-lg">
+        <div v-if="media" draggable="true" class="nuxpresso-modal h-screen w-screen border shadow-lg text-sm z-2xtop rounded-lg">
             <moka-edit-media class="z-max" @newimage="setImage" :modal="true" @close="media=!media"/>
         </div>
     </transition>
@@ -536,6 +540,11 @@ export default {
                 }) 
             }
             
+        },
+        removeSlider(block){
+            this.$store.dispatch('setCurrent',block)
+            this.$store.dispatch('selected',block.id)
+            this.removeElement()
         }
     },
     mounted(){  

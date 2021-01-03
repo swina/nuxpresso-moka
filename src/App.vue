@@ -55,15 +55,16 @@ export default {
       }
       this.$http.get('users/me').then ( resp => {
         this.$store.dispatch ( 'message' , 'Welcome back ' + resp.data.username )
+        this.$store.dispatch('login',true)
+        this.$store.dispatch('user',JSON.parse(JSON.stringify(window.localStorage.getItem('nuxpresso-user'))))   
       }).catch ( error => {
-        this.$store.dispatch('message','You are not authenticated!')
+        this.$store.dispatch('message','You are not authenticated! Save/Update is disabled')
         console.log ( error )
       })
-      this.$store.dispatch('login',true)
-      this.$store.dispatch('user',JSON.parse(JSON.stringify(window.localStorage.getItem('nuxpresso-user'))))   
-      this.$store.dispatch('loadComponents')
+      //this.$store.dispatch('loadComponents')
       this.$store.dispatch('loadElements')
-      this.$store.dispatch('loadMedia')
+      //this.$store.dispatch('loadMedia')
+      //this.$store.dispatch('loading',false)
     }
     
   }
