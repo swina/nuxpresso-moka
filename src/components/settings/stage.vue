@@ -32,7 +32,7 @@
                     <div v-if="mode==='components'">
                         <div class="font-bold">Components</div>
                         <select size="10" class="w-64">
-                            <option v-for="option in moka.components" :value="option"  @dblclick="origin=option,confirm=!confirm">{{ option.name }}</option>
+                            <option v-for="option in localcomponents" :value="option"  @dblclick="origin=option,confirm=!confirm">{{ option.name }}</option>
                         </select>
                     </div>
 
@@ -115,6 +115,7 @@
 import { mapState } from 'vuex'
 import uploadQry from '@/apollo/upload.gql'
 import articlesQry from '@/apollo/articles.gql'
+import componentsQry from '@/apollo/components.gql'
 import axios from 'axios'
 import draggable from 'vuedraggable'
 export default {
@@ -153,9 +154,11 @@ export default {
             return this.moka.remote_api
         },
         production(){
+            console.log ( 'loading' )
             return this.remote.get ( this.master + 'articles' ).then ( response => {
                 this.articlesRemote = response.data//this.moka.articles
-                //this.$store.dispatch('loading',false)
+                this.$store.dispatch('loading',false)
+                console.log ( 'loaded articles')
                 return true// response.data
             })
         },
@@ -238,8 +241,10 @@ export default {
         },
         transfer(scope,origin){
             if ( this.mode === 'components' ){
-                origin.blocks_id = origin.json.id
-                this.save ( this.mode , origin )
+                this.$http.get('components/' + origin.id ).then ( response => {
+                    let block = response.data 
+                    this.save ( this.mode , block )
+                })
             } else {
                 this.$http.get('articles/' + origin.id ).then ( response=>{
                     let article = response.data
@@ -258,12 +263,12 @@ export default {
                     
                     //this.save ( this.mode , origin )
                 })
-            }
+            } 
             
         }
     },
     mounted(){
-        
+        console.log ( this.$apolloData.loading )
         if ( this.enabled ){
             this.remote.post ( this.master + 'auth/local' , {
                 identifier: this.moka.remote_user,
@@ -300,6 +305,10 @@ export default {
                 return { limit : this.limit , start: this.start }
             },
             update: data => data.articles
+        },
+        localcomponents: {
+            query: componentsQry,
+            update: data => data.components
         }
     }
 

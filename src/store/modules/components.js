@@ -30,7 +30,7 @@ const moka = {
             state.settings = settings
         },
         SET_LOADING ( state , loading ){
-            state.loading = loading || true
+            state.loading = loading || false
         },
         SET_MESSAGE ( state , message ){
             state.message = message
@@ -70,8 +70,8 @@ const moka = {
         }
     },
     actions: {
-        loading( { commit } ){
-            commit ( 'SET_LOADING' )
+        loading( { commit } , loading ){
+            commit ( 'SET_LOADING' , loading )
         },
         filter ( { commit } , filter ){
             commit ( 'SET_FILTER' , filter )

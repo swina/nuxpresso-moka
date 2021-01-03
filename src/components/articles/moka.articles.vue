@@ -156,6 +156,7 @@
 <script>
 import queryArticles from '@/apollo/articles-admin.gql'
 import queryArticleSlug from '@/apollo/articles-slug.gql'
+import componentsQry from '@/apollo/components.gql'
 import MokaTextEditor from '@/components/editor/render/moka.text.editor'
 import MokaImagePlaceholder from '@/components/editor/render/moka.editor.image.placeholder'
 import MokaTemplates from '@/components/articles/moka.articles.templates'
@@ -169,7 +170,7 @@ export default {
     computed : { 
         ...mapState ( ['moka' ] ),
         templates (){
-            return this.moka.components.filter(comp=>{ return comp.category === 'template' || comp.category === 'page' } )
+            return this.components.filter(comp=>{ return comp.category === 'template' || comp.category === 'page' } )
         },
        
         templateImage(){
@@ -239,6 +240,11 @@ export default {
                 }
             },
             update: data => data.articles 
+        },
+        components: {
+            prefetch: true,
+            query: componentsQry,
+            update: data => data.components
         }  
     },
     watch:{
