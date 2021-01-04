@@ -192,7 +192,7 @@ export default {
             (this.index+1) < this.doc.blocks.length ?
                 this.goTo(this.index+1) :
                   this.goTo(0)
-          }
+          },
         })
     },
     beforeDestroy(){

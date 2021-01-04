@@ -205,13 +205,7 @@ export default {
     },
     mounted(){
         window.scrollTo(0,0)
-        let proxy = this.$refs[this.doc.id]
-        var draggable = new Draggable(this.$refs['slide'], {
-            trigger: this.$refs[this.doc.id],
-            onDrag: console.log ( 'dragging' ),
-            updateProgress: this.next(),
-        });
-        console.log ( draggable )
+       
         this.next()
         /*
         gsap.to('.slide', {

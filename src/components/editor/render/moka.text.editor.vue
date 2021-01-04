@@ -1,5 +1,5 @@
 <template>
-    <div class="relative p-0 border-none max-h-screen" style="min-width:30rem;max-height:25rem;min-height:25rem;">
+    <div class="relative p-0 border-none max-h-screen" style="min-width:30rem;min-height:25rem;">
         <!--<i v-if="!$attrs.embeded" class="material-icons absolute top-0 right-0 mt-1 mr-1 rounded-full cursor-pointer bg-red-500 text-white" @click="$emit('close')">highlight_off</i>-->
         <i class="material-icons text-sm nuxpresso-icon-btn text-black absolute top-0 right-0 m-1  cursor-pointer" title="add image" @click="addImage">image</i>
         
@@ -200,5 +200,21 @@ export default {
     border:0;
     min-height:20rem;
     max-height:20rem;
+}
+
+#editor > .ql-container {
+  height: 100%;
+  /* added these styles */
+  flex: 1;
+  display: flex; 
+  flex-direction: column;
+}
+
+.ql-editor {
+  height: 100%;
+  /* added these styles */
+  flex: 1;
+  overflow-y: auto;
+  width: 100%;
 }
 </style>

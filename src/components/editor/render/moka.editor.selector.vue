@@ -181,8 +181,11 @@
 
     <!-- EDIT CONTENT INLINE -->
     <transition name="fade">
-        <div v-if="editor.action==='edit' && editor.current && editor.current.type != 'image' && editor.current.type != 'video' && editor.current.tag != 'menu'" draggable="true" class="nuxpresso-modal w-1/2 border shadow-lg text-sm z-top">
-            <div class="bg-gray-700 text-white p-1 flex items-center">Edit <i class="material-icons ml-2 absolute right-0 mr-8 text-sm" title="Customize" @click="$store.dispatch('setAction','customize')">brush</i><i class="material-icons absolute  right-0  text-white mr-1 cursor-pointer" @click="$store.dispatch('setAction',null),editContent=!editContent">close</i></div>
+        <div v-if="editor.action==='edit' && editor.current && editor.current.type != 'image' && editor.current.type != 'video' && editor.current.tag != 'menu'" draggable="true" :class="'border shadow-lg text-sm z-top ' + isFullScreen"> 
+            <div class="bg-gray-700 text-white p-1 flex items-center">Edit 
+                <i class="material-icons ml-2 absolute right-0 mr-12 text-sm" title="Customize" @click="$store.dispatch('setAction','customize')">brush</i>
+                <i class="material-icons absolute  right-0  text-white mr-6 cursor-pointer" @click="fullscreen=!fullscreen" :title="fullscreen?'close fullscreen':'fullscreen'">{{fullscreen?'close_fullscreen':'fullscreen'}}</i>
+                <i class="material-icons absolute  right-0  text-white mr-1 cursor-pointer" @click="$store.dispatch('setAction',null),editContent=!editContent">close</i></div>
             <div class="p-4">
                 
                 
@@ -299,6 +302,7 @@ export default {
         toolbar: false, 
         customize: false,
         editContent: false,
+        fullscreen: false,
         editCSS: false,
         animations:false,
         media: false,
@@ -335,6 +339,9 @@ export default {
         },
         docCss(){
             return this.doc.id === this.moka.selected ? 'border-orange-300' : ''
+        },
+        isFullScreen(){
+            return this.fullscreen ? 'fixed w-screen h-screen bg-white z-2xtop top-0 left-0' : 'nuxpresso-modal w-full md:w-3/4 lg:w-2/3'
         },
         getSlider(){
             if ( this.doc.hasOwnProperty('slider') ){
