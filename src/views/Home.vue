@@ -51,6 +51,9 @@
         
       </div>
     </div>
+    <div class="fixed bottom-0 left-0 p-2 text-sm w-full text-center bg-gray-600 text-white" v-if="isLoading">
+      Loading data ...
+    </div>
   </div>
 </template>
 
@@ -65,7 +68,8 @@ export default {
   },
   data:()=>({
     email: '',
-    password: ''
+    password: '',
+    isLoading: false
   }),
   computed:{
     ...mapState ( [ 'moka' , 'user' ] ),
@@ -88,11 +92,17 @@ export default {
   },
   apollo:{
     components: {
-      query: qryComponents
+      query: qryComponents,
+      watchLoading(isLoading){
+        this.$store.dispatch ( 'loading' , isLoading )
+      }
     },
     media: {
       query: qryMedia,
-      update: data => data.files
+      update: data => data.files,
+      watchLoading(isLoading){
+        this.$store.dispatch ( 'loading' , isLoading )
+      }
     }
   },
   methods:{

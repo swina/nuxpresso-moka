@@ -1613,6 +1613,11 @@ ajv@^6.1.0, ajv@^6.10.2, ajv@^6.12.3, ajv@^6.12.4:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
+alloyfinger@^0.1.16:
+  version "0.1.16"
+  resolved "https://registry.yarnpkg.com/alloyfinger/-/alloyfinger-0.1.16.tgz#8d5d46073cf1fedba5f446e666bc4b3925b8b8b5"
+  integrity sha512-AfsLALs929WQsjSk1pbysoiVU3bgm/4k1wdZDtMQ7uI7b8XweqCCnUiBYqqdp8uPZ1fBq/+LCJhgUlhd90FssQ==
+
 alphanum-sort@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/alphanum-sort/-/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
@@ -3311,6 +3316,13 @@ dom-serializer@0:
   dependencies:
     domelementtype "^2.0.1"
     entities "^2.0.0"
+
+dom7@^2.1.5:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/dom7/-/dom7-2.1.5.tgz#a79411017800b31d8400070cdaebbfc92c1f6377"
+  integrity sha512-xnhwVgyOh3eD++/XGtH+5qBwYTgCm0aW91GFgPJ3XG+jlsRLyJivnbP0QmUBFhI+Oaz9FV0s7cxgXHezwOEBYA==
+  dependencies:
+    ssr-window "^2.0.0"
 
 domain-browser@^1.1.1:
   version "1.2.0"
@@ -7448,6 +7460,11 @@ sshpk@^1.7.0:
     safer-buffer "^2.0.2"
     tweetnacl "~0.14.0"
 
+ssr-window@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/ssr-window/-/ssr-window-2.0.0.tgz#98c301aef99523317f8d69618f0010791096efc4"
+  integrity sha512-NXzN+/HPObKAx191H3zKlYomE5WrVIkoCB5IaSdvKokxTpjBdWfr0RaP+1Z5KOfDT0ZVz+2tdtiBkhsEQ9p+0A==
+
 ssri@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/ssri/-/ssri-6.0.1.tgz#2a3c41b28dd45b62b63676ecb74001265ae9edd8"
@@ -7692,6 +7709,14 @@ svgo@^1.0.0:
     stable "^0.1.8"
     unquote "~1.1.1"
     util.promisify "~1.0.0"
+
+swiper@5.x:
+  version "5.4.5"
+  resolved "https://registry.yarnpkg.com/swiper/-/swiper-5.4.5.tgz#a350f654bf68426dbb651793824925512d223c0f"
+  integrity sha512-7QjA0XpdOmiMoClfaZ2lYN6ICHcMm72LXiY+NF4fQLFidigameaofvpjEEiTQuw3xm5eksG5hzkaRsjQX57vtA==
+  dependencies:
+    dom7 "^2.1.5"
+    ssr-window "^2.0.0"
 
 symbol-observable@^1.0.2:
   version "1.2.0"
@@ -8172,6 +8197,11 @@ vue-apollo@^3.0.4:
     chalk "^2.4.2"
     serialize-javascript "^4.0.0"
     throttle-debounce "^2.1.0"
+
+vue-awesome-swiper@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/vue-awesome-swiper/-/vue-awesome-swiper-4.1.1.tgz#8f7ab221ad003021d756b86aa618f429924900fe"
+  integrity sha512-50um10t6N+lJaORkpwSi1wWuMmBI1sgFc9Znsi5oUykw2cO5DzLaBHcO2JNX21R+Ue4TGoIJDhhxjBHtkFrTEQ==
 
 vue-blob-json-csv@^0.1.7:
   version "0.1.7"

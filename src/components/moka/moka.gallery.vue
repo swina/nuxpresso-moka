@@ -96,7 +96,10 @@ export default {
             variables(){
                 return { category : this.filter }
             },
-            update: data => data.components 
+            update: data => data.components ,
+            watchLoading(isLoading){
+                this.$store.dispatch ( 'loading' , isLoading )
+            }
         }
     }
 }

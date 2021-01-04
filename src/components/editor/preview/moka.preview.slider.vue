@@ -3,7 +3,7 @@
 <div :class="doc.css + ' relative flex flex-no-wrap'" :style="stile(doc) + ' ' + background(doc)" id="content" :autoplay="autoplay()">
     <!-- 1st level - BLOCKS LOOP --> 
     
-    <div v-for="(block,b) in doc.blocks" :class="'slide flex-none top-0 left-0 right-0 bottom-0 w-full bg-center bg-cover bg-no-repeat ' + responsive(block.css.css) + ' ' + block.css.container" :style="stile(block) + background(block)" :key="block.id" :ref="block.id">
+    <div v-for="(block,b) in doc.blocks" ref="slide" :class="'slide flex-none top-0 left-0 right-0 bottom-0 w-full bg-center bg-cover bg-no-repeat ' + responsive(block.css.css) + ' ' + block.css.container" :style="stile(block) + background(block)" :key="block.id" :ref="block.id">
         <!-- 2nd level - BLOCKS LOOP --->
         <div v-for="(row) in block.blocks" :class="'flex flex-col h-full ' + responsive(row.css)" :style="stile(row) + background(row)" :key="row.id" :ref="row.id">
             <!-- BLOCKS ELEMENTS LOOP -->
@@ -67,7 +67,9 @@ import MokaElement from '@/components/editor/preview/moka.element'
 
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { Draggable } from 'gsap/Draggable'
 gsap.registerPlugin ( ScrollTrigger )
+gsap.registerPlugin ( Draggable )
 
 const plugins = [ScrollTrigger];
 import gsapEffects from '@/plugins/animations'
@@ -203,6 +205,13 @@ export default {
     },
     mounted(){
         window.scrollTo(0,0)
+        let proxy = this.$refs[this.doc.id]
+        var draggable = new Draggable(this.$refs['slide'], {
+            trigger: this.$refs[this.doc.id],
+            onDrag: console.log ( 'dragging' ),
+            updateProgress: this.next(),
+        });
+        console.log ( draggable )
         this.next()
         /*
         gsap.to('.slide', {

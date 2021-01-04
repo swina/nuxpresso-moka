@@ -2,15 +2,14 @@
     <div 
         :id="doc && doc.hasOwnProperty('anchor')? doc.anchor : doc.id"
         v-if="doc" 
-        :key="doc.id" 
-        :class="'content max-w-screen relative flex flex-no-wrap block ' + classe(doc.css)" :style="doc.style + ' ' +  background(doc)" :ref="doc.id">
+        :key="doc.id"
+        :class="'content max-w-screen overflow-x-hidden relative flex flex-no-wrap block ' + classe(doc.css)" :style="doc.style + ' ' +  background(doc)" :ref="doc.id">
         
             <template v-for="(block,i) in doc.blocks">
-                <moka-preview-container
-                
-                class="slide flex-none top-0 left-0 right-0 bottom-0 w-full"
-                v-if="block && block.hasOwnProperty('blocks') && !block.hasOwnProperty('menu')" 
-                :doc="block" @action="hasSlideAction" :current="current"/>
+                  <moka-preview-container
+                  :class="'slide flex-none top-0 left-0 right-0 bottom-0 w-full slide_' + i"
+                  v-if="block && block.hasOwnProperty('blocks') && !block.hasOwnProperty('menu')" 
+                  :doc="block" @action="hasSlideAction" :current="current"/>
             </template>
             
             <div class="fixed bottom-0 right-0 z-top p-4 bg-black bg-opacity-50 opacity-0 hover:opacity-100">
@@ -18,7 +17,7 @@
               <i class="material-icons nuxpresso-icon-circle" @click="$emit('close')">close</i>
             </div>
             
-            <div v-if="doc.slider.dots.enable" class="absolute bottom-0 left-0 text-center flex-row justify-center items-center mb-4 w-full">
+            <div v-if="doc.slider.dots.enable" class="absolute bottom-0 left-0 text-center flex-row justify-center items-center mb-10 md:mb-4 w-full">
               <i :class="'material-icons mr-2 ' + dotActive(n)" v-for="n in doc.blocks.length" @click="goTo(n-1)">fiber_manual_record</i>
             </div>
 
@@ -44,18 +43,17 @@
 import MokaElement from '@/components/editor/preview/moka.element'
 import MokaPreviewContainer from '@/components/editor/preview/moka.slider.container'
 import { mapState } from 'vuex'
-
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin ( ScrollTrigger )
 const plugins = [ScrollTrigger];
-
+import  AlloyFinger from 'alloyfinger'
 export default {
     name: 'MokaPreviewSlider',
     data:()=>({
         index: -1,
         timer: null,
-        current: null
+        current: null,
     }),
     components: { MokaElement , MokaPreviewContainer },
     props: [ 'doc'  ],
@@ -65,6 +63,7 @@ export default {
             return gsapEffects
         },
         slides(){
+            
             return this.doc.blocks.length
         },
         over(){
@@ -90,7 +89,7 @@ export default {
           let tl = gsap.timeline()
             if ( document.querySelector('.slide') ){
               tl.to ( '.slide' , { opacity:0 , duration: .4 } ),
-              tl.to ( '.slide' , { xPercent: -this.index*100 , opacity:0 , duration: .5 } ),
+              tl.to ( '.slide' , { xPercent: -this.index*100 , opacity:.5 , duration: .5 } ),
               tl.to ( '.slide' , { opacity:1 , duration: .5 })
             }
         },
@@ -175,6 +174,26 @@ export default {
         if ( parseInt(this.doc.slider.delay) > 0 ){
           this.playslides ( this.doc.slider.delay )
         }
+        let container = this.$refs[this.doc.id]
+        let slider = new AlloyFinger ( container , {
+          swipe:(evt)=>{
+            if ( evt.direction === 'Left' ) {
+              (this.index+1) < this.doc.blocks.length ?
+                this.goTo(this.index+1) :
+                  this.goTo(0)
+            }
+            if ( evt.direction === 'Right' ) {
+              (this.index) > 0 ?
+                this.goTo(this.index-1) :
+                  this.goTo(this.doc.blocks.length-1)
+            }
+          },
+          doubleTap:(evt)=>{
+            (this.index+1) < this.doc.blocks.length ?
+                this.goTo(this.index+1) :
+                  this.goTo(0)
+          }
+        })
     },
     beforeDestroy(){
       console.log ( 'destroy timer ...' )

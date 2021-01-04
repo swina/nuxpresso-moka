@@ -27,12 +27,7 @@ import _ from 'lodash';
 Object.defineProperty(Vue.prototype, '$_', { value: _ });
 
 
-// HTTP connection to the API
-console.log ( process.env.VUE_APP_GRAPHQL)
-const httpLink = createHttpLink({
-  // You should use an absolute URL here
-  uri: process.env.VUE_APP_GRAPHQL  //|| 'http://localhost:1337/graphql',
-})
+
 
 import VueDraggableResizable from 'vue-draggable-resizable'
 
@@ -43,8 +38,17 @@ Vue.component('vue-draggable-resizable', VueDraggableResizable)
 
 
 
+
 // Cache implementation
 const cache = new InMemoryCache()
+
+// HTTP connection to the API
+console.log ( process.env.VUE_APP_GRAPHQL)
+
+const httpLink = createHttpLink({
+  // You should use an absolute URL here
+  uri: process.env.VUE_APP_GRAPHQL  //|| 'http://localhost:1337/graphql',
+})
 
 // Create the apollo client
 const apolloClient = new ApolloClient({

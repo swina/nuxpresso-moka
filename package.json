@@ -7,6 +7,7 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "alloyfinger": "^0.1.16",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
     "apollo-link": "^1.2.14",
@@ -22,9 +23,11 @@
     "quill-image-extend-module": "^1.1.2",
     "quill-image-resize-module": "^3.0.0",
     "register-service-worker": "^1.7.1",
+    "swiper": "5.x",
     "tailwindcss": "^1.8.10",
     "vue": "^2.6.11",
     "vue-apollo": "^3.0.4",
+    "vue-awesome-swiper": "^4.1.1",
     "vue-blob-json-csv": "^0.1.7",
     "vue-draggable-resizable": "^2.2.0",
     "vue-html2canvas": "^0.0.4",

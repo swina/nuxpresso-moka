@@ -2,6 +2,7 @@ query Components {
   components ( where: { enabled: true } ){
     name
     id
+    blocks_id
     category
     tags
     image_uri

@@ -34,6 +34,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin ( ScrollTrigger )
 const plugins = [ScrollTrigger];
+
 export default {
     name: 'MokaSliderContainer',
     components: { MokaElement  },
@@ -104,7 +105,8 @@ export default {
                     },
                     
                 });
-                    
+                
+    
             }
         },
     },
@@ -114,6 +116,7 @@ export default {
         if ( this.doc.hasOwnProperty('gsap') && this.doc.gsap.animation ){
             this.animate ( this.doc , this.doc.id )
         }
+        
         return
         /*
         this.doc.blocks.forEach ( block => {

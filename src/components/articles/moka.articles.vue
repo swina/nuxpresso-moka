@@ -76,7 +76,7 @@
                         <button class="warning mr-2" @click="editor=!editor">Close</button>
                         <button class="success mr-2" @click="save">Save</button>    
                         <button @click="wordpress=!wordpress">WP page</button>
-                        <div class="flex flex-col mt-6">
+                        <div class="flex flex-col mt-6" v-if="templates">
                             <div class="mb-2 flex flex-col">
                                 <button class="sm"@click="selectTemplate=!selectTemplate">Template</button> 
                                 <div v-if="templateImage" :style="'background-image:url(' + templateImage + ')'" class="h-24 bg-auto bg-no-repeat bg-cover cursor-pointer" title="Change template" @click="selectTemplate=!selectTemplate"></div>
@@ -239,12 +239,18 @@ export default {
                     }
                 }
             },
-            update: data => data.articles 
+            update: data => data.articles,
+            watchLoading(isLoading){
+                this.$store.dispatch ( 'loading' , isLoading )
+            }
         },
         components: {
             prefetch: true,
             query: componentsQry,
-            update: data => data.components
+            update: data => data.components,
+            watchLoading(isLoading){
+                this.$store.dispatch ( 'loading' , isLoading )
+            }
         }  
     },
     watch:{

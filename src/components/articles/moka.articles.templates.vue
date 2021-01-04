@@ -3,7 +3,7 @@
     <div v-if="templates" class="flex flex-row flex-wrap justify-around p-4">
         
         <template v-for="(template,index) in mokatemplates">
-            <div class="w-48 flex flex-col mb-4 cursor-pointer" v-if="index>=start && index < (start+limit)" @click="$emit('set',template.id,template.json.id)">
+            <div class="w-48 flex flex-col mb-4 cursor-pointer" v-if="index>=start && index < (start+limit)" @click="$emit('set',template.id,template.blocks_id)">
                 <span class="text-sm font-bold">{{ template.name }}</span>
                 <div v-if="template.image_uri" :style="'background-image:url(' + template.image_uri + ')'" class="h-24 bg-auto bg-no-repeat bg-cover"></div>
             </div>
