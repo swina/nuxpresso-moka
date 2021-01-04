@@ -1,5 +1,8 @@
 <template>
-    <div class="p-4 relative bg-white" v-if="files">
+<div :class="$attrs.filter?'':'nuxpresso-modal z-2xtop h-screen w-screen bg-black bg-opacity-75'">
+    
+    <div class="p-4 relative h-full bg-white" :class="$attrs.filter?'':'mt-8'" v-if="files">
+        <i v-if="$attrs.filter" class="material-icons absolute right-0 top-0 m-1" @click="$emit('close')">close</i>
         <div class="grid grid-cols-4 grid-flow-row items-center">
             <h3 class="">Media <span class="text-xs">[{{total}} files]</span></h3> 
             <div class="col-span-2">
@@ -13,7 +16,7 @@
         </div>
         <!--<div class="bg-gray-200 h-full border-1 rounded-lg shadow p-8 relative overflow-y-auto">-->
         <i v-if="$attrs.modal" class="material-icons absolute top-0 right-0" @click="$emit('close')">highlight_off</i>
-        <div class="flex flex-wrap border rounded p-4">
+        <div class="flex flex-wrap border rounded p-4 h-3/4 overflow-y-auto">
             <template v-for="(file,n) in files">
                 <div class="md:w-1/4 lg:w-2/12 px-2 bg-white text-xs cursor-pointer mb-2"  @click="setImage(file),selected=file" :title="file.name" >
                     <div :class="'mb-1 overflow-hidden border-4 border-transparent ' + active(file)">
@@ -57,22 +60,24 @@
             </div>
         </transition>
          <transition name="fade">
-        <div v-if="selectThumbnail" class="nuxpresso-modal w-1/2 p-2 z-2xtop">
-            <p>This image has a reduced format. Do you want to use it or keep the original?</p>
+        <div v-if="selectThumbnail" class="nuxpresso-modal w-3/4 p-2 z-2xtop">
+            <i class="material-icons absolute right-0 top-0 m-1" @click="selectThumbnail=!selectThumbnail">close</i>
+            <p>This image has a different formats. Select one.</p>
             <div class="flex flex-row text-xs">
                 <div class="w-2/3 p-2">
-                    <img :src="selectedImage.url" class="w-full object-cover" @click="assignImg('')"/>
+                    <img :src="selectedImage.url" class="border w-full object-fit" @click="assignImg('')"/>
                     {{ selectedImage.width}} x {{ selectedImage.height}} - 
                     {{ selectedImage.size }} KB
                 </div>
                 <div class="w-1/3 p-2">
-                    <img :src="selectedImage.formats.thumbnail.url" class="w-full h-auto" @click="assignImg('thumb')"/>
+                    <img :src="selectedImage.formats.thumbnail.url" class="border w-full h-auto" @click="assignImg('thumb')"/>
                     {{ selectedImage.formats.thumbnail.width}} x {{ selectedImage.formats.thumbnail.height}} - 
                     {{ selectedImage.formats.thumbnail.size }} KB
                 </div>
             </div>
         </div>
     </transition>
+    </div>
     </div>
 </template>
 
@@ -122,13 +127,16 @@ export default {
             }
         },
         assignImg(image){
+           
+            let img = Object.assign({},this.selectedImage)
             if ( image === 'thumb' ){
-                this.selectedImage.url = this.selectedImage.formats.thumbnail.url
-                this.selectedImage.size = this.selectedImage.formats.thumbnail.size
-                this.selectedImage.width = this.selectedImage.formats.thumbnail.width
-                this.selectedImage.height = this.selectedImage.formats.thumbnail.height
+                img.url = this.selectedImage.formats.thumbnail.url
+                img.size = this.selectedImage.formats.thumbnail.size
+                img.width = this.selectedImage.formats.thumbnail.width
+                img.height = this.selectedImage.formats.thumbnail.height
             } 
-            this.$emit ('newimage', this.selectedImage )
+            this.selectedImage = null
+            this.$emit ('newimage', img )
             this.$emit( 'close' )
         },
         next(){
@@ -156,8 +164,8 @@ export default {
             query: uploadQry,
             variables(){
                 return { 
-                    limit : this.limit , 
-                    start: this.start ,
+                    limit : this.search.length < 3 ? this.limit : -1, 
+                    start: this.search.length < 3 ? this.start : 0 ,
                     search: this.search
                 }
             },

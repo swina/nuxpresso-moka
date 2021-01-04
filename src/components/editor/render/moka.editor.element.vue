@@ -91,7 +91,7 @@
                 <div class="absolute bottom-0 left-0 -mb-4 text-xs text-purple-500" v-if="el.gsap && el.gsap.animation">{{ el.gsap.animation }}</div>
             </div>
              <div v-if="el.id===moka.selected" class="z-top absolute top-0 left-0 -mt-8 h-6 bg-gray-800 text-gray-300 text-xs rounded-2xl items-center flex flex-row">
-                    
+                    <!--,$store.dispatch('setParent',$attrs.parent)-->
                     <i class="material-icons text-sm text-gray-600 leading-4 ml-2" @click="toolbar=!toolbar,$store.dispatch('setAction','replaceelement'),$store.dispatch('setParent',$attrs.parent)" title="Replace element">{{ el.icon }}</i>
                     <i class="material-icons text-sm text-gray-600 hover:text-blue-500 leading-4 mr-2" @click="toolbar=!toolbar" v-if="!toolbar">arrow_right</i>
                     <i class="material-icons text-sm text-gray-600 hover:text-blue-500 leading-4 mr-2" @click="toolbar=!toolbar" v-if="toolbar">arrow_left</i>

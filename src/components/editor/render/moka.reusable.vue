@@ -33,7 +33,7 @@
                 </div>
                 <div class="w-full flex flex-row flex-wrap p-1 justify-around" :key="group + '_' + g">
                     <div v-for="(component,c) in schema[group]" class="flex flex-col p-1" :key="'component_' + c">
-                        <div class="hover:bg-blue-200 hover:text-black flex-auto flex flex-col justify-center  p-1 text-center text-xs w-16 h-16 cursor-pointer"  v-if="!$attrs.newblock||component.tag==='container'" @click="setComponent(group,component)">
+                        <div class="hover:bg-blue-200 hover:text-black flex-auto flex flex-col justify-center  p-1 text-center text-xs w-16 h-16 cursor-pointer"  v-if="!$attrs.newblock||component.tag==='container'" @click="setComponent(group,component,schema[group],c)">
                             <i class="material-icons text-blue-800">{{component.icon}}</i>
                             <div class="leading-4">{{ component.label }}</div>
                         </div>
@@ -219,7 +219,8 @@ export default {
             cols: 2
         },
         selected: null,
-        svgSelect: false
+        svgSelect: false,
+        components:null
     }),
     computed:{
         ...mapState(['moka']), 
@@ -240,6 +241,7 @@ export default {
     },
     methods:{
         createComponent ( type , component ){
+            console.log ( 'element =>  ' , component )
             if ( component.element === 'grid' ){
                 this.selected = component
                 this.grids = true
@@ -525,29 +527,40 @@ export default {
             
             this.$emit ( 'add' , comp )
         },
-        setComponent ( group , component ){
-            this.selected = component
-            if ( component.element === 'flex-row' || component.element === 'grid' ){
+        setComponent ( group , component  ){
+            let obj = JSON.parse(JSON.stringify(component) )
+            obj.id = this.$randomID()
+            this.selected = obj
+            if ( obj.element === 'flex-row' || obj.element === 'grid' ){
                 this.grids = true
                 return
             } else {
-                if ( component.tag === 'icon' ) {
+                if ( obj.tag === 'icon' ) {
                     this.icons = true
                     return
                 }
-                if ( component.element === 'h' ) {
-                    this.selected = component
+                if ( obj.element === 'h' ) {
+                    this.selected = obj
                     this.selected.id = this.$randomID()
+                    this.selected.content = 'Heading'
                     this.headings = true
                     return
                 }
-                if ( component.tag === 'svg' ){
+                if ( obj.tag === 'svg' ){
                     this.svgSelect = true
                     return
                 }
+
+                if ( obj.type === 'image' ){
+                    obj.image = null
+                }
                 
-                component['id'] = this.$randomID()
-                this.$emit( 'add' , component)
+                //component['id'] = this.$randomID()
+                obj.css = ''
+                obj.content = 'Add your content here'
+                this.selected = obj
+                console.log ( 'element => ' , obj )
+                this.$emit( 'add' , obj)
             }
         },
         /*

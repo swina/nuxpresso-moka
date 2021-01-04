@@ -1,7 +1,10 @@
 <template>
     <div v-if="init">
         <div v-if="$attrs.gallery" class="moka-components-gallery flex flex-col md:grid md:grid-cols-4 md:grid-flow-cols md:gap-8 w-full items-start justify-start cursor-pointer object-fit" style="grid-auto-rows: .5fr;">
-            <div v-if="!objects" class="bg-lime-300 p-1 text-sm animate-pulse">Loading data..</div>
+            <moka-loading v-if="!objects"/>
+            <!--<div v-if="!objects" class="nuxpresso-modal border-none shadow-none p-1">
+                <i class="material-icons animate-spin  text-5xl text-gray-600">bubble_chart</i>
+            </div>-->
             <div v-for="(comp,c) in objects" class="mb-2 text-sm border  shadow-lg rounded-lg justify-center flex flex-col h-full" :title="comp.description">
                 <div class="flex-1 relative object-cover ">
                     <div class="px-1 bg-gray-700 text-gray-300 w-full rounded-tl rounded-tr  flex flex-row items-center">

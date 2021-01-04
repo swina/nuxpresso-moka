@@ -25,6 +25,8 @@ const percs =  [ 'full','1/2',
 '11/12'
 ]
 
+const colors = [ 'gray' , 'bluegray' , 'brown' , 'red', 'orange' , 'yellow' , 'green' , 'lime' , 'teal' , 'blue' , 'indigo' , 'purple' , 'pink' ]
+
 function setPercs ( prefix ){
     let arr = []
     percs.forEach ( perc => {
@@ -55,6 +57,17 @@ function setOpacity ( prefix ){
     }
     return arr
 }
+
+function setColors ( prefix ){
+    let arr = []
+    colors.forEach ( color => {
+        arr.push ( prefix + '-' + color)
+        arr.push ( 'hover:' + prefix + '-' + color )
+    })
+    return arr
+}
+
+
 var classes = {
     semantics:['article','aside','details','figcaption','figure','footer','header','main','mark','nav','section','summary','time'],
     textSize: [
@@ -97,40 +110,7 @@ var classes = {
         'tracking-widest'
     ],
     textOpacity: setOpacity('text-opacity'),
-    textcolor: [
-        'text-white',
-        'text-black', 
-        'text-transparent', 
-        'text-gray',
-        'text-bluegray',
-        'text-brown', 
-        'text-red', 
-        'text-orange', 
-        'text-yellow', 
-        'text-green', 
-        'text-lime',
-        'text-teal', 
-        'text-blue', 
-        'text-indigo',
-        'text-purple',
-        'text-pink',
-        'hover:text-white',
-        'hover:text-black', 
-        'hover:text-transparent', 
-        'hover:text-gray', 
-        'hover:text-bluegray',
-        'hover:text-brown',
-        'hover:text-red', 
-        'hover:text-orange', 
-        'hover:text-yellow', 
-        'hover:text-green', 
-        'hover:text-lime',
-        'hover:text-teal', 
-        'hover:text-blue', 
-        'hover:text-indigo',
-        'hover:text-purple',
-        'hover:text-pink'
-        ],
+    textcolor: setColors('text'),
     fontfamily: [
         'Barlow Condensed',
         'Abel',
@@ -156,41 +136,8 @@ var classes = {
         'font-black'
     ],
     bgOpacity: setOpacity('bg-opacity'),
-    colors: [ 'gray' , 'bluegray' , 'brown' , 'red', 'orange' , 'yellow' , 'green' , 'lime' , 'teal' , 'blue' , 'indigo' , 'purple' , 'pink' ],
-    bgcolor : [
-        'bg-white',
-        'bg-black', 
-        'bg-transparent', 
-        'bg-gray', 
-        'bg-bluegray',
-        'bg-brown',
-        'bg-red', 
-        'bg-orange', 
-        'bg-yellow', 
-        'bg-green', 
-        'bg-lime',
-        'bg-teal', 
-        'bg-blue', 
-        'bg-indigo',
-        'bg-purple',
-        'bg-pink',
-        'hover:bg-white',
-        'hover:bg-black', 
-        'hover:bg-transparent', 
-        'hover:bg-gray', 
-        'hover:bg-bluegray',
-        'hover:bg-brown',
-        'hover:bg-red', 
-        'hover:bg-orange', 
-        'hover:bg-yellow', 
-        'hover:bg-green', 
-        'hover:bg-lime', 
-        'hover:bg-teal', 
-        'hover:bg-blue', 
-        'hover:bg-indigo',
-        'hover:bg-purple',
-        'hover:bg-pink'
-        ],
+    colors: colors,
+    bgcolor : setColors('bg'),
     flexdirection : [ 'flex-col' , 'flex-row' , 'flex-col-reverse' , 'flex-row-reverse' ],
     flexorder:[
         'order-first',

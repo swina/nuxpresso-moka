@@ -417,6 +417,7 @@ export default {
         },
         //copy current element
         copyElement(current){
+            delete current.parent
             let element = {}
             //element = Object.assign( {} , current )
             element = JSON.parse(JSON.stringify(this.editor.current))
@@ -437,12 +438,9 @@ export default {
         //duplicate current element
         duplicateElement(current){
             
-            delete this.editor.current.parent    
+            //delete this.editor.current.parent    
 
             let el = JSON.parse(JSON.stringify(this.editor.current))
-            //let o = this.$copy ( this.editor.current )
-            //this.$findNode ( el.id , this.moka.component.json )
-            //let obj = this.$unique(el)
             let obj = this.$clone ( el )
             obj.id = this.$randomID()
             this.$findNode ( this.editor.current.id , this.moka.component.json )
@@ -458,11 +456,15 @@ export default {
         },
         //replace a basic HTML element (not containers)
         replaceElement(component){
+            console.log ( component )
             component.id = this.$randomID()
-            this.editor.current = component
-            this.editor.parent[0][this.editor.parent[1]] = component
-            this.$store.dispatch('selected',component.id)
-            this.$store.dispatch('setCurrent',component)
+            let obj = JSON.parse(JSON.stringify(component))
+            this.editor.current = obj 
+            this.editor.parent[0][this.editor.parent[1]] = obj
+            console.log ( obj )
+            delete obj.parent
+            this.$store.dispatch('selected',obj.id)
+            this.$store.dispatch('setCurrent',obj)
             this.$store.dispatch ( 'setAction' , null )
             this.$store.dispatch( 'setParent' , null )
         },

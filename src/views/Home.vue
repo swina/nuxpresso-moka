@@ -1,5 +1,6 @@
 <template>
   <div v-if="moka" class="min-h-screen h-screen flex flex-col p-4">
+    <moka-loading v-if="isLoading"/>
     <h2>Dashboard</h2>
 
     <div class="w-full flex flex-row justify-around" v-if="components">

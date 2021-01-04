@@ -60,6 +60,7 @@
                 <div class="w-1/2 p-2">
                     <h4 class="bg-purple-500 p-1">Production</h4>
                     <draggable :list="trash" group="removed">SERVER: {{ master }}</draggable>
+                    <div class="bg-lime-300 text-sm p-1" v-if="!articlesRemote && mode==='articles'">Loading ...</div>
                     <div v-if="production && mode==='articles'">
                         <div class="font-bold">Articles</div>
                         <draggable :list="serverArticles" group="articles" class="flex flex-col" @add="onEndArticle">
@@ -72,6 +73,7 @@
                             <option v-for="article in articles" :value="article">{{ article.title }}</option>
                         </select>-->
                     </div>
+                    <div class="bg-lime-300 text-sm p-1" v-if="!blocks && mode==='components'">Loading ...</div>
                     <div v-if="components && mode==='components'">
                         <div class="font-bold">Components</div>
                         <select size="10" class="w-64">
