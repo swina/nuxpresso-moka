@@ -1,5 +1,5 @@
 <template>
-    <div editorelement v-if="element" :class="$attrs.develop ? 'relative z-top' : ''" @dblclick="$emit('editinline',element)" :style="element.style">
+    <div editorelement v-if="element" :class="$attrs.develop ? 'relative ' : ''" @dblclick="$emit('editinline',element)" :style="element.style">
             <span :class="'text-xs ' + showid">{{element.id}}</span> 
             
             <!--<span :class="'relative z-2xtop '" v-if="editor.current && editor.current.id === el.id && editor.current.tag === 'element'">
@@ -81,7 +81,7 @@
                 </div>
             </nav>
             </transition>
-            <div v-if="$attrs.develop " :class="'z-max absolute border border-green-500 border-dashed z-4 top-0 left-0 bottom-0 right-0 scale-x-102 scale-y-102 transform ' + active(el.id,el.css) + ' bg-transparent'" style="min-height:2rem" @click="select(el)">
+            <div v-if="$attrs.develop " :class="'absolute border border-green-500 border-dashed z-top top-0 left-0 bottom-0 right-0 scale-x-102 scale-y-102 transform ' + active(el.id,el.css) + ' bg-transparent'" style="min-height:2rem" @click="select(el)">
                 <div class="h-2 w-2 absolute top-0 right-0 bg-black rounded-full -m-1"></div>
                 <div class="h-2 w-2 absolute top-0 left-0 bg-black rounded-full -m-1"></div>
                 <div class="h-2 w-2 absolute bottom-0 right-0 bg-black rounded-full -m-1"></div>
@@ -90,7 +90,7 @@
                     <i class="absolute top-0 right-0 material-icons nuxpresso-icon-circle text-sm text-black -mt-4" @click="$emit('editinline')">{{ el.icon }}</i>-->
                 <div class="absolute bottom-0 left-0 -mb-4 text-xs text-purple-500" v-if="el.gsap && el.gsap.animation">{{ el.gsap.animation }}</div>
             </div>
-             <div v-if="el.id===moka.selected" class="z-top absolute top-0 left-0 -mt-8 h-6 bg-gray-800 text-gray-300 text-xs rounded-2xl items-center flex flex-row">
+             <div v-if="el.id===moka.selected" class="z-top absolute top-0 left-0 -mt-6 h-6 bg-gray-800 text-gray-300 text-xs rounded-2xl items-center flex flex-row">
                     <!--,$store.dispatch('setParent',$attrs.parent)-->
                     <i class="material-icons text-sm text-gray-600 leading-4 ml-2" @click="toolbar=!toolbar,$store.dispatch('setAction','replaceelement'),$store.dispatch('setParent',$attrs.parent)" title="Replace element">{{ el.icon }}</i>
                     <i class="material-icons text-sm text-gray-600 hover:text-blue-500 leading-4 mr-2" @click="toolbar=!toolbar" v-if="!toolbar">arrow_right</i>

@@ -3,7 +3,7 @@
         v-if="doc"
         :level="$attrs.level"  
         :class="'p-2 relative fill-current ' + classe(doc.css)" :style="doc.style + ' ' +  background(doc)" >
-        
+        <div v-if="!doc.blocks.length && !doc.image">A container. Add your block/elements here</div>
         <template v-for="(block,b) in doc.blocks">
             
             <moka-element
@@ -33,8 +33,12 @@
                 v-if="block && block.hasOwnProperty('blocks') && !block.hasOwnProperty('items')  && !block.hasOwnProperty('slider')" 
                 :doc="block"
                 @copy="$emit('copy')"/>
-            <!-- v-if="block && block.hasOwnProperty('blocks') && !block.hasOwnProperty('items')  && !block.hasOwnProperty('slider')" 
-                 -->
+
+            <!--<moka-editor-slides
+                v-if="block && block.hasOwnProperty('slider')" 
+                :doc="block"
+                @remove="doc.blocks.splice(b,1)"/>-->
+                
             <moka-container
                 :key="block.id"
                 :component="$attrs.component"
@@ -47,22 +51,23 @@
                 :zi="$attrs.zi + parseInt($attrs.level)"
                 v-if="block && block.hasOwnProperty('slider')" 
                 :doc="block.blocks[0]"/>
+            
         </template>
        
-        <div :class="'absolute transform border-2 border-dashed top-0 left-0 bottom-0 right-0 z-' + zindex + ' scale-x-' + (106-root) + ' ' + active(doc.id,doc)" @click="setCurrent(doc)" v-if="doc && !doc.hasOwnProperty('items')">
+        <div :class="'absolute transform border-2 border-dashed top-0 left-0 bottom-0 right-0 z-' + zindex + ' scale-x-' + (105-root) + ' ' + active(doc.id,doc)" @click="setCurrent(doc)" v-if="doc && !doc.hasOwnProperty('items')">
             <!--{{ $attrs.level }} {{ $attrs.index }}-->
             <span v-if="doc && doc.hasOwnProperty('loop') && doc.loop" class="text-xs"><i class="material-icons">article</i> Article Grid</span>
             <div class="h-2 w-2 absolute top-0 right-0 bg-black rounded-full -m-1"></div>
             <div class="h-2 w-2 absolute top-0 left-0 bg-black rounded-full -m-1"></div>
             <div class="h-2 w-2 absolute bottom-0 right-0 bg-black rounded-full -m-1"></div>
             <div class="h-2 w-2 absolute bottom-0 left-0 bg-black rounded-full -m-1"></div>
-            <div v-if="doc.id===moka.selected" class="z-2xtop absolute top-0 left-0 ml-4 p-1 -mt-5  h-6 w-auto bg-gray-800 text-gray-300 text-xs rounded-2xl items-center flex flex-row justify-around">
+            <div v-if="doc.id===moka.selected" class="z-2xtop absolute top-0 left-0 ml-4 p-1 -mt-6  h-6 w-auto bg-gray-800 text-gray-300 text-xs rounded-2xl items-center flex flex-row justify-around">
                 <i class="transform scale-100 material-icons text-sm mr-2" v-if="doc.icon">{{doc.icon}}</i>
                 <i class="transform scale-100 material-icons text-sm mr-2" v-if="!doc.icon">select_all</i>
-                <i v-if="doc.type==='flex'" class="mr-2 material-icons hover:text-blue-500 text-sm leading-4" @click="$store.dispatch('setAction','addcomponent')" title="Add element">add</i>
+                <i v-if="doc.type==='flex' || doc.type==='grid'" class="mr-2 material-icons hover:text-blue-500 text-sm leading-4" @click="$store.dispatch('setAction','addcomponent')" title="Add element">add</i>
                 <i v-if="doc.tag==='form'" class="mr-2 material-icons hover:text-blue-500 text-sm leading-4" @click="$store.dispatch('setAction','formsetting')" title="Settings">settings</i> 
                 <i class="mr-2 material-icons hover:text-blue-500 text-sm leading-4 " @click="$store.dispatch('setAction','customize')" title="Customize">brush</i>
-                <i v-if="doc.type === 'flex'" class="material-icons text-gray-400 hover:text-blue-400 mr-2" title="Add block" @click="$store.dispatch('setAction','addreusable')">widgets</i> 
+                <i v-if="doc.type === 'flex' || doc.type==='grid'" class="material-icons text-gray-400 hover:text-blue-400 mr-2" title="Add block" @click="$store.dispatch('setAction','addreusable')">widgets</i> 
                 <i class="mr-2 material-icons hover:text-blue-500 text-sm leading-4 " @click="$store.dispatch('setAction','delete')" title="Delete">delete</i>
             </div>
             <!--<div class="absolute bottom-0 left-0 -mb-4 text-xs" v-if="doc.gsap && doc.gsap.animation">{{ doc.gsap.animation }}</div>
@@ -81,10 +86,11 @@
 <script>
 import MokaElement from '@/components/editor/render/moka.editor.element'
 import MokaSlider from '@/components/editor/preview/moka.slider'
+import MokaEditorSlides from '@/components/editor/render/moka.editor.slides'
 import { mapState } from 'vuex'
 export default {
     name: 'MokaContainer',
-    components: { MokaElement , MokaSlider },
+    components: { MokaElement , MokaSlider , MokaEditorSlides },
     props: [ 'doc' , 'coords' ,'pos' ],
     data:()=>({
         position: null
@@ -105,7 +111,7 @@ export default {
             if ( !css ) return 
             let cl = css.hasOwnProperty('css') ? css.css + ' ' + css.container : css
             cl.replace('z-','')
-            return cl
+            return cl.replace('modal','')
         },
         setCurrent(el){ 
             let level = this.coords
@@ -187,10 +193,12 @@ export default {
             let color = 'border-blue-500 '
             doc && !doc.hasOwnProperty('type') ? color = 'border-red-500 ' : null
             doc && doc.hasOwnProperty('slider') ? color = 'border-yellow-500 ' : null
+            doc && doc.hasOwnProperty('popup') ? color = 'border-teal-200 ' : null
             doc.type === 'flex' ?
-                color = 'border-red-500 border-2 bg-gray-300 bg-opacity-25 ' : ' '
+                doc.hasOwnProperty('popup') ? color = 'border-teal-200 border-2 ' :
+                    color = 'border-red-500 border-2 bg-gray-300 bg-opacity-25 ' : ''
             if ( this.moka && this.moka.selected ) {
-                return this.moka.selected === id ? color + 'opacity-100' : color + 'opacity-0 hover:opacity-100'
+                return this.moka.selected === id ? color + 'opacity-100 ' : color + 'opacity-0 hover:opacity-100'
             } else {
                 return color + 'opacity-0 hover:opacity-100 '
             }

@@ -264,6 +264,11 @@ export default {
                 this.svgSelect = true
                 return
             }
+            if ( component.type === 'popup' ){
+                console.log ( 'popup' )
+                let obj = thi.$clone ( component )
+                this.$emit('add',obj)
+            }
             if ( component.element === 'column' ){
                 this.columns = true
             } else {
@@ -556,11 +561,18 @@ export default {
                 }
                 
                 //component['id'] = this.$randomID()
-                obj.css = ''
+                if ( !obj.css.hasOwnProperty('css') ){
+                    obj.css = ''
+                }
+                if ( obj.hasOwnProperty('popup') ){
+                    obj.blocks.push( this.schema.text[2] )
+                    obj.blocks[0].content = 'Modal/Popup'
+                }
                 obj.content = 'Add your content here'
-                this.selected = obj
-                console.log ( 'element => ' , obj )
-                this.$emit( 'add' , obj)
+                let reusable = this.$clone ( obj )
+                this.selected = reusable
+                console.log ( 'element => ' , reusable )
+                this.$emit( 'add' , reusable )
             }
         },
         /*

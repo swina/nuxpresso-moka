@@ -56,23 +56,28 @@
             </div>
                 
             <!-- BOTTOM RIGHT BUTTONS ( Add block, add reusable, preview ) -->
-            <div class="fixed bottom-0 right-0 opacity-100 hover:opacity-100 mr-6 mb-2 z-top">
- 
+            <div class="fixed bottom-0 right-0 opacity-100 hover:opacity-100 text-gray-300 mr-6 mb-12 z-2xtop">
+                    Document 
                     <!-- CLEAR SELECTION -->
-                    <i class="material-icons moka-icons nuxpresso-icon-circle ml-2" @click="$store.dispatch('setCurrent',doc),$store.dispatch('selected',doc.id)"
+                    <i class="material-icons moka-icons nuxpresso-icon-circle text-gray-300 ml-2" @click="$store.dispatch('setCurrent',doc),$store.dispatch('selected',doc.id)"
  title="Select document">border_clear</i>
 
+
                     <!-- ADD EMPTY BLOCK (GRID) -->
-                    <i class="material-icons moka-icons nuxpresso-icon-circle ml-2" @click="grids=!grids" title="Add block">add</i>
+                    <i class="material-icons moka-icons nuxpresso-icon-circle text-gray-300 ml-2" @click="grids=!grids" title="Add block">add</i>
 
                     <!-- IMPORT A BLOCK -->
-                    <i class="material-icons moka-icons nuxpresso-icon-circle ml-2" @click="$store.dispatch('setAction','addreusable'),addBlock=true" title="Add reusable block">widgets</i>
+                    <i class="material-icons moka-icons nuxpresso-icon-circle text-gray-300 ml-2" @click="$store.dispatch('setAction','addreusable'),addBlock=true" title="Add reusable block">widgets</i>
                     
                     <!-- PREVIEW DOCUMENT -->
-                    <i class="material-icons moka-icons nuxpresso-icon-circle ml-2" v-if="$attrs.component && $attrs.component.category!='slider'" title="Preview" @click="preview=!preview,disable=false">remove_red_eye</i> 
+                    <i class="material-icons moka-icons nuxpresso-icon-circle text-gray-300 ml-2" v-if="$attrs.component && $attrs.component.category!='slider'" title="Preview" @click="preview=!preview,disable=false">remove_red_eye</i> 
 
                     <!-- PREVIEW SLIDER -->
-                    <i class="material-icons nuxpresso-icon-circle ml-2 bg-green-400 " v-if="$attrs.component && $attrs.component.category==='slider'" title="Preview" @click="slider=!slider,disable=false">remove_red_eye</i>
+                    <i class="material-icons nuxpresso-icon-circle ml-2 text-gray-300 bg-green-400 " v-if="$attrs.component && $attrs.component.category==='slider'" title="Preview" @click="slider=!slider,disable=false">remove_red_eye</i>
+                    
+                    <!-- SAVE DOCUMENT -->
+                    <i class="material-icons moka-icons nuxpresso-icon-circle text-gray-300 ml-2" @click="$emit('save')"
+ title="Save document">save</i>
                     
                 
             </div>
@@ -390,7 +395,6 @@ export default {
         //add a grid as new block
         addGrid(grid){
             this.editor.current.blocks.push ( grid )
-            console.log ( grid )
             //this.doc.blocks.push ( grid )
             this.grids = false
         },
@@ -515,6 +519,7 @@ export default {
             this.reusable = false
             let component = {}
             let json , imported
+            console.log ( 'importing ... ' , obj )
             if ( obj.hasOwnProperty ( 'json' ) ){
                 if ( !obj.json.hasOwnProperty('slider' ) ) {
                     imported = obj.json.blocks[0]
@@ -631,7 +636,7 @@ export default {
             if (!el){
                 document.querySelector(block)
             }
-            options = { type: "dataURL" , useCORS: true , scale: 0.50 }
+            options = { type: "dataURL" , useCORS: true , scale: 0.25 }
             let screenshot = await this.$html2canvas(el, options)
             this.save(screenshot)
             return screenshot

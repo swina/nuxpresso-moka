@@ -2,18 +2,11 @@
     <component
         :is="semantic"
         :id="doc.hasOwnProperty('anchor')? doc.anchor : doc.id"
-        v-if="doc"  
+        v-if="doc && (modal || moka.popup)"
+        :modal="popup"  
         :class="classe(doc.css)" :style="doc.style + ' ' +  background(doc)" :ref="doc.id">
         <template v-for="(block,b) in doc.blocks">
-            <!-- 
-            <moka-element
-                @click="elementAction"
-                v-if="block && !block.hasOwnProperty('blocks') || block.hasOwnProperty('items')"
-                :key="block.id"
-                :element="block"
-                :coords="[b]"
-                :develop="false"/> 
-            -->
+            
             <moka-element
                 @click="elementAction"
                 v-if="block && !block.hasOwnProperty('blocks') || block.hasOwnProperty('items')"
@@ -25,8 +18,20 @@
             <moka-preview-container
                 v-if="block && !block.hasOwnProperty('slider') && block.hasOwnProperty('blocks') && !block.hasOwnProperty('menu')" @action="elementAction" 
                 :doc="block"/>
-            <moka-slider :key="block.id" :ref="block.id" v-if="block && block.hasOwnProperty('slider')" :develop="true" :embeded="true" :doc="block" :editor="true"/>
+
+            <moka-slider 
+                :key="block.id" 
+                :ref="block.id" 
+                v-if="block && block.hasOwnProperty('slider')" 
+                :develop="true" 
+                :embeded="true" 
+                :doc="block" 
+                :editor="true"/>
+
+                
+
         </template>
+        <i class="material-icons absolute top-0 right-0 m-1" v-if="doc.hasOwnProperty('popup') && doc.popup.close" @click="popupClose">close</i>
     </component>
 
 </template>
@@ -46,6 +51,9 @@ export default {
     name: 'MokaPreviewContainer',
     components: { MokaElement , MokaSlider , draggable },
     props: [ 'doc'  ],
+    data:()=>({
+        modal: true
+    }),
     computed:{
         ...mapState(['moka']),
         animations(){
@@ -54,6 +62,23 @@ export default {
         semantic(){
             return this.doc.semantic ? this.doc.semantic : 'div'
         },
+        popup(){
+            if ( this.doc.hasOwnProperty('popup') ){
+                if ( this.doc.popup.trigger ){
+                    //this.doc.css.css.replace('modal','')
+                    this.modal = false
+                }
+            }
+        }
+    },
+    watch:{
+        '$store.state.moka.popup':function(v){
+            if ( v ){
+                if ( this.doc.hasOwnProperty('gsap') && this.doc.gsap.animation ){
+                    this.animate ( this.doc , this.doc.id )
+                }
+            }
+        }
     },
     methods:{
         
@@ -106,6 +131,10 @@ export default {
                     
             }
         },
+        popupClose(){
+            this.modal = false
+            this.$store.dispatch('popup','')
+        }
     },
     mounted(){
         window.scrollTo(0,0)

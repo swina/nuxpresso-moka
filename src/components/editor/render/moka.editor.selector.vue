@@ -35,8 +35,6 @@
                         category="slider"
                         :root="true"
                         />  
-                    <!--<moka-container :doc="block.blocks[0]"/>
-                    {{block.blocks[0]}}-->
                 </div>
             </template>
         </div>
@@ -100,7 +98,7 @@
     </div>
     
     <!-- STATUS BAR -->
-    <div editorstatus class="fixed bg-gray-300 z-top bottom-0 left-0 p-1 border-t w-full flex flex-row items-center text-sm bg-white z-max uppercase h-10 divide-x divide-gray-400">
+    <div editorstatus class="fixed bg-gray-300 z-2xtop bottom-0 left-0 p-1 border-t w-full flex flex-row items-center text-sm bg-white z-max uppercase h-10 divide-x divide-gray-400">
         <i class="material-icons text-gray-800 hover:bg-black hover:text-blue-400 mx-2" @click="help=!help" title="Hotkeys">keyboard</i>
         <div v-if="editor.current" class="pl-1 w-full flex flex-row items-center">
             
@@ -115,8 +113,10 @@
             <span>Mobile Breakpoint <span class="lowercase font-bold mr-2">{{ breakpoint }}</span></span>
             <span class="capitalize">CSS class</span>
             
-            <input v-if="!editor.current.css.hasOwnProperty('css')" type="text" class="ml-2 w-5/12" v-model="editor.current.css"/>
-            <input v-else type="text" class="ml-2 w-5/12" v-model="editor.current.css.css"/>
+            <input v-if="!editor.current.css.hasOwnProperty('css')" type="text" class="ml-2 64" v-model="editor.current.css"/>
+            
+            <input v-else type="text" class="ml-2 w-64" v-model="editor.current.css.css"/>
+
             <i class="material-icons moka-icon-circle ml-2" title="Edit CSS classes" @click="editCSS=!editCSS">edit</i>
 
             <i class="material-icons moka-icon-circle ml-2" title="Customize" @click="$store.dispatch('setAction','customize')">brush</i>
@@ -181,7 +181,7 @@
 
     <!-- EDIT CONTENT INLINE -->
     <transition name="fade">
-        <div v-if="editor.action==='edit' && editor.current && editor.current.type != 'image' && editor.current.type != 'video' && editor.current.tag != 'menu'" draggable="true" :class="'border shadow-lg text-sm z-top ' + isFullScreen"> 
+        <div v-if="editor.action==='edit' && editor.current && editor.current.type != 'image' && editor.current.type != 'video' && editor.current.tag != 'menu'" draggable="true" :class="'border shadow-lg text-sm z-2xtop ' + isFullScreen"> 
             <div class="bg-gray-700 text-white p-1 flex items-center">Edit 
                 <i class="material-icons ml-2 absolute right-0 mr-12 text-sm" title="Customize" @click="$store.dispatch('setAction','customize')">brush</i>
                 <i class="material-icons absolute  right-0  text-white mr-6 cursor-pointer" @click="fullscreen=!fullscreen" :title="fullscreen?'close fullscreen':'fullscreen'">{{fullscreen?'close_fullscreen':'fullscreen'}}</i>
@@ -230,7 +230,7 @@
     </transition>
     <!-- DELETE OBJECT MODAL -->
     <transition name="fade">
-        <div class="nuxpresso-modal bg-white border shadow p-4 z-top" v-if="confirmModal||editor.action==='delete'">
+        <div class="nuxpresso-modal bg-white border shadow p-4 z-2xtop" v-if="confirmModal||editor.action==='delete'">
             <h5>Delete this object ?</h5>
             <button @click="confirm=false,confirmModal=false,$store.dispatch('setAction',null)">No</button>
             <button class="ml-2 danger" @click="confirm=true,confirmModal=!confirmModal,removeElement()">Yes, delete</button>
@@ -637,6 +637,9 @@ export default {
                 this.tree =! this.tree
             }
             if ( e.altKey && e.code === 'KeyI' ){
+                this.$store.dispatch ( 'setAction' , 'addcomponent' )
+            }
+            if ( e.altKey && e.code === 'KeyU' ){
                 this.$store.dispatch ( 'setAction' , 'addreusable' )
             }
             if ( e.altKey && e.code === 'KeyS' ){

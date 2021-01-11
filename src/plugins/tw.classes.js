@@ -331,7 +331,8 @@ var classes = {
         'fixed',
         'absolute',
         'relative',
-        'sticky'
+        'sticky',
+        'modal'
     ],
     positionTop: [ 'top-0' ],
     positionLeft: [ 'left-0' ],

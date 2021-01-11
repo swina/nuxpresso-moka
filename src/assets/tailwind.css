@@ -208,6 +208,12 @@ pre {
     @apply w-full overflow-auto bg-gray-200 text-xs p-2 my-2 border border-gray-400;
 }
 
+.modal {
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    position:fixed;
+}
 
 .nuxpresso-modal {
     top:50%;

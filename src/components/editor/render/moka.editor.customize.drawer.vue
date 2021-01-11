@@ -2,7 +2,7 @@
     <div :data="component" class="w-full relative h-screen overflow-y-auto z-2xtop mb-2 p-1 shadow">
         <div v-if="$attrs.element && entity && entity.entity" class="absolute top-0 left-0 overflow-y-auto h-auto w-full p-1 z-2xtop h-screen">
             
-            <div class="bg-teal-700 text-white flex flex-row items-center p-1 shadow relative p-1">
+            <div class="bg-gray-800 text-white flex flex-row items-center p-1 shadow relative p-1">
                 <div class="flex flex-row items-center" @dblclick="$emit('switch')">
                     
                     <div>

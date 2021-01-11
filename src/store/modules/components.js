@@ -23,7 +23,8 @@ const moka = {
         selected: null,
         current: null,
         fonts: process.env.VUE_APP_FONT_FAMILIES.split('|'),
-        slide: 0
+        slide: 0,
+        popup: ''
     },
     mutations: {
         SET_SETTINGS ( state , settings ){
@@ -67,6 +68,9 @@ const moka = {
         },
         SET_SLIDE ( state , slide ){
             state.slide = slide
+        },
+        SET_POPUP ( state , popup ){
+            state.popup = popup
         }
     },
     actions: {
@@ -78,6 +82,9 @@ const moka = {
         },
         message( { commit } , message ){
             commit ( 'SET_MESSAGE' , message )
+        },
+        popup( { commit } , popup ){
+            commit ( 'SET_POPUP' , popup )
         },
         async loadComponents ( { commit } ){
             const comps = await axios.get ( process.env.VUE_APP_API_URL + 'components' )

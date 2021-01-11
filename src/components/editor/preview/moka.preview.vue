@@ -17,35 +17,7 @@
                     />
                 <moka-slider :key="block.id" v-if="block.hasOwnProperty('slider')" :develop="true" :embeded="true" :doc="block" :editor="true"/>    
             </template>
-        <!--
-        <div block v-for="(block,b) in doc.blocks" :class="'relative ' + block.css.css + ' ' + block.css.container" :style="stile(block) + background(block)" :key="block.id" :ref="block.id">
-            <div videobg v-if="block.image && block.image.ext==='.mp4'" :class="'absolute ' + block.css.css">  
-                <video playsinline :poster="block.image.previewUrl" class="object-cover h-full w-full" autoplay loop>
-                    <source :src="block.image.url"/>
-                </video>
-            </div>
-            <template v-for="(row,r) in block.blocks">
-                
-                <moka-flex 
-                    class="z-2"
-                    :develop="false"
-                    v-if="row.type==='flex'" 
-                    :key="row.id"  
-                    :doc="doc" 
-                    :blocks="row" 
-                    :coords="[b,r]"/> 
-                
-                <moka-grid 
-                    class="z-2"
-                    :develop="false"
-                    v-if="row.type==='grid'" 
-                    :key="row.id" 
-                    :doc="doc"
-                    :blocks="row" 
-                    :coords="[b,r]"
-                />
-            </template>
-            <!-- SLIDER BLOCK -->
+        
               
                         
         

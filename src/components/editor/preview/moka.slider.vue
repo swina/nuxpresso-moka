@@ -1,7 +1,7 @@
 <template>
     <div 
         :id="doc && doc.hasOwnProperty('anchor')? doc.anchor : doc.id"
-        v-if="doc" 
+        v-if="doc && doc.blocks.length" 
         :key="doc.id"
         :class="'content max-w-screen overflow-x-hidden relative flex flex-no-wrap block ' + classe(doc.css)" :style="doc.style + ' ' +  background(doc)" :ref="doc.id">
         
@@ -85,7 +85,7 @@ export default {
           if ( n < 0 ) return 
           if ( n > this.doc.blocks.length -1 ) return
           this.index = n
-          this.current = this.doc.blocks[n].id
+          //this.current = this.doc.blocks[n].id
           let tl = gsap.timeline()
             if ( document.querySelector('.slide') ){
               tl.to ( '.slide' , { opacity:0 , duration: .4 } ),
@@ -111,7 +111,7 @@ export default {
             this.index < (this.doc.blocks.length + n) ? this.index += n : this.index = 0
             this.index < 0 ? this.index = 0 : null
             this.index >= this.doc.blocks.length ? this.index = 0 : null
-            this.current = this.doc.blocks[this.index].id
+            //this.current = this.doc.blocks[this.index].id
             let tl = gsap.timeline()
             if ( document.querySelector('.slide') ){
               tl.to ( '.slide' , { xPercent: -this.index*100 , opacity:1 , duration: 1.5 } )
@@ -170,6 +170,7 @@ export default {
 
     },
     mounted(){
+      if ( !this.doc.blocks.length ) return 
         this.next()
         if ( parseInt(this.doc.slider.delay) > 0 ){
           this.playslides ( this.doc.slider.delay )

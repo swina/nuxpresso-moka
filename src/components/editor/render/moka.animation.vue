@@ -2,7 +2,6 @@
     <div class="flex flex-col" v-if="current" :key="current.id">
         <i class="material-icons absolute top-0 right-0 m-1" @click="$emit('close')">close</i>
             <label>Animation</label>
-            {{current.id}}
             <select class="w-full dark" v-model="$attrs.value.gsap.animation" @change="animate(current,current.id)">
                 <option value="">none</option>
                 <option v-for="(ani,i) in gsapAnimations.gsapEffects" :value="ani.replace('-','')"><span class="capitalize">{{ ani.replace('-' , ' ')}}</span></option>
