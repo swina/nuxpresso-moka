@@ -8,6 +8,7 @@
             <div class="col-span-2">
                 <button @click="uploadFile=!uploadFile">Upload</button>
             </div>
+            
             <div class="text-right text-sm">
                 Search <input type="text" v-model="search" placeholder="search" class="mr-2"/>
                 <i class="material-icons cursor-pointer text-xl" title="Refresh" @click="refresh()">cached</i>
@@ -36,7 +37,7 @@
         <div class="w-full text-center my-4 grid grid-cols-3 grid-cols-auto">
             <div class="text-left">
                 <span class="text-sm" v-if="selected">{{ selected.name }} 
-                    <button>Delete</button>
+                    <button @click="deleteMedia">Delete</button>
                     <button class="ml-2" @click="edit=!edit">Edit</button>
                 </span>
             </div>
@@ -55,7 +56,7 @@
             </div>
         </transition>
          <transition name="fade">
-            <div class="nuxpresso-modal z-2xtop w-2/3 shadow-xl border rounded p-4" v-if="edit">
+            <div class="nuxpresso-modal z-2xtop w-2/3 shadow-xl border rounded h-3/4 p-4" v-if="edit">
                 <moka-edit-media :img="selected" @close="edit=!edit"/>
             </div>
         </transition>
@@ -150,6 +151,13 @@ export default {
         refresh(){
             this.total++
             this.$apollo.queries.files.refetch()
+        },
+        deleteMedia (){
+            this.$http.delete ( 'upload/files/' +  this.selected.id ).then ( resp => {
+                this.total--
+                this.selected = null
+                this.$apollo.queries.files.refetch()
+            })
         }
     },
     

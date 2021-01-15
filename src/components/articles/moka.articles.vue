@@ -3,7 +3,7 @@
         <div class="grid grid-cols-2 grid-flow-row items-center" style="grid-template-columns:1fr .2fr .6fr .2fr;">
             <h3 class="">
                 <i class="material-icons" v-if="editor" @click="editor=!editor">chevron_left</i>
-                Articles
+                Articles <i v-if="!editor" class="material-icons" @click="$apollo.queries.articles.refetch()">refresh</i>
             </h3> 
             <button @click="createPage=!createPage">Create New</button>
             <div class="text-right">Category 
@@ -21,7 +21,7 @@
                     </template>
                     <th>Template</th>
 
-                    <th>Preview</th>
+                    <th></th>
                     <th></th>
                 </thead>
                 <tr v-for="(article,a) in articles" class="cursor-pointer hover:bg-gray-100 p-1 border-b-2" @click="articleSlug=article.id,editor=!editor" v-if="isCategory(article)">
@@ -42,11 +42,7 @@
                         </span>
                     </td>
                     <td class="w-20">
-                        <!--<span v-if="article.component">
-                        {{ article.component.category}}
-                        
-                        </span>-->
-                        <div v-if="article.component && article.component.image_uri" :style="'background-image:url(' + article.component.image_uri + ')'" class="h-12 bg-auto bg-no-repeat bg-cover"></div>
+                        <div v-if="article.component" :style="'background-image:url(' + background(article.component) + ')'" class="h-12 bg-auto bg-no-repeat bg-cover"></div>
                     </td>
                     <td></td>
                     <!--<td><i class="material-icons text-sm" @click="articleSlug=article.id,editor=!editor">edit</i></td>-->
@@ -78,12 +74,12 @@
                         <button @click="wordpress=!wordpress">WP page</button>
                         <div class="flex flex-col mt-6" v-if="templates">
                             <div class="mb-2 flex flex-col">
-                                <button class="sm"@click="selectTemplate=!selectTemplate">Template</button> 
+                                <button class="sm mb-2" @click="selectTemplate=!selectTemplate">Page / Template</button> 
                                 <div v-if="templateImage" :style="'background-image:url(' + templateImage + ')'" class="h-24 bg-auto bg-no-repeat bg-cover cursor-pointer" title="Change template" @click="selectTemplate=!selectTemplate"></div>
-                                <select class="w-full" v-model="currentArticle.component" @change="checkTemplate">
+                                <!--<select class="w-full" v-model="currentArticle.component" @change="checkTemplate">
                                     <option value="0">default</option>
                                     <option v-if="template.enabled" v-for="(template,t) in templates" :value="template.id"> {{ template.name }} </option>
-                                </select>
+                                </select>-->
                             </div>
                             <div class="mb-2 flex flex-col">
                                 Category
@@ -166,10 +162,11 @@ var self = this
 
 export default {
     name: 'MokaArticles',
-    components: { MokaTextEditor , MokaImagePlaceholder , MokaMedia , MokaTemplates },
+    components: { MokaTextEditor , MokaImagePlaceholder , MokaMedia , MokaTemplates  },
     computed : { 
         ...mapState ( ['moka' ] ),
         templates (){
+            
             return this.components.filter(comp=>{ return comp.category === 'template' || comp.category === 'page' } )
         },
        
@@ -177,12 +174,13 @@ export default {
             if ( !this.currentArticle.component ) return ''
             if ( this.currentArticle.template_id ){ 
                 let template = this.templates.filter ( templ => { return templ.blocks_id === this.currentArticle.template_id } )
+                if ( template.length && template[0].image && template[0].image.url ) return template[0].image.url
                 if ( template.length && template[0].image_uri ) return template[0].image_uri
                 return false
             }
             return false
         },
-        categories(){
+        categories(){ 
             return this.moka.categories
         }
     },
@@ -219,7 +217,6 @@ export default {
                     description: 'A new nuxpresso page'
                 }
             }
-            
     }),
     apollo:{
         articles: {
@@ -291,7 +288,14 @@ export default {
         }
     },
     methods:{
-         getTemplatePreview(blocks_id){
+        background(template){
+            let image = ''
+            template.image && template.image.url ?
+                image = template.image.url : 
+                    template.image_uri ? image = template.image_uri : ''
+            return image
+        },
+        getTemplatePreview(blocks_id){
             if ( !blocks_id ) return 'no image'
             this.templates.forEach ( templ => {
                 if ( templ.blocks_id === blocks_id ){
@@ -403,7 +407,7 @@ export default {
             }
             
         }
-    }    
+    },
 }
 </script>
 

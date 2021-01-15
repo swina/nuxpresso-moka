@@ -24,7 +24,8 @@ const moka = {
         current: null,
         fonts: process.env.VUE_APP_FONT_FAMILIES.split('|'),
         slide: 0,
-        popup: ''
+        popup: '',
+        blocks: null
     },
     mutations: {
         SET_SETTINGS ( state , settings ){
@@ -71,6 +72,9 @@ const moka = {
         },
         SET_POPUP ( state , popup ){
             state.popup = popup
+        },
+        SET_BLOCKS ( state , blocks ){
+            state.blocks = blocks
         }
     },
     actions: {
@@ -131,6 +135,9 @@ const moka = {
         },
         slide ( { commit } , slide ){
             commit (  'SET_SLIDE' , slide )
+        },
+        setBlocks( { commit } , blocks ){
+            commit ( 'SET_BLOCKS' , blocks)
         }
     }
 

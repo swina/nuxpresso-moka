@@ -1,19 +1,23 @@
 <template>
-    <div class="p-2 grid grid-cols-2" v-if="image">
-        <div class="flex flex-col justify-center p-1">
-            <img :src="image.url"/>
+    <div class="p-2 grid grid-cols-2 grid-rows-2 h-full gap-5" v-if="image">
+        <div class="flex h-full flex-col justify-center p-1 bg-gray-800 bg-contain bg-no-repeat bg-top" :style="'background-image:url(' +
+         image.url + ')'">
+            <!-- <img :src="image.url" class="h-full w-auto"/> -->
         </div>
         <div class="flex flex-col p-2">
             <label>File</label>
-            <input type="text" readonly :value="image.name"/>
+            <input class="w-full" type="text" readonly :value="image.name"/>
             <label>Caption</label>
-            <input type="text" v-model="image.caption"/>
+            <input class="w-full" type="text" v-model="image.caption"/>
             <label>Alternative text</label>
-            <input type="text" v-model="image.alternativeText"/>
-            <div class="text-right my-2">
-                <button class="danger mr-2" @click="$emit('close')">Close</button>
-                <button @click="save">Save</button>
-            </div>
+            <input class="w-full" type="text" v-model="image.alternativeText"/>
+            <label>URL</label>
+            <input class="w-full" type="text" readonly v-model="image.url"/>
+            
+        </div>
+        <div class="w-full absolute bottom-0 text-center my-2">
+            <button class="danger mr-2" @click="$emit('close')">Close</button>
+            <button @click="save">Save</button>
         </div>
     </div>
 </template>

@@ -70,11 +70,15 @@
             <div v-if="exportComponent" class="nuxpresso-modal w-full  border-4 border-gray-500 md:w-1/3 bg-gray-800 rounded shadow-xl p-2 text-gray-600 text-sm z-2xtop">
                 <i class="material-icons absolute top-0 right-0 m-1 cursor-pointer" @click="exportComponent=!exportComponent">close</i>
                 <h4>Export Library</h4>
+                <div>
+                    <label>Save as</label><br/>
+                    <input class="dark" type="text" v-model="filename"/>.json
+                </div>
                 <vue-blob-json-csv
                     file-type="json"
-                    :file-name="filter + ' library'"
-                    :data="objects"
-                    confirm="Do you want to download it?"
+                    :file-name="filename"
+                    :data="moka.blocks"
+                    
                 >
                 <button class="my-2 success" @click="exportComponent=!exportComponent">Download Library</button>
                 </vue-blob-json-csv>
@@ -109,7 +113,8 @@ export default {
         filter:'widget',
         gallery: true,
         objects: null,
-        type: ''
+        type: '',
+        filename: ''
     }),
     /*watch:{
         type(v){
@@ -143,16 +148,18 @@ export default {
         },
         dataload (){
             
-
+            
             if ( this.moka.components ){
                 this.$attrs.filter ?
                     this.$store.dispatch ( 'filter' , this.$attrs.filter ) :
                         this.filter = 'widget'
 
                 this.moka.filter ? this.filter = this.moka.filter : this.filter = 'widget'
+                
                 this.objects = this.filter ? this.moka.components.filter(comp=>{ 
                     return comp.category === this.filter } ) : this.moka.components
             }    
+            this.filename = this.$attrs.filter
             return true
         }
     },

@@ -3,9 +3,13 @@
     <div v-if="templates" class="flex flex-row flex-wrap justify-around p-4">
         
         <template v-for="(template,index) in mokatemplates">
-            <div class="w-48 flex flex-col mb-4 cursor-pointer" v-if="index>=start && index < (start+limit)" @click="$emit('set',template.id,template.blocks_id)">
-                <span class="text-sm font-bold">{{ template.name }}</span>
-                <div v-if="template.image_uri" :style="'background-image:url(' + template.image_uri + ')'" class="h-24 bg-auto bg-no-repeat bg-cover"></div>
+            <div class="w-48 flex flex-col mb-4 cursor-pointer" v-if="index>=start && index < (start+limit)" @click="$emit('set',template.id,template.blocks_id)" :title="template.category">
+                <div class="flex flex-row items-center justify-between text-gray-600">
+                    <span class="text-sm">{{ template.name }}</span>
+                    <i class="material-icons ml-1">{{ template.category === 'page' ? 'web' : 'dynamic_feed'}}</i>
+                </div>
+                
+                <div :style="'background-image:url(' + background(template) + ')'" class="h-24 bg-auto bg-no-repeat bg-cover border shadow rounded"></div>
             </div>
         </template>
     </div>
@@ -31,6 +35,13 @@ export default {
         }
     },
     methods: {
+        background(template){
+            let image = ''
+            template.image && template.image.url ?
+                image = template.image.url : 
+                    template.image_uri ? image = template.image_uri : ''
+            return image
+        },
         next(){
             if ( this.start < ( this.mokatemplates.length - this.limit ) ){
                 this.start += this.limit

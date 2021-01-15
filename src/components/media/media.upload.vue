@@ -110,8 +110,8 @@ export default {
         let formData = new FormData()
         formData.append("files", file )
         for (var key of formData.entries()) {
-			  console.log(key[0] + ', ' + key[1])
-		}
+			    console.log(key[0] + ', ' + key[1])
+		    }
         return this.$http.post("/upload", 
              formData ,
              {   

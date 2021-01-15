@@ -2,7 +2,7 @@
 <div v-if="current">
      <div class="fixed bottom-0 z-top left-0 cursor-pointer border bg-gray-800 w-full transform flex flex-row px-2 h-10 mb-10 items-center">
         <i class="material-icons text-gray-400 bg-gray-800 hover:text-blue-400" @click="opened=!opened" title="Open options">{{ current.icon }}</i>
-        <div v-if="opened" class="bg-gray-800 flex flex-row w-full">
+        <div v-if="opened && editor.current.tag != 'document'" class="bg-gray-800 flex flex-row w-full">
             <i v-if="current.type === 'flex'" class="material-icons text-gray-400 hover:text-blue-400 ml-6" @click="$store.dispatch('setAction','addcomponent')" title="Add block/element">add</i>
             
             <i class="material-icons text-gray-400 hover:text-blue-400 ml-6" @click="$emit('customize'),$store.dispatch('setAction','customize')" title="Edit component">brush</i>

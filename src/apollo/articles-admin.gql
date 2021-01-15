@@ -15,8 +15,11 @@ query Articles ( $limit : Int, $start : Int , $cat: String) {
     component {
       id
       name
-      category,
+      category
       image_uri
+      image {
+        url
+      }
     }
     image {
       url

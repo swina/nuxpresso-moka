@@ -144,6 +144,7 @@
     <!-- TOOLBAR -->
     <transition name="slideright">
         <moka-side-bar 
+            
             :current="editor.current"
             :component="doc" 
             @tree="tree=!tree"
@@ -579,6 +580,7 @@ export default {
             }
             if ( e.altKey && e.code === 'KeyW' ){
                 if ( this.editor.current  ){
+                    this.$store.dispatch('setAction','edit')
                     this.$emit('edit',this.current)
                 }
             }

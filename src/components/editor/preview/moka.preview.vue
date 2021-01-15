@@ -22,7 +22,7 @@
                         
         
         <div v-if="!$attrs.dashboard" class="fixed bottom-0 right-0 z-top p-4 bg-black bg-opacity-50 opacity-0 hover:opacity-100">
-            <i class="material-icons nuxpresso-icon-circle mr-2" @click="$emit('save')">save</i>
+            <i class="material-icons nuxpresso-icon-circle mr-2" @click="$store.dispatch('loading',true),$store.dispatch('message','Saving blocks ...'),$emit('save')">save</i>
             <i class="material-icons nuxpresso-icon-circle" @click="$emit('close')">close</i>
         </div> 
         <div v-else class="fixed bottom-0 right-0 z-top p-4 bg-black bg-opacity-50">

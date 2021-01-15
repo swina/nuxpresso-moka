@@ -7,7 +7,8 @@
                 @save="save"  
                 @savecopy="saveAsNew=!saveAsNew" 
                 @preview="preview=!preview" 
-                @saveasreusable="saveAsReusable"/>
+                @saveasreusable="saveAsReusable"
+                @createpage="createPage"/>
         </div>
 
         
@@ -27,14 +28,14 @@
             <button @click="saveNewComponent" class="my-2">Save</button>
         </div>
     </transition>
-        <transition name="fade">
-            <div v-if="preview" class="fixed top-0 left-0 h-screen m-auto w-screen z-max bg-white border shadow overflow-x-hidden overflow-y-auto">
-                <moka-preview v-if="component" :category="component.category" :blocks="component.json.blocks" @close="preview=!preview" @save="savePrint"/>
-            </div>
-        </transition>
-        <div class="fixed top-0 bg-black bg-opacity-50 left-0 z-max h-screen w-screen flex flex-col justify-center items-center" v-if="loading">
-            <div class="flex  lds-ring" v-if="loading || moka.loading"><div></div><div></div><div></div><div></div></div>
+    <transition name="fade">
+        <div v-if="preview" class="fixed top-0 left-0 h-screen m-auto w-screen z-max bg-white border shadow overflow-x-hidden overflow-y-auto">
+            <moka-preview v-if="component" :category="component.category" :blocks="component.json.blocks" @close="preview=!preview" @save="savePrint"/>
         </div>
+    </transition>
+        <!--<div class="fixed top-0 bg-black bg-opacity-50 left-0 z-max h-screen w-screen flex flex-col justify-center items-center" v-if="loading">
+            <div class="flex  lds-ring" v-if="loading || moka.loading"><div></div><div></div><div></div><div></div></div>
+        </div>-->
     </div>
 </template>
 
@@ -75,6 +76,7 @@ export default {
         save(){
             this.loading = true
             console.log ( 'save =>' , this.component.blocks_id , this.component.json.id )
+            this.$store.dispatch ( 'loading' , true )
             this.$http.defaults.headers.common = {
                 'Authorization': window.localStorage.getItem('nuxpresso-jwt')
             }
@@ -88,9 +90,11 @@ export default {
                 //this.$store.dispatch('loadComponents')
                 //this.$apollo.queries.refresh()
                 //console.log ( this )
-                this.$emit('message','Component saved')
+                this.$store.dispatch('loading',false)
+                this.$emit('message','Block saved')
                 this.loading = false
             }).catch ( error => {
+                this.$store.dispatch('loading',false)
                 this.$emit('message','An error occured. Check you console log.')
                 console.log ( error )
                 this.loading = false
@@ -133,7 +137,18 @@ export default {
             })
             return null
         },
-        
+        createPage(page){
+            page.SEO = {
+                title : page.title,
+                description: page.title + ' is another page'
+            }
+            this.$http.post ( 'articles' , page ).then ( result => {
+                this.$emit('message','The new article ' + page.title + ' has been created')
+            }).catch ( error => {
+                this.$emit ('message','An error occured. Please check your console log')
+                console.log ( error )
+            })
+        }
 
     }
 }

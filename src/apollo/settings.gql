@@ -4,7 +4,11 @@ query Settings {
     site_title
     show_title
     breadcrumb
+    body_bg
+    body_color
     darkmode
+    darkmode_bg
+    darkmode_color
     autoimage
     authentication
     scrolltop
@@ -20,62 +24,11 @@ query Settings {
     github
     twitter
     footer
-    darkmode_settings {
-      ...on ComponentThemesDarkMode {
-        primary_fg {
-          color
-          density
-          css
-          tw_color
-        }
-        main_bg {
-          color
-          density
-          css
-          tw_color
-        }
-        header_fg {
-          color
-          density
-          css
-          tw_color
-        }
-        header_bg {
-          color
-          density 
-          image {
-            url
-          }
-          css
-          tw_color
-        }
-        footer_fg {
-          color
-          density 
-          css
-          tw_color
-        }
-        footer_bg {
-          color
-          density 
-          image {
-            url
-          }
-          css
-          tw_color
-        }
-        link_fg {
-          color
-          density 
-          css
-          tw_color
-        }
-        menu_fg {
-          color
-          density 
-          css
-          tw_color
-        }
+    google_analytics
+    seo {
+      ...on ComponentSeoSeo{
+				  title
+      		description
       }
     }
   }

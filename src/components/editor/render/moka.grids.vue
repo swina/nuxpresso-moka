@@ -106,9 +106,9 @@ export default {
                     column.blocks = []
                     column.css.container = 'flex flex-col md:col-span-' + v[n]
                     column.id = this.$randomID()
-                    let content = JSON.parse(JSON.stringify(this.schema.text[2]))
-                    content.id = this.$randomID()
-                    column.blocks.push ( content )
+                    //let content = JSON.parse(JSON.stringify(this.schema.text[2]))
+                    //content.id = this.$randomID()
+                    //column.blocks.push ( content )
                     obj.blocks.push ( column )
                 }
                 this.obj = obj

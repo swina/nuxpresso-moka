@@ -2,16 +2,18 @@
     <div class="flex flex-col">
         Height  
         <select class="w-full nodark" v-model="model" @change="$emit('input',model),$emit('css',model)">
-            <option value="">not set</option>
+            <option value=""></option>
             <option v-for="opt in options" :value="opt.value">{{ opt.label }}</option>
         </select>
     </div>
 </template>
 
 <script>
+import classes from '@/plugins/tw.classes'
 export default {
     data:()=>({
         model: '',
+        /*
         options: [
             { label: 'auto', value: 'h-auto' }, 
             { label: '0' , value: 'h-0' } , 
@@ -42,7 +44,13 @@ export default {
             { label: 'full',value: 'h-full' } , 
             { label: 'screen' , value: 'h-screen' }
         ],
+        */
     }),
+    computed:{
+        options(){
+            return classes[this.$attrs.attr]
+        }
+    },
     props: [ 'css' ],
     mounted(){
         if ( !this.css.length ) return

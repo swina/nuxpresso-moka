@@ -2,8 +2,8 @@
     <div 
         v-if="doc"
         :level="$attrs.level"  
-        :class="'p-2 relative fill-current ' + classe(doc.css)" :style="doc.style + ' ' +  background(doc)" >
-        <div v-if="!doc.blocks.length && !doc.image">A container. Add your block/elements here</div>
+        :class="'p-2 fill-current ' + classe(doc.css)" :style="doc.style + ' ' +  background(doc)" >
+        <div v-if="!doc.blocks.length && !doc.image" class="text-xs">Click here to add your elements</div>
         <template v-for="(block,b) in doc.blocks">
             
             <moka-element
@@ -108,9 +108,10 @@ export default {
     },
     methods:{
         classe(css){
-            if ( !css ) return 
+            if ( !css ) return 'relative'
             let cl = css.hasOwnProperty('css') ? css.css + ' ' + css.container : css
             cl.replace('z-','')
+            cl.indexOf('absolute') > -1 ? cl += ' absolute' : cl += ' relative'
             return cl.replace('modal','')
         },
         setCurrent(el){ 

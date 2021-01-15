@@ -33,6 +33,10 @@
                 <i class="material-icons mr-2">lock_open</i> Logout
             </div>
 
+            <a class="text-gray-200" href="https://nuxpresso-docs.vercel.app/moka" target="_blank"><div class="flex flex-row items-center py-1 font-thin text-sm p-2 hover:bg-gray-700">
+                <i class="material-icons mr-2">help</i> Docs
+            </div></a>
+
             <!-- LOGO -->
             <div class="absolute w-full bottom-0 m-auto mb-2 text-center font-thin ">
                 <div class="text-xl w-16 m-auto h-16 bg-gray-900 hover:border-gray-200 border-transparent border rounded-full flex flex-col text-gray-300 font-black animate-pulse cursor-pointer" @click="$router.push('/')">

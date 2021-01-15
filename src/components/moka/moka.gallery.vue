@@ -11,8 +11,10 @@
                         {{comp.name}}
                     </div>
                     
-                    <div class="h-48 bg-contain bg-center bg-no-repeat" v-if="comp.image_uri" :style="'background-image:url(' + comp.image_uri + ')'" title="Click to preview" @click="selectComponent(comp.id,'preview')">
-                    </div>
+                    <div class="h-48 bg-contain bg-center bg-no-repeat" v-if="comp.image_uri || comp.image" :style="'background-image:url(' + background(comp) + ')'" title="Click to preview" @click="selectComponent(comp.id,'preview')">
+                    </div> 
+                    <!--<div class="h-48 bg-contain bg-center bg-no-repeat" v-if="comp.image && comp.image.url" :style="'background-image:url(' + comp.image.url + ')'" title="Click to preview" @click="selectComponent(comp.id,'preview')">   
+                    </div>-->
                     
                     <div v-else class="h-48" title="Click to preview" @click="$emit('preview',comp)"></div>
                     
@@ -42,6 +44,7 @@
 <script>
 import componentsQry from '@/apollo/components.filter.gql'
 import MokaTable from '@/components/table'
+
 import { mapState } from 'vuex'
 export default {
     name: 'MokaBlocksGallery',
@@ -58,7 +61,10 @@ export default {
     computed:{
         ...mapState ( ['moka'] ),
         init(){
+            //let blocks = require ('../../assets/blocks/' + this.filter + '.json')
+            //console.log ( blocks )
             this.objects = this.blocks
+            this.$store.dispatch('setBlocks',this.blocks)
             return true
         }
     },
@@ -85,7 +91,10 @@ export default {
             this.selectComponent ( comp.id , 'component' )
         },
         background(comp){
-            return comp.image_uri ? 'background-image: url(' + comp.image_uri + ');background-size:cover;background-position:center center;background-repeat: no-repeat;' : ''
+            let image = ''
+            comp.image && comp.image.url ? image = comp.image.url :
+                comp.image_uri ? image = comp.image_uri : ''
+            return image ? image : ''
         },
         removeElement(){
             if ( this.current && this.confirm ){

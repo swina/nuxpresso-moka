@@ -9,10 +9,10 @@
                 <div :class="'main absolute top-0 left-0 bottom-0 right-0 z-max mb-4 '" v-if="disable"></div>
 
                 <!-- TOP BAR -->
-                <div :class="'fixed z-xtop top-0 left-0 bg-gray-500 p-1 grid grid-cols-3 items-center w-full m-auto cursor-pointer'" title="Select component body" @click="$store.dispatch('selected',$attrs.component.id)">
+                <div :class="'fixed z-xtop top-0 left-0 bg-gray-500 p-1 grid grid-cols-3 items-center w-full m-auto cursor-pointer'" title="Select component body">
                     <div class="flex flex-row items-center">
                         <i class="material-icons text-red-500" @click="$store.dispatch('setAction',null),$router.push('dashboard')" title="Close">fiber_manual_record</i>
-                        <i class="material-icons text-yellow-500" title="Select component">fiber_manual_record</i>
+                        <i class="material-icons text-yellow-500" title="Select document" @click="$store.dispatch('setCurrent',doc),$store.dispatch('selected',doc.id)">fiber_manual_record</i>
                         <i class="material-icons text-green-500" @click="preview=!preview" title="preview">fiber_manual_record</i>
                         <div class="text-sm ml-4">
                             {{ $attrs.component.name }}
@@ -23,11 +23,16 @@
                     <div class="text-center font-black" style="">M O K A</div>
                     <div class="absolute right-0 mr-2 flex flex-row items-center">
                         <i class="material-icons hover:text-blue-500 mr-2" @click="$emit('save')" title="Save">save</i>
+
                         <i class="material-icons hover:text-blue-500 mr-2" @click="$emit('savecopy')" title="Duplicate component">file_copy</i>
+                        
+                        <i class="material-icons hover:text-blue-500 mr-2" @click="createPage=!createPage" title="Create a page/article">web</i>
+
                         <i class="material-icons hover:text-blue-500 mr-2" @click="$store.dispatch('setAction','addreusable')" title="Import component">system_update_alt</i>
+                        
                         <i class="material-icons hover:text-blue-500 mr-2" @click="$store.dispatch('loading'),exportComponent=!exportComponent" title="Export component">backup</i>
-                        <i class="material-icons hover:text-blue-500 mr-2" v-if="$attrs.component && $attrs.component.category!='slider'" title="Preview" @click="preview=!preview,disable=false">preview</i> 
-                        <i class="material-icons hover:text-blue-500 mr-2" v-if="$attrs.component && $attrs.component.category==='slider'" title="Preview" @click="slider=!slider,disable=false">preview</i>
+                        <i class="material-icons hover:text-blue-500 mr-2" v-if="$attrs.component && $attrs.component.category!='slider'" title="Preview" @click="preview=!preview,disable=false">remove_red_eye</i> 
+                        <i class="material-icons hover:text-blue-500 mr-2" v-if="$attrs.component && $attrs.component.category==='slider'" title="Preview" @click="slider=!slider,disable=false">remove_red_eye</i>
                         <i class="material-icons hover:text-blue-500 mr-2" v-if="doc.hasOwnProperty('slider')" title="Slider Settings" @click="sliderSettings=!sliderSettings,disable=false">settings</i>
                     </div>
                 </div>
@@ -56,7 +61,7 @@
             </div>
                 
             <!-- BOTTOM RIGHT BUTTONS ( Add block, add reusable, preview ) -->
-            <div class="fixed bottom-0 right-0 opacity-100 hover:opacity-100 text-gray-300 mr-6 mb-12 z-2xtop">
+            <div class="fixed bottom-0 right-0 opacity-100 hover:opacity-100 text-gray-300 mr-6 mb-12 z-top">
                     Document 
                     <!-- CLEAR SELECTION -->
                     <i class="material-icons moka-icons nuxpresso-icon-circle text-gray-300 ml-2" @click="$store.dispatch('setCurrent',doc),$store.dispatch('selected',doc.id)"
@@ -64,10 +69,10 @@
 
 
                     <!-- ADD EMPTY BLOCK (GRID) -->
-                    <i class="material-icons moka-icons nuxpresso-icon-circle text-gray-300 ml-2" @click="grids=!grids" title="Add block">add</i>
+                    <i v-if="editor.current && editor.current.tag==='document'" class="material-icons moka-icons nuxpresso-icon-circle text-gray-300 ml-2" @click="grids=!grids" title="Add block">add</i>
 
                     <!-- IMPORT A BLOCK -->
-                    <i class="material-icons moka-icons nuxpresso-icon-circle text-gray-300 ml-2" @click="$store.dispatch('setAction','addreusable'),addBlock=true" title="Add reusable block">widgets</i>
+                    <i v-if="editor.current && editor.current.tag==='document'" class="material-icons moka-icons nuxpresso-icon-circle text-gray-300 ml-2" @click="$store.dispatch('setAction','addreusable'),addBlock=true" title="Add reusable block">widgets</i>
                     
                     <!-- PREVIEW DOCUMENT -->
                     <i class="material-icons moka-icons nuxpresso-icon-circle text-gray-300 ml-2" v-if="$attrs.component && $attrs.component.category!='slider'" title="Preview" @click="preview=!preview,disable=false">remove_red_eye</i> 
@@ -285,6 +290,32 @@
         </div>
     </transition>
 
+
+    <!-- create a CMS page -->
+    <transition name="fade">
+        <div v-if="createPage" class="nuxpresso-modal z-2xtop border w-1/3 bg-white p-2 rounded shadow">
+            <i class="material-icons absolute top-0 right-0 m-1" @click="createPage=!createPage">close</i>
+            <h5>Create CMS Article</h5>
+            <div class="text-sm">This block/document will be linked to a new page.</div>
+            <div class="flex flex-col">
+                <label>Title</label>
+                <input class="w-full" type="text" v-model="page.title"/>
+                <label>Category</label>
+                <select class="w-full" v-model="page.categories">
+                    <option value=""></option>
+                    <option v-for="(category,c) in moka.categories" :value="category"> {{ category.name }} </option>
+                </select>
+                <label>SEO Title</label>
+                <input class="w-full" type="text" v-model="page.SEO.title"/>
+                <label>SEO Description</label>
+                <textarea class="w-full" v-model="page.SEO.description"/>
+                <div class="my-2">
+                    <button class="bg-gray-400 text-black mr-2" @click="createPage=!createPage">Cancel</button>
+                    <button class="success" @click="createPage=false,$emit('createpage',page)">Create</button>
+                </div>
+            </div>
+        </div>
+    </transition>
     <!-- HTML -->
     <transition name="fade">
         <div v-if="html" class="nuxpresso-modal w-3/4 p-4">
@@ -292,6 +323,10 @@
             <h4>HTML</h4>
             <textarea v-model="html" style="font-family:monospace" class="w-full h-64"/>
         </div>
+    </transition>
+
+    <transition name="fade">
+        <moka-loading v-if="moka.loading"/>
     </transition>
 </div>
 </template>
@@ -357,7 +392,17 @@ export default {
             enabled: true
         },
         snapshot: null,
-        html: null
+        html: null,
+        createPage: false,
+        page: {
+            title: 'new page',
+            categories: [],
+            template_id: '',
+            SEO: {
+                title: 'new page',
+                description: 'A SEO description '
+            }
+        }
     }),
    
     computed:{
@@ -380,6 +425,8 @@ export default {
             if ( !this.$attrs.component ) this.$router.push('dashboard')
             this.doc = this.$attrs.component.json
             this.doc.id ? null : this.doc.id = this.$randomID()
+            this.page.template_id = this.$attrs.component.blocks_id
+            this.page.component = this.$attrs.component.id
             //this.$store.dispatch ( 'setCurrent' , this.doc )
             //this.$store.dispatch ( 'selected' , this.doc.id )
             this.mycomponent = this.$attrs.component
@@ -622,7 +669,8 @@ export default {
         },
         //save screenshot of blocks
         save(screenshot){
-            this.mycomponent.image_uri = screenshot
+            this.mycomponent.image = screenshot
+            this.mycomponent.image_uri = ''
             this.$emit('save')
         },
         //screenshot print
@@ -636,11 +684,39 @@ export default {
             if (!el){
                 document.querySelector(block)
             }
-            options = { type: "dataURL" , useCORS: true , scale: 0.25 }
+            options = { type: "dataURL" , useCORS: true , scale: 0.50 }
             let screenshot = await this.$html2canvas(el, options)
-            this.save(screenshot)
-            return screenshot
+            if ( this.$attrs.component.image && this.$attrs.component.image.id ){
+                this.$http.delete('/upload/files/' + this.$attrs.component.image.id ).then ( resp => {
+                    console.log ( resp )
+                })
+            }
+            this.srcToFile ( screenshot ,  'moka-preview-' + this.$attrs.component.name + '.jpg' , 'image/jpg' ).then ( resp => { 
+                console.log ( 'src to file => ' , resp )
+                let formData = new FormData()
+                formData.append("files", resp )
+                this.$http.post("/upload", 
+                    formData ,
+                    {   
+                        headers: {
+                            "Content-Type": "multipart/form-data"
+                        },
+                }).then ( response => {
+                    screenshot = response.data[0]
+                    this.save(screenshot)
+                    return screenshot
+                }).catch ( error => {
+                    console.log ( error )
+                })
+            })
+            
         }, 
+        async srcToFile(src, fileName, mimeType){
+            return (fetch(src)
+                .then(function(res){return res.arrayBuffer();})
+                .then(function(buf){return new File([buf], fileName, {type:mimeType});})
+            );
+        },
         //print an element (Ctrl+o)
         async printElement(id) {
             let el , options
