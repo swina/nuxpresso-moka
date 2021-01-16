@@ -13,9 +13,9 @@
                         
                     <div class="w-1/2 flex flex-col">
                         <label class="font-bold">SEO Title (default)</label>
-                        <input type="text" v-model="moka.settings.seo.title"/>
+                        <input type="text" v-model="moka.settings.seo_title"/>
                         <label class="font-bold">SEO Description (default)</label>
-                        <textarea v-model="moka.settings.seo.description" class="w-3/4"/>
+                        <textarea v-model="moka.settings.seo_description" class="w-3/4"/>
                         <label class="font-bold">Google Analytics Code</label>
                         <input type="text" v-model="moka.settings.google_analytics"/>
                         <div class="text-xs">Leave blank to not apply</div>
