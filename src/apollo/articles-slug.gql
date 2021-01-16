@@ -26,10 +26,9 @@ query Articles ( $slug : String){
     }
     image_title
     updated_at
-    SEO {
-        description
-        title
-    }
+    seo_title
+    seo_description
+    
     categories {
         name
         slug

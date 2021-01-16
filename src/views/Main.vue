@@ -1,6 +1,6 @@
 <template>
   <div class="bg-gray-800 min-h-screen h-screen flex flex-col justify-center items-center">
-    <div class="m-auto w-full md:w-1/4">
+    <div class="m-auto w-full md:w-1/3">
        <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -55,7 +55,20 @@
         </div>
         <div class="text-gray-500 text-sm mt-1 font-hairline">S T U D I O</div>
       </div>
-      <div class="flex flex-col w-full text-sm text-gray-500" v-if="!logged && !loginOK">
+      <div v-if="firstRun" class="text-sm text-gray-500 my-4 border p-2 border-gray-600 rounded">
+        <p>Welcome to MOKAStudio</p>
+        <p>Looks like this the first time you are running MOKAStudio.</p>
+        <p>A user is needed in order to work with MOKAStudio.</p>
+      </div>
+      <div class="flex flex-row m-auto justify-around">
+        <div v-if="!firstRun">
+          <div class="m-auto"><button class="w-24" @click="$router.push('dashboard')">Guest</button></div>
+          <div class="m-auto" v-if="!logged && !loginOK"><button class="w-24" @click="showLogin=!showLogin">Login</button></div>
+        </div>
+        <div class="m-auto" v-if="firstRun"><button class="w-24" @click="createUser">Create user</button></div>
+      </div>
+      
+      <div class="flex flex-col w-full text-sm text-gray-500" v-if="showLogin">
         <label>User</label>
         <input type="email" v-model="email" class="w-full dark"/>
         <label>Password</label>
@@ -74,9 +87,11 @@ export default {
   components: {
   },
   data:()=>({
+    showLogin: false,
     email: '',
     password: '',
-    loginOK: false
+    loginOK: false,
+    firstRun: false
   }),
   computed:{
     ...mapState ( [ 'moka' , 'user'] ),
@@ -92,18 +107,58 @@ export default {
   },
  
   beforeMount(){
+    let vm = this
     if ( !this.user.login || !window.localStorage.getItem('nuxpresso-jwt') ){
-      this.user.login = false
-      console.log ( 'not logged' )
+      if ( process.env.NODE_ENV === 'development' ){
+        this.$http.post('auth/local' , {
+          identifier: process.env.VUE_APP_DEV_USER,
+          password: process.env.VUE_APP_DEV_PASSWORD
+        }).then ( response => {
+          let authenticated = {
+              user : response.data.user,
+              jwt : response.data.jwt
+          }
+          vm.$store.dispatch('login',true)
+          vm.$store.dispatch('user',response.data.user)
+          vm.loginOK = true
+          vm.firstRun = false
+          //vm.$store.dispatch ( 'authenticatedUser' , authenticated )
+          //vm.$axios.defaults.headers.common = {'Authorization': 'Bearer ' + response.jwt};
+          window.localStorage.setItem ( 'nuxpresso-jwt' , "Bearer " + response.data.jwt )
+          window.localStorage.setItem ( 'nuxpresso-user' , JSON.stringify(response.data.user) )
+          vm.viewForm = false
+          vm.enabled = true
+          vm.responseClass = 'text-green-500'
+          vm.response = 'Welcome ! You are authenticated'
+        }).catch ( error => {
+          this.firstRun = true
+          this.user.login = false
+        })
+      } else {
+        this.firstRun = false
+        this.user.login = false
+      }  
     }
   },
   methods:{
+    createUser(){
+      
+        this.$http.post('auth/local/register' , {
+          username: process.env.VUE_APP_DEV_USER,
+          password: process.env.VUE_APP_DEV_PASSWORD,
+          email: process.env.VUE_APP_DEV_EMAIL,
+          firstname: 'nuxpresso',
+          lastname: 'moka'
+        }).then ( response => {
+          console.log ( response )
+        })
+    },
     login(){
       let vm = this
       this.$http.post(
           'auth/local', {
-          identifier: this.email,
-          password: this.password,
+          identifier: process.env.VUE_APP_DEV_USER,//this.email,
+          password: process.env.VUE_APP_DEV_PASSWORD,
       })
       .then(response => {
           // Handle success.
@@ -131,7 +186,7 @@ export default {
           
       }); 
     }
-  }
+  },
   
 }
 </script>

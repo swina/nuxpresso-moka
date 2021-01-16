@@ -6,5 +6,8 @@ query Articles {
     homepage
     updated_at
     template_id
+    seo_title
+    seo_description
+    
   }
 }

@@ -27,5 +27,7 @@ query Articles ( $limit : Int, $start : Int , $cat: String) {
       alternativeText
     }
     template_id
+    seo_title
+    seo_description
   }
 }

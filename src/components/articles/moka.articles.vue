@@ -12,6 +12,7 @@
                     <option v-for="category in moka.categories" :value="category.name">{{ category.name }}</option>
                 </select>
             </div>
+            <button @click="updateSEO">SEO Update</button>
             <!--<a href="#" @click="gallery=!gallery" class="text-right"><i class="material-icons" v-if="!gallery">grid_on</i><i class="material-icons" v-if="gallery">list</i></a> -->
         </div>
             <table class="w-full border text-sm text-left p-1" v-if="!editor">
@@ -38,7 +39,8 @@
                         <span v-if="article.component">
                             {{ article.component.name }} 
                             <br/>
-                            # {{article.template_id}}
+                            # {{article.template_id}}<br/>
+                            {{ article.seo_title }}
                         </span>
                     </td>
                     <td class="w-20">
@@ -98,9 +100,9 @@
                             <div class="flex flex-col">
                                 <div class="text-xl">SEO</div>
                                 <label>Title</label>
-                                <input type="text" v-model="currentArticle.SEO.title"/>
+                                <input type="text" v-model="currentArticle.seo_title"/>
                                 <label>Description</label>
-                                <textarea class="text-sm w-full" v-model="currentArticle.SEO.description"/>
+                                <textarea class="text-sm w-full" v-model="currentArticle.seo_description"/>
                             </div>
                         </div>
                     </div>
@@ -406,6 +408,15 @@ export default {
                 this.start -= this.limit
             }
             
+        },
+        updateSEO(){
+            this.articles.forEach ( article => {
+                article.seo_title = article.title
+                article.seo_description = 'A nuxpresso article'
+                this.$http.put ( 'articles/' + article.id , article ).then ( resp => {
+                    console.log ( resp )
+                })
+            })
         }
     },
 }

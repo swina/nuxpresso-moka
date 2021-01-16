@@ -13,11 +13,16 @@
                 <i class="material-icons" v-if="gallery" @click="gallery=!gallery">list</i>
             </div>
         </div>
-        <div v-if="moka.elements && filter!='slider'" class="py-2 flex flex-row flex-wrap">
-            <button class="mr-2 mt-1 capitalize w-24 border hover:bg-blue-400 hover:text-white border-blue-400 focus:bg-gray-600 focus:text-white focus:outline-none bg-white text-blue-400 rounded-none" @click="type=''">all</button>
-            <template v-for="tipo in moka.elements.types.types">
-                <button class="mr-2 mt-1 capitalize w-24 border hover:bg-blue-400 hover:text-white border-blue-400 bg-white text-blue-400 focus:bg-gray-600 focus:text-white focus:outline-none rounded-none" @click="type=tipo">{{ tipo }}</button>
-            </template>
+        <div v-if="moka.elements" class="py-2 flex flex-row flex-wrap">
+            <button class="mr-2 mt-1 capitalize w-24 border hover:bg-blue-400 hover:text-white border-blue-400 focus:bg-gray-600 focus:text-white focus:outline-none bg-white text-blue-400 rounded-none" @click="type='',types=false">all</button>
+            <button v-if="$attrs.filter!='slider'" class="mr-2 mt-1 capitalize w-24 border hover:bg-blue-400 hover:text-white border-blue-400 focus:bg-gray-600 focus:text-white focus:outline-none bg-white text-blue-400 rounded-none" @click="types=!types,type=''"><i class="material-icons">filter_alt</i></button>
+            <transition name="fade">
+                <div v-if="types && $attrs.filter!='slider'">
+                    <template v-for="tipo in moka.elements.types.types">
+                        <button class="mr-2 mt-1 capitalize w-24 border hover:bg-blue-400 hover:text-white border-blue-400 bg-white text-blue-400 focus:bg-gray-600 focus:text-white focus:outline-none rounded-none" @click="type=tipo">{{ tipo }}</button>
+                    </template>
+                </div>
+            </transition>
         </div>
         <!--
         <moka-table v-if="!gallery" ctx="components"  @component="setComponent" @message="message" @remove="remove"/>
@@ -93,6 +98,7 @@ import MokaGallery from '@/components/moka/moka.gallery'
 import MokaPreview from '@/components/editor/preview/moka.preview'
 import MokaSlider from '@/components/editor/preview/moka.slider'
 import MokaUpload from '@/components/moka/moka.import.json'
+import blocksExport from '@/apollo/components.export.gql'
 import { mapState } from 'vuex'
 export default {
     name: 'MokaComponents',
@@ -113,6 +119,7 @@ export default {
         filter:'widget',
         gallery: true,
         objects: null,
+        types: false,
         type: '',
         filename: ''
     }),
@@ -259,5 +266,16 @@ export default {
             this.$emit('message',message)
         }
     },
+    apollo:{
+        blocks_dump : {
+            query: blocksExport,
+            variables(){
+                return {
+                    category : this.filter
+                }
+            },
+            update: data => data.components
+        }
+    }
 }
 </script>

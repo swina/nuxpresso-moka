@@ -15,7 +15,8 @@ const menu = {
         },
         { label: 'CMS' , icon: 'article' , component: null , 
             items : [
-                { label: 'Articles' , icon: 'article' , component: 'MokaArticles' , filter: '' }
+                { label: 'Articles' , icon: 'article' , component: 'MokaArticles' , filter: 'article' },
+                { label: 'Categories' , icon: 'category' , component: 'MokaCategories' , filter: 'category' }
             ]
         },
         { label: 'Media' , icon: 'photo' , component: 'MokaMedia' , filter: 'manager' },

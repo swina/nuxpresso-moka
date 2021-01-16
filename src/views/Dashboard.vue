@@ -65,6 +65,7 @@
 <script>
 import MokaList from '@/components/moka/moka.list'
 import MokaArticles from '@/components/articles/moka.articles'
+import MokaCategories from '@/components/articles/moka.categories'
 import MokaMedia from '@/components/media/media'
 import articlesQry from '@/apollo/articles.gql'
 import categoriesQry from '@/apollo/categories.gql'
@@ -79,7 +80,7 @@ import menu from '@/plugins/app'
 export default {
     name: 'MokaDashboard',
     components: {
-        MokaList,  MokaArticles, MokaMedia,  MokaHome , MokaSettings, MokaStage, MokaDeploy , MokaGrid
+        MokaList,  MokaArticles, MokaCategories, MokaMedia,  MokaHome , MokaSettings, MokaStage, MokaDeploy , MokaGrid
     },
     data:()=>({
         label: '',

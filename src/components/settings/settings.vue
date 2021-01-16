@@ -8,7 +8,7 @@
         <div class="flex flex-col justify-around">
             
             <div v-if="tab==='website'" class="border relative pb-8">
-                <h5 class="bg-gray-800 text-gray-200 p-1">Website settings (nuxpresso-nuxt)</h5>
+                <h5 class="bg-gray-700 text-gray-200 p-1">Website settings (nuxpresso-nuxt)</h5>
                 <div class="flex flex-row p-2 w-full text-base">
                         
                     <div class="w-1/2 flex flex-col">
@@ -25,7 +25,7 @@
                         <input type="text" v-model="moka.settings.read_more"/>
                     </div>
                     <div class="w-1/2">
-                        <h4>Layout settings</h4>
+                        <label class="font-bold">Layout settings</label>
                         <div class="bg-gray-200 rounded p-2 text-center cursor-pointer">
                             Colors<br>
                             <div class="flex flex-row justify-around">
@@ -67,10 +67,10 @@
                 <button class="absolute bottom-0 right-0 m-2" @click="saveSettings">Save</button>
             </div>
             <div v-if="tab==='moka'" class="border">
-                <h5 class="bg-gray-800 text-gray-200 p-1">MOKAStudio settings</h5>
+                <h5 class="bg-gray-700 text-gray-200 p-1">MOKAStudio settings</h5>
                     <div class="flex flex-row">
                     <div class="flex flex-col p-2 w-full md:w-1/2">
-                        <h3>BLOCKS Types</h3>
+                        <label class="font-bold">Block Types</label>
                         <select v-if="moka" v-model="currentType" multiple class="h-32 w-full" readonly>
                             <option v-for="(tipo,index) in moka.elements.types.types" :value="index">{{tipo}}</option>
                         </select>
@@ -83,9 +83,19 @@
                             Input values that can help to find/define your components like footer, header, call to action , etc
                         </div>
                         <button @click="saveTypes">Save</button>
+                        <label class="font-bold">Colors palette</label>
+                        <div class="flex flex-col">
+                        <template v-for="color in colors">
+                            <div class="flex flex-row mb-1">
+                            <template v-for="n in 9">
+                                <div :title="color + ' ' + (n*100)":class="'border w-6 h-6 rounded-full mr-2 bg-' + color + '-' + (n*100)"></div>
+                            </template>
+                            </div>
+                        </template>
+                        </div>
                     </div>
                     <div class="flex flex-col p-2 w-full md:w-1/2">
-                        <h3>FONTS</h3>
+                        <label class="font-bold">Fonts</label>
                         <select v-if="moka" v-model="currentFont" multiple class="h-32 w-full" readonly>
                             <!-- <option v-for="(font,index) in moka.elements.types.fonts" :value="index">{{font}}</option> -->
                             <option v-for="(font,index) in moka.fonts" :value="index">{{font}}</option>
@@ -103,20 +113,7 @@
                     </div>
                 </div>
             </div>
-            <!--<moka-user/>-->
-            <!--<div class="flex flex-col">
-                <h3>Create MOKAStudio User</h3>
-                <label>Username</label>
-                <input type="text" v-model="newUser.username"/>
-                <label>Email</label>
-                <input type="email" v-model="newUser.email"/>
-                <label>Password</label>
-                <input type="password" v-model="newUser.password"/>
-                <label>Confirm</label>
-                <input type="password" v-model="newUser.confirm"/>
-                <button v-if="newUser.confirm === newUser.password">Create</button>
-                <div class="text-xs text-red-700" v-if="newUser.confirm != newUser.password">Passwords must match</div>
-            </div>-->
+            
         </div>
     </div>
 </template>
@@ -127,6 +124,8 @@ import MokaUser from '@/components/settings/user'
 import MokaColor from '@/components/editor/tailwind/tailwind.color'
 import MokaBgcolor from '@/components/editor/tailwind/tailwind.bgcolor'
 import { mapState } from 'vuex'
+import classes from '@/plugins/tw.classes'
+
 export default {
     name: 'NuxpressoSettings',
     components: { MokaUser , MokaColor , MokaBgcolor },
@@ -134,6 +133,7 @@ export default {
         tab: 'website',
         types: null,
         new_type:'',
+        currentColor: '',
         currentType: [],
         currentFont: [],
         new_font:'',
@@ -145,11 +145,16 @@ export default {
         }
     }),
     computed: {
-        ...mapState ( ['moka'] )
-
+        ...mapState ( ['moka'] ),
+        colors(){
+            return this.mokacolors()
+        }
     },
     
     methods:{
+        mokacolors(){
+            return classes.colors
+        },
         removeTypes(){
             this.currentType.forEach ( index => {
                 this.moka.elements.types.types.splice ( index ,1 )

@@ -10,6 +10,13 @@
     </transition>
     -->
     <transition name="fade">
+      <div v-if="firstRun">
+        Welcome to MOKAStudio. <br/>
+        Before to start we need to create the default user in order to use MOKAStudio<br>
+        <button @click="createUser">Create User</button>
+      </div>
+    </transition>
+    <transition name="fade">
         <div style="transform: translateX(-50%);left:50%;" class="border-l-4 border-blue-500 fixed bottom-0 m-auto shadow-xl mb-2 bg-gray-800 text-gray-200 text-left p-4 w-1/2  z-highest" v-if="message">   
         {{ message }}
         </div>
@@ -24,7 +31,8 @@ import { mapState } from 'vuex'
 export default {
   name: 'App',
   data:()=>({
-    message: ''
+    message: '',
+    firstRun: false
   }),
   computed:{
     ...mapState ( ['moka'] ),
@@ -44,11 +52,13 @@ export default {
     },
   },
   methods: {
+    
     setMessage(msg){
       this.message = msg
     },
   },
   mounted(){
+    
     if ( window.localStorage.getItem('nuxpresso-jwt') ){
       this.$http.defaults.headers.common = {
           'Authorization': window.localStorage.getItem('nuxpresso-jwt')
@@ -58,7 +68,9 @@ export default {
         this.$store.dispatch('login',true)
         this.$store.dispatch('user',JSON.parse(JSON.stringify(window.localStorage.getItem('nuxpresso-user'))))   
       }).catch ( error => {
-        this.$store.dispatch('message','You are not authenticated! Save/Update is disabled')
+        //this.$store.dispatch('message','You are not authenticated! Save/Update is disabled')
+        this.firstRun = true
+        //this.createUser()
         console.log ( error )
       })
       //this.$store.dispatch('loadComponents')

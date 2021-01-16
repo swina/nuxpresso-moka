@@ -98,7 +98,7 @@
     </div>
     
     <!-- STATUS BAR -->
-    <div editorstatus class="fixed bg-gray-300 z-2xtop bottom-0 left-0 p-1 border-t w-full flex flex-row items-center text-sm bg-white z-max uppercase h-10 divide-x divide-gray-400">
+    <div editorstatus class="fixed bg-gray-300 z-top bottom-0 left-0 p-1 border-t w-full flex flex-row items-center text-sm bg-white z-max uppercase h-10 divide-x divide-gray-400">
         <i class="material-icons text-gray-800 hover:bg-black hover:text-blue-400 mx-2" @click="help=!help" title="Hotkeys">keyboard</i>
         <div v-if="editor.current" class="pl-1 w-full flex flex-row items-center">
             

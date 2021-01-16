@@ -2,8 +2,8 @@
     <div 
         v-if="doc"
         :level="$attrs.level"  
-        :class="'p-2 fill-current ' + classe(doc.css)" :style="doc.style + ' ' +  background(doc)" >
-        <div v-if="!doc.blocks.length && !doc.image" class="text-xs">Click here to add your elements</div>
+        :class="'p-2 fill-current ' + classe(doc.css)" :style="doc.style + ' ' +  background(doc)" @dblclick="doc.blocks.length===0?$store.dispatch('setAction','addcomponent'):null" >
+        <div v-if="!doc.blocks.length && !doc.image" class="text-xs">Dblclick here to add an element</div>
         <template v-for="(block,b) in doc.blocks">
             
             <moka-element
@@ -58,7 +58,7 @@
             <!--{{ $attrs.level }} {{ $attrs.index }}-->
             <span v-if="doc && doc.hasOwnProperty('loop') && doc.loop" class="text-xs"><i class="material-icons">article</i> Article Grid</span>
             <div class="h-2 w-2 absolute top-0 right-0 bg-black rounded-full -m-1"></div>
-            <div class="h-2 w-2 absolute top-0 left-0 bg-black rounded-full -m-1"></div>
+            <div class="h-3 w-3 absolute top-0 left-0 bg-blue-500 rounded-full -m-2" @dblclick="$store.dispatch('setAction','addcomponent')" title="Dblclick to add an element"></div>
             <div class="h-2 w-2 absolute bottom-0 right-0 bg-black rounded-full -m-1"></div>
             <div class="h-2 w-2 absolute bottom-0 left-0 bg-black rounded-full -m-1"></div>
             <div v-if="doc.id===moka.selected" class="z-2xtop absolute top-0 left-0 ml-4 p-1 -mt-6  h-6 w-auto bg-gray-800 text-gray-300 text-xs rounded-2xl items-center flex flex-row justify-around">
