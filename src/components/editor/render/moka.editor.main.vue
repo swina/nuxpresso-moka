@@ -93,81 +93,83 @@
 
     <!-- COMPONENT SETTINGS -->
     <transition name="slideleft">
-        <div class="fixed w-1/4 left-0 top-0 mt-8 flex flex-col shadow-lg p-4 bg-white z-2xtop text-base" v-if="settings">
-            <i class="material-icons absolute top-0 right-0 m-1 text-2xl text-gray-400" @click="settings=!settings">close</i>
-            <label class="font-bold">Name</label>
-            <input class="w-full" type="text" v-model="$attrs.component.name"/> 
-            <label class="font-bold">Description</label>
-            <textarea class="w-full" v-model="$attrs.component.description"></textarea>
+        <div class="fixed w-1/4 left-0 top-0 mt-8 flex flex-col shadow-lg p-2 pt-4 bg-white z-2xtop text-base" v-if="settings">
+            <div class="p-2 bg-gray-300 rounded">
+                <i class="material-icons absolute top-0 right-0 text-xl text-gray-400" @click="settings=!settings">close</i>
+                <label class="font-bold">Name</label>
+                <input class="w-full" type="text" v-model="$attrs.component.name"/> 
+                <label class="font-bold">Description</label>
+                <textarea class="w-full" v-model="$attrs.component.description"></textarea>
 
-            <!-- Category -->
-            <label class="font-bold ">Category</label>
-            <select class="w-full" v-model="$attrs.component.category">
-                <option :key="category" v-for="category in $categories()">{{ category }}</option>
-            </select>
-            
-            <label class="font-bold">Type <i class="material-icons" @click="addType=!addType">add</i></label>
-            
-            <!-- ADD A NEW TYPE (TAG) -->
-            <input class="w-full" v-if="addType" v-model="newType" @change="saveNewType"/>
-            
-            <!-- TAGS -->
-            <select class="w-full" v-model="$attrs.component.tags">
-                <option value=""></option>
-                <option :key="tipo" v-for="tipo in moka.elements.types.types" :value="tipo">{{ tipo }}</option>
-            </select>
-
-            <div class="flex flex-col p-2 w-full md:w-1/2 text-base">
-                <label class="font-bold">Body settings</label>
-                <div class="flex flex-row w-full text-sm">
-                    <div class="mr-6">
-                        <label class="font-bold">Text</label>
-                        <moka-color attr="textcolor" v-model="doc.body_color" :css="doc.body_color"/>
-                    </div>
-                    <div>
-                        <label class="font-bold">Background</label>
-                        <moka-bgcolor attr="bgcolor" v-model="doc.body_bg" :css="doc.body_bg"/>
-                    </div>
-                </div>
-            </div>
-
-            <!-- DOC IS A TEMPLATE : template settings -->
-            <div class="flex flex-col text-sm" v-if="$attrs.component.category === 'template'">
-                <label class="font-bold">Default template</label>
-                <div class="text-xs text-gray-600"><input type="checkbox" v-model="$attrs.component.default"/> (apply to articles with no template)</div>
-            
-                <label class="font-bold">Loop 
-                <input class="w-full" type="checkbox" v-model="$attrs.component.loop"/></label>
-                <div class="flex flex-col" v-if="$attrs.component.loop">
-                    <select class="w-full" v-model="$attrs.component.loop_type">
-                        <option value="">all</option>
-                        <option value="articles">articles</option>
-                        <option :key="opt.slug" v-for="opt in moka.categories" :value="opt.slug">articles/category/{{opt.name}}</option>
-                    </select>
-                    <label class="font-bold">Pagination <input type="checkbox" v-model="$attrs.component.loop_pagination"/></label>
-                    <div>Articles per page</div>
-                    <input class="w-full" type="number" min="1" max="100" v-model="$attrs.component.loop_limit"/>
-                </div>
-            </div>
-
-            
-            <div class="grid grid-cols-2 gap-2 p-1">
-                <!-- mobile breakpoint -->
-                <label class="font-bold">Mobile breakpoint </label>
-                <div class="flex flex-row cursor-pointer items-center" title="Set mobile responsive breakpoint">
-                    <i :class="'material-icons moka-icons text-sm p-1 mr-2 ' + mobile('md')" @click="breakpoint='md'">phone_iphone</i>
-                    <i :class="'material-icons moka-icons text-sm p-1 mr-2 ' + mobile('lg')" @click="breakpoint='lg'">tablet</i>
-                    <i :class="'material-icons moka-icons text-sm p-1 mr-2 ' + mobile('xl')" @click="breakpoint='xl'">laptop_mac</i>
-                </div>
-                <!-- Font settings -->
-                <label class="font-bold">Font</label>
-                <select class="w-full" v-model="fontFamily">
-                    <option value="Arial">sans</option>
-                    <option value="serif">serif</option>
-                    <option v-for="gfont in moka.elements.types.fonts">{{gfont}}</option>
-                    <option v-for="font in moka.fonts" :value="font">{{font}}</option>
-                    
+                <!-- Category -->
+                <label class="font-bold ">Category</label>
+                <select class="w-full" v-model="$attrs.component.category">
+                    <option :key="category" v-for="category in $categories()">{{ category }}</option>
                 </select>
+                
+                <label class="font-bold">Type <i class="material-icons" @click="addType=!addType">add</i></label>
+                
+                <!-- ADD A NEW TYPE (TAG) -->
+                <input class="w-full" v-if="addType" v-model="newType" @change="saveNewType"/>
+                
+                <!-- TAGS -->
+                <select class="w-full" v-model="$attrs.component.tags">
+                    <option value=""></option>
+                    <option :key="tipo" v-for="tipo in moka.elements.types.types" :value="tipo">{{ tipo }}</option>
+                </select>
+
+                <div class="flex flex-col p-2 w-full md:w-1/2 text-base">
+                    <label class="font-bold">Body settings</label>
+                    <div class="flex flex-row w-full text-sm">
+                        <div class="mr-6">
+                            <label class="font-bold">Text</label>
+                            <moka-color attr="textcolor" v-model="doc.body_color" :css="doc.body_color"/>
+                        </div>
+                        <div>
+                            <label class="font-bold">Background</label>
+                            <moka-bgcolor attr="bgcolor" v-model="doc.body_bg" :css="doc.body_bg"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DOC IS A TEMPLATE : template settings -->
+                <div class="flex flex-col text-sm" v-if="$attrs.component.category === 'template'">
+                    <label class="font-bold">Default template</label>
+                    <div class="text-xs text-gray-600"><input type="checkbox" v-model="$attrs.component.default"/> (apply to articles with no template)</div>
+                
+                    <label class="font-bold">Loop 
+                    <input class="w-full" type="checkbox" v-model="$attrs.component.loop"/></label>
+                    <div class="flex flex-col" v-if="$attrs.component.loop">
+                        <select class="w-full" v-model="$attrs.component.loop_type">
+                            <option value="">all</option>
+                            <option value="articles">articles</option>
+                            <option :key="opt.slug" v-for="opt in moka.categories" :value="opt.slug">articles/category/{{opt.name}}</option>
+                        </select>
+                        <label class="font-bold">Pagination <input type="checkbox" v-model="$attrs.component.loop_pagination"/></label>
+                        <div>Articles per page</div>
+                        <input class="w-full" type="number" min="1" max="100" v-model="$attrs.component.loop_limit"/>
+                    </div>
+                </div>
+
+                
+                <div class="grid grid-cols-2 gap-2 p-1">
+                    <!-- mobile breakpoint -->
+                    <label class="font-bold">Mobile breakpoint </label>
+                    <div class="flex flex-row cursor-pointer items-center" title="Set mobile responsive breakpoint">
+                        <i :class="'material-icons moka-icons text-sm p-1 mr-2 ' + mobile('md')" @click="breakpoint='md'">phone_iphone</i>
+                        <i :class="'material-icons moka-icons text-sm p-1 mr-2 ' + mobile('lg')" @click="breakpoint='lg'">tablet</i>
+                        <i :class="'material-icons moka-icons text-sm p-1 mr-2 ' + mobile('xl')" @click="breakpoint='xl'">laptop_mac</i>
+                    </div>
+                    <!-- Font settings -->
+                    <label class="font-bold">Font</label>
+                    <select class="w-full" v-model="fontFamily">
+                        <option value="Arial">sans</option>
+                        <option value="serif">serif</option>
+                        <option v-for="gfont in moka.elements.types.fonts">{{gfont}}</option>
+                        <option v-for="font in moka.fonts" :value="font">{{font}}</option>
+                        
+                    </select>
+                </div>
             </div>
         </div>
     </transition>
@@ -175,18 +177,22 @@
     
     <!-- SAVE AS COMPONENT -->
     <transition name="fade">
-        <div v-if="saveBlockAsComponent" class="nuxpresso-modal rounded w-full md:w-1/4 p-4 flex flex-col bg-white z-2xtop">
+        <div v-if="saveBlockAsComponent" class="nuxpresso-modal rounded w-full md:w-1/4 p-2 flex flex-col bg-white z-2xtop">
             <i class="material-icons absolute top-0 right-0 cursor-pointer" @click="saveBlockAsComponent=!saveBlockAsComponent">close</i>
-            <h4>Save Block As new component</h4>
-            <label>Name*</label>
-            <input type="text" v-model="newComponent.name"/>
-            <label>Category</label>
-            <select v-model="newComponent.category">
-                <option v-for="category in $categories()">{{ category }}</option>
-            </select>
-            <label>Description</label>
-            <textarea v-model="newComponent.description"/>
-            <button @click="saveBlockAsNewComponent" class="my-2">Save</button>
+            
+            <h4>Save Block As Reusable</h4>
+            
+            <div class="flex flex-col bg-gray-300 p-2 rounded">
+                <label>Name*</label>
+                <input class="w-full" type="text" v-model="newComponent.name"/>
+                <label>Category</label>
+                <select class="w-full" v-model="newComponent.category">
+                    <option v-for="category in $categories()">{{ category }}</option>
+                </select>
+                <label>Description</label>
+                <textarea class="w-full" v-model="newComponent.description"/>
+                <button @click="saveBlockAsNewComponent" class="my-2">Save</button>
+            </div>
         </div>
     </transition>
 
@@ -194,7 +200,9 @@
     <transition name="fade">
         <div v-if="exportComponent" class="nuxpresso-modal rounded w-full md:w-1/4  p-4 flex flex-col bg-white z-2xtop">
             <i class="material-icons absolute top-0 right-0 cursor-pointer" @click="exportComponent=!exportComponent">close</i>
+
             <h4>Export Component</h4>
+            <div class="flex flex-col bg-gray-300 p-2 rounded">
             <vue-blob-json-csv
                 file-type="json"
                 :file-name="$attrs.component.name"
@@ -203,6 +211,7 @@
             >
             <button class="my-2">Download {{$attrs.component.name}}</button>
             </vue-blob-json-csv>
+            </div>
         </div>
     </transition>
 
@@ -296,6 +305,7 @@
         <div v-if="createPage" class="nuxpresso-modal z-2xtop border w-1/3 bg-white p-2 rounded shadow">
             <i class="material-icons absolute top-0 right-0 m-1" @click="createPage=!createPage">close</i>
             <h5>Create CMS Article</h5>
+            <div class="flex flex-col bg-gray-300 p-2 rounded">
             <div class="text-sm">This block/document will be linked to a new page.</div>
             <div class="flex flex-col">
                 <label>Title</label>
@@ -313,6 +323,7 @@
                     <button class="bg-gray-400 text-black mr-2" @click="createPage=!createPage">Cancel</button>
                     <button class="success" @click="createPage=false,$emit('createpage',page)">Create</button>
                 </div>
+            </div>
             </div>
         </div>
     </transition>

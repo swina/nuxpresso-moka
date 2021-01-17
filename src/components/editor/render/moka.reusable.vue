@@ -52,7 +52,7 @@
             <transition name="fade">
                 <div class="nuxpresso-modal text-xs p-4 z-50 w-1/3 border" v-if="grids">
                     <i class="material-icons absolute right-0 top-0" @click="grids=!grids">close</i>
-                    <moka-grids @grid="addGrid"/>
+                    <moka-grids @grid="addGrid" :loop="isloop"/>
                     <!--
                     <h3>Columns</h3>
                     <div class="flex flex-col">
@@ -220,7 +220,8 @@ export default {
         },
         selected: null,
         svgSelect: false,
-        components:null
+        components:null,
+        isloop: false,
     }),
     computed:{
         ...mapState(['moka']), 
@@ -244,6 +245,8 @@ export default {
             console.log ( 'element =>  ' , component )
             if ( component.element === 'grid' ){
                 this.selected = component
+                console.log ( component )
+                component.label === 'Articles Grid' ? this.isloop = true : this.isloop = false
                 this.grids = true
                 return
             }
@@ -537,6 +540,7 @@ export default {
             obj.id = this.$randomID()
             this.selected = obj
             if ( obj.element === 'flex-row' || obj.element === 'grid' ){
+                component.label === 'Articles Grid' ? this.isloop = true : this.isloop = false
                 this.grids = true
                 return
             } else {

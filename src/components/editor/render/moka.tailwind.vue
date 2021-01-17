@@ -123,6 +123,7 @@ export default {
             this.group === group ? this.group = '' : this.group = group
         },
         update(classe){
+            console.log ( classe )
             this.allCss = this.$clean(this.allCss.replace(this.$clean(classe),' '))
         },
         blockcss(classe){

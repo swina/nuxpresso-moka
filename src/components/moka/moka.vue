@@ -13,19 +13,21 @@
 
         
         <transition name="fade">
-        <div v-if="saveAsNew" class="nuxpresso-modal rounded w-full md:w-1/4 p-4 flex flex-col bg-white z-2xtop">
+        <div v-if="saveAsNew" class="nuxpresso-modal rounded w-full md:w-1/4 p-2 flex flex-col bg-white z-2xtop">
             <i class="material-icons absolute top-0 right-0 cursor-pointer" @click="saveAsNew=!saveAsNew">close</i>
             <h4>Duplicate</h4>
-            <label>Name*</label>
-            <input type="text" v-model="newComponent.name"/>
-            <label>Category</label>
-            <select v-model="newComponent.category">
-                <option v-for="category in $categories()">{{ category }}</option>
-                
-            </select>
-            <label>Description</label>
-            <textarea v-model="newComponent.description"/>
-            <button @click="saveNewComponent" class="my-2">Save</button>
+            <div class="flex flex-col bg-gray-300 p-2 rounded">
+                <label>Name*</label>
+                <input class="w-full" type="text" v-model="newComponent.name"/>
+                <label>Category</label>
+                <select class="w-full" v-model="newComponent.category">
+                    <option v-for="category in $categories()">{{ category }}</option>
+                    
+                </select>
+                <label>Description</label>
+                <textarea class="w-full" v-model="newComponent.description"/>
+                <button @click="saveNewComponent" class="my-2">Save</button>
+            </div>
         </div>
     </transition>
     <transition name="fade">

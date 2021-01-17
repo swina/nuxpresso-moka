@@ -239,9 +239,10 @@
     </transition>
     <!-- ANIMATION -->
     <transition name="slideleft">
-        <div v-if="animations && editor.current" class="fixed z-top w-1/5 text-sm left-0 bottom-0 p-2 bg-gray-800 text-gray-500 flex flex-col">
+        <div v-if="animations && editor.current" class="fixed z-2xtop w-1/5 text-sm left-0 bottom-0 p-2 flex flex-col bg-white">
             
-            <i class="material-icons absolute top-0 right-0 m-1" @click="animations=!animations">close</i>
+            <i class="material-icons absolute top-0 right-0" @click="animations=!animations">close</i>
+
             <moka-animation :key="editor.current.id" v-model="editor.current" :element="editor.current" @close="animations=!animations"/>
         </div>
     </transition> 

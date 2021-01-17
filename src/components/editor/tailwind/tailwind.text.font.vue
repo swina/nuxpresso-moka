@@ -5,6 +5,7 @@
             <option value=""></option>
             <option value="Arial">sans-serif</option>
             <option value="serif">serif</option>
+            <option value="monospace">monospace</option>
             <option v-for="font in fonts" :value="font">{{font}}</option>
         </select>
     </div>

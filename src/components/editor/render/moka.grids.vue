@@ -94,12 +94,14 @@ export default {
     watch:{
         selected(v){
             if ( v ){
-                
-                let obj = JSON.parse(JSON.stringify(this.schema.containers[0]))
+                let schema = !this.$attrs.loop ? this.schema.containers[0] : this.schema.containers.filter ( container => container.label === 'Articles Grid' )[0]
+                console.log ( schema )
+                let obj = JSON.parse( JSON.stringify(schema) ) //JSON.parse(JSON.stringify(this.schema.containers[0]))
                 obj.blocks = []
                 obj.id = this.$randomID()
                 obj.css.container = "grid md:grid-rows-1 md:grid-cols-" + this.grid +  " grid-cols-1 grid-rows-" + this.grid 
                 obj.css.css = ''
+                this.$attrs.loop ? obj.label = 'Articles Grid' : null
                 obj.cols = parseInt(this.grid)
                 for ( var n = 0 ; n < v.length ; n++ ) {
                     let column = JSON.parse(JSON.stringify(this.schema.containers[1]))

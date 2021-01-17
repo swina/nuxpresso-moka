@@ -59,7 +59,7 @@ function setOpacity ( prefix ){
 }
 
 function setColors ( prefix ){
-    let arr = []
+    let arr = ['transparent','white','black']
     colors.forEach ( color => {
         arr.push ( prefix + '-' + color)
         arr.push ( 'hover:' + prefix + '-' + color )

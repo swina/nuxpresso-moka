@@ -51,6 +51,7 @@ export default {
                     this.color.color = '' :
                         this.color.hover = '' 
             }
+            console.log ( this.color )
             this.$emit('input', Object.values(this.color).join(' ') )
             this.$emit('css', Object.values(this.color).join(' '))
             this.palette = false

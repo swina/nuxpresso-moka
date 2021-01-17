@@ -52,6 +52,10 @@ p.nuxpresso-box-multiline {
     @apply my-1;
 }
 
+p > pre {
+  @apply bg-transparent text-base;
+}
+
 button {
     @apply bg-blue-400 text-white text-sm leading-4 px-2 py-1 border border-transparent rounded-none outline-none;
     width: fit-content;

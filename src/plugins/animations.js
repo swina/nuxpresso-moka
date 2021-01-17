@@ -376,8 +376,13 @@ gsap.registerEffect({
     extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
 });
 
+// ---- YOUR ANIMATIONS GO HERE ---
 
+// --- END OF YOUR ANIMATIONS ---
 
+// ADD YOUR ANIMATION name to the gsapEffect array
 const gsapEffects = [ 'fade' , 'scale' , 'scale-in' , 'flip-x' , 'flip-y' , 'slide-left' , 'slide-right' , 'slide-top' , 'slide-down', 'rotate' , 'rotate-scale' , 'rotate-hover' , 'grow-width' , 'width-reverse' , 'close-left' , 'close-right' , 'grow-height' ]
+
+// DO NOT REMOVE OR CHANGE THE FOLLOWING
 const gsapEase = [ 'none' , 'power1' , 'power2' , 'power3' , 'power4' , 'back' , 'elastic','bounce','rough','slow','steps','circ','expo','sine' ]
 export default { gsapEffects , gsapEase }

@@ -186,7 +186,9 @@ export default {
 </script>
 
 <style>
-
+pre {
+    border:0!important;
+}
 .ql-container {
     font-family: 'Arial';
 }
