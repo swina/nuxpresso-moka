@@ -24,7 +24,9 @@
                         <div class="relative pt-32 bg-gray-700 ">
                             <div class="flex items-center text-center h-full justify-center absolute h-48 top-0 left-0 right-0 bottom-0">
                                 <img v-if="file.previewUrl" class="w-auto h-auto block m-auto" :src="file.previewUrl"/>
-                                <img v-else class="w-auto h-auto block m-auto" :src="file.formats && file.formats.thumbnail?file.formats.thumbnail.url:file.url"/>
+                                <img v-if="file.url && file.mime.indexOf('image') > -1" class="w-auto h-auto block m-auto" :src="file.formats && file.formats.thumbnail?file.formats.thumbnail.url:file.url"/>
+                                <!-- <img v-if="file.mime.indexOf('image') < 0" class="w-auto h-auto block m-auto" src="img/no-image.png"/> -->
+                                <i v-if="file.mime.indexOf('image') < 0" class="material-icons text-gray-400 text-5xl">insert_drive_file</i>
                             </div>
                         </div>
                     </div>

@@ -2,6 +2,7 @@
     <div class="p-2 grid grid-cols-2 grid-rows-2 h-full gap-5" v-if="image">
         <div class="flex h-full flex-col justify-center p-1 bg-gray-800 bg-contain bg-no-repeat bg-top" :style="'background-image:url(' +
          image.url + ')'">
+            <i v-if="image.mime.indexOf('image') < 0" class="material-icons text-gray-400 m-auto text-10xl">insert_drive_file</i>
             <!-- <img :src="image.url" class="h-full w-auto"/> -->
         </div>
         <div class="flex flex-col p-2">

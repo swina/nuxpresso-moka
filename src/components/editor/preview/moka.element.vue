@@ -2,6 +2,7 @@
     <div v-if="element" :ref="element.id" :id="element.hasOwnProperty('anchor') && element.anchor ? element.anchor : element.id" :style="element.style" element @click="element.hasOwnProperty('action') ? $emit('click',element.action) : null">
 
             <component :class="$cssResponsive(el.css)" :is="tag" v-html="el.content" v-if="(el.tag==='element' || el.type==='button')  && el.element !='img' && el.type != 'video' && el.type != 'audio' && !el.link" :style="stile"></component>
+            
             <a v-if="el.link" :href="el.link">
                 <component :class="$cssResponsive(el.css)" :is="tag" v-html="el.content" v-if="(el.tag==='element' || el.type==='button')  && el.element !='img' && el.type != 'video' && el.type != 'audio'" :style="stile"></component>
             </a>

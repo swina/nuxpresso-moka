@@ -82,10 +82,11 @@
                 <vue-blob-json-csv
                     file-type="json"
                     :file-name="filename"
-                    :data="moka.blocks"
+                    :data="blocks_dump"
                     
                 >
                 <button class="my-2 success" @click="exportComponent=!exportComponent">Download Library</button>
+                Blocks: {{ blocks_dump.length }}
                 </vue-blob-json-csv>
             </div>
         </transition>
