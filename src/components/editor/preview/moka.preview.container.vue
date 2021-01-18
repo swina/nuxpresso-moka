@@ -96,10 +96,12 @@ export default {
         background(block){
             if ( !block ) return 
             return block.hasOwnProperty('image') ?
-                block.image && block.image.url ? 
+                'background-image:url(' + this.$imageURL(block.image) + ')' : ''
+                /*block.image && block.image.url ? 
                     block.image.previewUrl ? 
                         ' background-image:url(' + block.image.previewUrl + ');background-size:cover;background-repeat:no-repeat;' :
                             ' background-image:url(' + block.image.url + ');' : ''  : ''        
+                */
         },
         elementAction(action){
             this.$emit('action',action)

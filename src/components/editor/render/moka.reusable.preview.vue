@@ -6,7 +6,7 @@
         <template v-for="(template,index) in mokatemplates">
             <div class="w-1/2 flex flex-col mb-4 cursor-pointer relative p-1 justify-center items-center" v-if="index>=start && index < (start+limit)" @click="$emit('add',template.id)">
                 <span v-if="!template.image_uri || !template.image" class="text-sm p-1">{{ template.name }}</span>
-                <div v-if="template.image && template.image.url" :style="'background-image:url(' + template.image.url + ')'" class="h-24 w-full bg-center bg-no-repeat bg-contain shadow" :title="template.name"></div>
+                <div v-if="template.image && template.image.url" :style="'background-image:url(' + $imageURL(template.image) + ')'" class="h-24 w-full bg-center bg-no-repeat bg-contain shadow" :title="template.name"></div>
             </div>
         </template>
     </div>

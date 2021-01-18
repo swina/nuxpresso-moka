@@ -25,14 +25,15 @@
             
             <svg v-if="el.tag === 'svg'" :viewBox="el.content.viewBox" width="100%" height="100%" v-html="el.content.g" :class="el.css + ' fill-current'"></svg>
 
-            <img v-if="el.element === 'img' && el.image && el.image.url && el.image.ext != '.svg'" :src="el.image.url" :caption="el.image.caption" :alt="el.image.alternative_text" :class="$cssResponsive(el.css)"/>
+            <img v-if="el.element === 'img' && el.image && el.image.url && el.image.ext != '.svg'" 
+                :src="$imageURL(el.image)" :caption="el.image.caption" :alt="el.image.alternative_text" :class="$cssResponsive(el.css)"/>
             
             <div v-if="(el.element === 'img')  && el.image && el.image.ext === '.svg'" :class="el.css + ' fill-current'">     
                 <simple-svg :src="el.image.url" width="100%" height="100%"/>
             </div>
             <!--<button v-if="el.element === 'button'" :class="el.css">{{ el.content }}</button>-->
 
-            <img :class="$cssResponsive(el.css)" :ref="el.id" v-if="el.type==='video' && el.image && el.image.url && el.image.ext != '.svg'" :src="el.image.previewUrl"/>
+            <img :class="$cssResponsive(el.css)" :ref="el.id" v-if="el.type==='video' && el.image && el.image.url && el.image.ext != '.svg'" :src="$imageURL(el.image)"/><!--el.image.previewUrl-->
 
             <i :class="'material-icons text-10xl ' + $cssResponsive(el.css)" v-if="el.type==='video' && !el.image">movie</i> 
             <i :class="'material-icons text-10xl ' + $cssResponsive(el.css)" v-if="el.type==='image' && !el.image">photo</i> 

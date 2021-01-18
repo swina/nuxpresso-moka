@@ -222,10 +222,10 @@ export default {
                         //' background-image:url(' + block.image.previewUrl + ');background-size:cover;background-repeat:no-repeat;' + this.isSvg(block.image) :
                         //    ' background-image:url(' + block.image.url + ');' : ''  : ''        
         },
-        setImageBackground(image){
-            if ( !image ) return
-            let theImg = image.hasOwnProperty('previewUrl')  && image.previewUrl ? image.previewUrl : image.url
-            let response = ' background-image:url(' + theImg + ');'
+        setImageBackground(image){ 
+            if ( !image ) return ''
+            //let theImg = image.hasOwnProperty('previewUrl')  && image.previewUrl ? image.previewUrl : image.url
+            let response = ' background-image:url(' +  this.$imageURL(image) + ')' //theImg + ');'
             return response
         }
     },

@@ -146,10 +146,11 @@ export default {
             return null
         },
         setEditorImage(img){
+                let image = this.$imageURL(img)
                 this.$refs['editor'].quill.focus()
                 let range = this.$refs['editor'].quill.getSelection();
                 range ? 
-                    this.$refs['editor'].quill.insertEmbed(range.index, 'image', img.url ) :
+                    this.$refs['editor'].quill.insertEmbed(range.index, 'image', image ) : //img.url ) :
                         this.$emit('message','Set a position in the editor to place the image')
         }, 
         stile(){

@@ -1,5 +1,5 @@
-    import Vue from 'vue'
-    import moment from 'moment'
+import Vue from 'vue'
+import moment from 'moment'
     /*
     const baseURL = 'https://js.api.here.com/v3/3.1/'
     const src = 'mapsjs.bundle.js' //'mapsjs-core.js','mapsjs-service.js','mapsjs-ui.js','mapsjs-mapevents.js']
@@ -35,6 +35,19 @@ export default {
             caption: img.caption
         }
     }
+    Vue.prototype.$imageURL = ( image ) => {
+        if ( !image ) return false
+        let url = ''
+            image.previewUrl ? 
+                image.previewUrl.includes('http') ? 
+                    url = image.previewUrl : 
+                        url = process.env.VUE_APP_API_URL + image.previewUrl.replace('/','') :
+                            image.url.includes('http') ? url = image.url : 
+                                url = process.env.VUE_APP_API_URL + image.url.replace('/','') 
+        return url
+        
+    }
+
     Vue.prototype.$layer = (element)=>{
             
         let classe = ''

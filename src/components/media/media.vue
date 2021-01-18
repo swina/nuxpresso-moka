@@ -23,10 +23,18 @@
                     <div :class="'mb-1 overflow-hidden border-4 border-transparent ' + active(file)">
                         <div class="relative pt-32 bg-gray-700 ">
                             <div class="flex items-center text-center h-full justify-center absolute h-48 top-0 left-0 right-0 bottom-0">
+                                
+                                <img v-if="file.mime.includes('image')" :src="$imageURL(file)" class="w-auto h-auto block m-auto"/>
+
+                                <i v-if="!file.mime.includes('image')" class="material-icons text-gray-400 text-5xl">insert_drive_file</i>
+
+                                <!--
                                 <img v-if="file.previewUrl" class="w-auto h-auto block m-auto" :src="file.previewUrl"/>
-                                <img v-if="file.url && file.mime.indexOf('image') > -1" class="w-auto h-auto block m-auto" :src="file.formats && file.formats.thumbnail?file.formats.thumbnail.url:file.url"/>
-                                <!-- <img v-if="file.mime.indexOf('image') < 0" class="w-auto h-auto block m-auto" src="img/no-image.png"/> -->
-                                <i v-if="file.mime.indexOf('image') < 0" class="material-icons text-gray-400 text-5xl">insert_drive_file</i>
+                                
+                                <img v-if="file.url.inclides('http') && file.url && file.mime.indexOf('image') > -1" class="w-auto h-auto block m-auto" :src="file.formats && file.formats.thumbnail?file.formats.thumbnail.url:file.url"/>
+
+
+                                <i v-if="file.mime.indexOf('image') < 0" class="material-icons text-gray-400 text-5xl">insert_drive_file</i>-->
                             </div>
                         </div>
                     </div>
@@ -58,7 +66,7 @@
             </div>
         </transition>
          <transition name="fade">
-            <div class="nuxpresso-modal z-2xtop w-2/3 shadow-xl border rounded h-3/4 p-4" v-if="edit">
+            <div class="nuxpresso-modal z-2xtop w-2/3  h-2/3 shadow-xl border rounded p-2" v-if="edit">
                 <moka-edit-media :img="selected" @close="edit=!edit"/>
             </div>
         </transition>
@@ -114,6 +122,19 @@ export default {
     methods:{
         active(item){
             return this.selected ? parseInt(this.selected.id) === parseInt(item.id) ? 'border-blue-500' : '' : ''
+        },
+        getImageURL(image){
+            let url = ''
+            image.mime.includes('image') ?
+                image.previewUrl ? 
+                    image.previewUrl.includes('http') ? 
+                        url = image.previewUrl : 
+                            url = process.env.VUE_APP_API_URL + image.previewUrl.replace('/','') :
+                                image.url.includes('http') ? url = image.url : 
+                                    url = process.env.VUE_APP_API_URL + image.url.replace('/','') :
+                                        url = false
+            return url
+
         },
         setImage(img){
             if ( this.$attrs.filter && this.$attrs.filter === 'manager') { 
