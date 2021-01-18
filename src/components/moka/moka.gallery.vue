@@ -35,7 +35,8 @@
             <div class="nuxpresso-modal bg-white border shadow p-4 z-max" v-if="confirmModal">
                 <h5>Delete this object ?</h5>
                 <button @click="confirm=false,confirmModal=!confirmModal">No</button>
-                <button class="ml-2 danger" @click="confirm=true,confirmModal=!confirmModal,$emit('remove',current)">Yes, delete</button>
+                <!-- <button class="ml-2 danger" @click="confirm=true,confirmModal=!confirmModal,$emit('remove',current,index)">Yes, delete</button> -->
+                <button class="ml-2 danger" @click="confirm=true,confirmModal=!confirmModal,removeBlock()">Yes, delete</button>
             </div>  
         </transition>
     </div>
@@ -95,6 +96,13 @@ export default {
             comp.image && comp.image.url ? image = comp.image.url :
                 comp.image_uri ? image = comp.image_uri : ''
             return image ? image : ''
+        },
+        removeBlock(){
+            console.log ( 'removing block' , this.current )
+            this.blocks.splice(this.index,1)
+            this.$http.delete ( 'components/' + this.current ).then ( result => {
+                console.log ( result )
+            })
         },
         removeElement(){
             if ( this.current && this.confirm ){

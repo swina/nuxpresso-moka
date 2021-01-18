@@ -252,7 +252,7 @@ export default {
             })
             return null
         },
-        remove(id){
+        remove(id,index){
             this.loading = true
             this.$http.delete ( 'components/' + id ).then ( response => {
                 this.$store.dispatch ( 'loadComponents' )
