@@ -20,6 +20,7 @@
                     
                     <div class="px-1 absolute bottom-0 rounded-br rounded-bl bg-gray-300 items-center flex flex-row w-full text-left text-xs justify-between">
                         <div>{{$moment(comp.updated_at)}}</div>
+                        <i class="ml-2 material-icons text-gray-500 hover:text-blue-500" title="Add to export" @click="addToLibrary(comp,'library')">library_add</i>
                         <i class="ml-2 material-icons text-gray-500 hover:text-blue-500" title="Delete" @click="index=c,current=comp.id,confirmModal=!confirmModal">delete</i>
                         <i class="ml-2 material-icons text-gray-500 hover:text-blue-500" title="Duplicate" @click="selectComponent(comp.id,'duplicate')">file_copy</i>
                         <i class="material-icons xs ml-2 text-gray-500 hover:text-blue-500" title="Preview" @click="selectComponent(comp.id,'preview')">preview</i>
@@ -27,7 +28,8 @@
                     </div>
                 </div>
             </div>
-        </div>    
+        </div>  
+
         <moka-table v-if="!$attrs.gallery" :components="objects" ctx="components" @component="selectComponentTable" />
 
 
@@ -90,6 +92,15 @@ export default {
         },
         selectComponentTable(comp){
             this.selectComponent ( comp.id , 'component' )
+        },
+        addToLibrary(component){
+            this.$http.get('components/' + component.id ).then ( result => {
+                let block = result.data
+                block.image_uri = block.image && block.image.url ? block.image.url : ''
+                block.image = null
+                this.$store.dispatch('addToLibrary', block)
+                this.$store.dispatch('message','Block added to library to export')
+            })
         },
         background(comp){
             let image = ''

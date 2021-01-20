@@ -25,7 +25,8 @@ const moka = {
         fonts: process.env.VUE_APP_FONT_FAMILIES.split('|'),
         slide: 0,
         popup: '',
-        blocks: null
+        blocks: null,
+        library: []
     },
     mutations: {
         SET_SETTINGS ( state , settings ){
@@ -75,6 +76,9 @@ const moka = {
         },
         SET_BLOCKS ( state , blocks ){
             state.blocks = blocks
+        },
+        ADD_TO_LIBRARY ( state , block ){
+            state.library.push ( block )
         }
     },
     actions: {
@@ -138,6 +142,9 @@ const moka = {
         },
         setBlocks( { commit } , blocks ){
             commit ( 'SET_BLOCKS' , blocks)
+        },
+        addToLibrary ( { commit } , block ){
+            commit ( 'ADD_TO_LIBRARY' , block )
         }
     }
 

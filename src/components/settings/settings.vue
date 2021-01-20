@@ -2,8 +2,12 @@
     <div class="p-4">
         <h3>Settings</h3>
         <div class="flex flex-row text-sm cursor-pointer">
+            <template v-for="t in tabs">
+                <div @click="tab=t.tag" :class="tab===t.tag?'py-1 px-2 bg-blue-400 text-white capitalize':'py-1 px-2 bg-white text-blue-400 focus:outline-none border capitalize'">{{t.label}}</div>    
+            </template>
+            <!--
             <div @click="tab='website'" :class="tab==='website'?'py-1 px-2 bg-blue-400 text-white':'py-1 px-2 bg-white text-blue-400 focus:outline-none border'">Website</div>
-            <div @click="tab='moka'" :class="tab==='moka'?'py-1 px-2 bg-blue-400 text-white':'py-1 px-2 bg-white text-blue-400 border'">MOKAStudio</div>
+            <div @click="tab='moka'" :class="tab==='moka'?'py-1 px-2 bg-blue-400 text-white':'py-1 px-2 bg-white text-blue-400 border'">MOKAStudio</div>-->
         </div>
         <div class="flex flex-col justify-around">
             
@@ -71,7 +75,7 @@
                     <div class="flex flex-row">
                     <div class="flex flex-col p-2 w-full md:w-1/2">
                         <label class="font-bold">Block Types</label>
-                        <select v-if="moka" v-model="currentType" multiple class="h-32 w-full" readonly>
+                        <select v-if="moka && moka.elements.types" v-model="currentType" multiple class="h-32 w-full" readonly>
                             <option v-for="(tipo,index) in moka.elements.types.types" :value="index">{{tipo}}</option>
                         </select>
                         <div class="flex flex-row my-1">
@@ -113,7 +117,10 @@
                     </div>
                 </div>
             </div>
-            
+            <div v-if="tab==='elements'" class="border">
+                <h5 class="bg-gray-700 text-gray-200 p-1">Blocks Elements</h5>
+                <moka-settings-elements/>
+            </div>
         </div>
     </div>
 </template>
@@ -123,13 +130,19 @@ import settingsQry from '@/apollo/settings.gql'
 import MokaUser from '@/components/settings/user'
 import MokaColor from '@/components/editor/tailwind/tailwind.color'
 import MokaBgcolor from '@/components/editor/tailwind/tailwind.bgcolor'
+import MokaSettingsElements from '@/components/settings/elements'
 import { mapState } from 'vuex'
 import classes from '@/plugins/tw.classes'
 
 export default {
     name: 'NuxpressoSettings',
-    components: { MokaUser , MokaColor , MokaBgcolor },
+    components: { MokaUser , MokaColor , MokaBgcolor , MokaSettingsElements},
     data:()=>({
+        tabs: [
+            { label: 'Website' , tag: 'website' },
+            { label: 'MOKAStudio' , tag: 'moka' },
+            { label: 'Block Elements' , tag: 'elements'}
+        ],
         tab: 'website',
         types: null,
         new_type:'',

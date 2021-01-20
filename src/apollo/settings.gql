@@ -12,8 +12,6 @@ query Settings {
     autoimage
     authentication
     scrolltop
-    articles_limit
-    articles_loop_mode
     read_more
     logo_img {
       url
@@ -25,11 +23,5 @@ query Settings {
     twitter
     footer
     google_analytics
-    seo {
-      ...on ComponentSeoSeo{
-				  title
-      		description
-      }
-    }
   }
 }

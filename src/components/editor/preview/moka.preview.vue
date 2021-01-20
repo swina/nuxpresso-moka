@@ -79,8 +79,11 @@ export default {
         },
         background(block){
             return block.hasOwnProperty('image') ?
+                ' background-image:url(' + this.$imageURL(block.image) + ');' : ''
+                /*
                 block.image ? 
                     ' background-image:url(' + block.image.url + ');' : '' : ''
+                */
         },
         printSave(){
             this.print().then (()=>{

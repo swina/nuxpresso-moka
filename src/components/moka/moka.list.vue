@@ -5,7 +5,8 @@
             <div class="flex justify-center">
                 <button @click="create=!create" class="mr-2">Create New</button>
                 <button @click="importJSON=!importJSON" class="mr-2">Import</button>
-                <button @click="exportComponent=!exportComponent">Export</button>
+                <button @click="exportComponent=!exportComponent" class="mr-2">Export Category</button>
+                <button v-if="moka.library.length" @click="exportLibrary=!exportLibrary">Export Selected [{{moka.library.length}}]</button>
             </div> 
             <div class="flex flex-row justify-end">
                 <i class="material-icons" @click="refresh">refresh</i>
@@ -70,11 +71,12 @@
                 <moka-upload @close="importJSON=!importJSON"/>
             </div>
         </transition>
+        
         <!-- EXPORT COMPONENT -->
         <transition name="fade">
             <div v-if="exportComponent" class="nuxpresso-modal w-full  border-4 border-gray-500 md:w-1/3 bg-gray-800 rounded shadow-xl p-2 text-gray-600 text-sm z-2xtop">
                 <i class="material-icons absolute top-0 right-0 m-1 cursor-pointer" @click="exportComponent=!exportComponent">close</i>
-                <h4>Export Library</h4>
+                <h4>Export Category</h4>
                 <div>
                     <label>Save as</label><br/>
                     <input class="dark" type="text" v-model="filename"/>.json
@@ -87,6 +89,33 @@
                 >
                 <button class="my-2 success" @click="exportComponent=!exportComponent">Download Library</button>
                 Blocks: {{ blocks_dump.length }}
+                </vue-blob-json-csv>
+            </div>
+        </transition>
+        <!-- EXPORT COMPONENT -->
+        <transition name="fade">
+            <div v-if="exportLibrary && moka.library.length" class="nuxpresso-modal w-full  border-4 border-gray-500 md:w-1/3 bg-gray-800 rounded shadow-xl p-2 text-gray-600 text-sm z-2xtop">
+                <i class="material-icons absolute top-0 right-0 m-1 cursor-pointer" @click="exportLibrary=!exportLibrary">close</i>
+                <h4>Export Selected</h4>
+                <div class="w-full flex flex-row">
+                    <select size="10" class="w-3/4 h-32" v-model="libraryComponent">
+                        <option v-for="(block,index) in moka.library" :value="index">{{ block.category }} - {{ block.name }}</option>
+                    </select>
+                    <div class="text-center w-1/4">
+                        <button @click="moka.library.splice(libraryComponent,1)">Remove</button>
+                    </div>
+                </div>
+                <div>
+                    <label>Save as</label><br/>
+                    <input class="dark" type="text" v-model="filename"/>.json
+                </div>
+                <vue-blob-json-csv
+                    file-type="json"
+                    :file-name="filename"
+                    :data="moka.library"
+                >
+                <button class="my-2 success" @click="exportComponent=!exportComponent">Download Library</button>
+                Blocks: {{ moka.library.length }}
                 </vue-blob-json-csv>
             </div>
         </transition>
@@ -109,6 +138,7 @@ export default {
         importJSON:false,
         component: null,
         exportComponent: false,
+        exportLibrary: false,
         newComponent: {
             category:'component',
             name: 'New component',
@@ -122,7 +152,8 @@ export default {
         objects: null,
         types: false,
         type: '',
-        filename: ''
+        filename: '',
+        libraryComponent: null
     }),
     /*watch:{
         type(v){
@@ -154,6 +185,7 @@ export default {
             //this.$store.dispatch('loading')
             return json.objects
         },
+        
         dataload (){
             
             

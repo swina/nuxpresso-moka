@@ -13,17 +13,21 @@
             <!--<component :ref="element.id" :class="$cssResponsive(el.css)" :is="tag" v-if="el.type === 'video'" :src="el.src + el.content"/>-->
             
 
-            <img v-if="el.element === 'img' && el.image && el.image.url && el.image.ext != '.svg' && el.image.ext != '.mp4'" :src="el.image.url" :caption="el.image.caption" :alt="el.image.alternative_text" :class="$cssResponsive(el.css)"/>
+            <img v-if="el.element === 'img' && el.image && el.image.url && el.image.ext != '.svg' && el.image.ext != '.mp4'" :src="$imageURL(el.image)" :caption="el.image.caption" :alt="el.image.alternative_text" :class="$cssResponsive(el.css)"/>
             
             <div v-if="(el.element === 'img')  && el.image && el.image.ext === '.svg'" :class="el.css + ' fill-current'">     
-                <simple-svg :src="el.image.url" width="100%" height="100%"/>
+                <simple-svg :src="$imageURL(el.image)" width="100%" height="100%"/>
             </div>
 
             <video :class="$cssResponsive(el.css)" v-if="el.type==='video' && el.image && el.image.url" :autoplay="el.hasOwnProperty('autoplay')?el.autoplay:true" 
             :controls="el.hasOwnProperty('controls')?el.controls:true"
             :loop="el.hasOwnProperty('loop')?el.loop:true">
-                <source :src="el.image.url">
+                <source :src="$imageURL(el.image)">
             </video>
+
+            <audio :class="$cssResponsive(el.css)" v-if="el.type==='audio'">
+                <source :src="$imageURL(el.image)"/>
+            </audio>
 
             <!--<img :ref="element.id" v-if="el.element === 'img' && !el.image" src="../assets/no-image.png" :class="$cssResponsive(el.css)"/>-->
             

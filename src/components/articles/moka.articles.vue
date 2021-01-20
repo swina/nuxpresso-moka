@@ -18,7 +18,12 @@
             <table class="w-full border text-sm text-left p-1" v-if="!editor">
                 <thead class="bg-gray-200">
                     <template v-for="(col,c) in columns">
-                        <th class="text-left p-2">{{ col.label }}</th>
+                        <th class="text-left p-2">
+                            <div class="flex flex-row items-center"> 
+                                <label>{{ col.label }}</label> 
+                                <i class="material-icons pt-1" v-if="col.sortable" @click="sortArticles(col.field)">expand_more</i>
+                            </div>
+                        </th>
                     </template>
                     <th>Template</th>
 
@@ -52,6 +57,9 @@
             </table>
             <div class="flex flex-row justify-around text-center" v-if="!editor && !filter">
                 <i class="material-icons mx-2 text-2xl" @click="prev">chevron_left</i>
+                <div class="text-sm">
+                    Order: <span class="uppercase">{{ sortby }}</span> <span class="uppercase">{{order}}</span>
+                </div>
                 <i class="material-icons mx-2 text-2xl" @click="next">chevron_right</i>
             </div>
             <transition name="fade">
@@ -121,7 +129,10 @@
             <transition name="fade">
                 <div v-if="selectTemplate" class="nuxpresso-modal w-4/5 p-2 border rounded bg-white">
                     <i class="material-icons absolute top-0 right-0 m-2" @click="selectTemplate=!selectTemplate">close</i>
-                    <moka-templates :templates="templates" @set="setTemplate" @close="selectTemplate=!selectTemplate"/>
+                    <moka-templates 
+                        :templates="templates" 
+                        @set="setTemplate" 
+                        @close="selectTemplate=!selectTemplate"/>
                 </div>
             </transition>
             <transition name="fade">
@@ -188,37 +199,39 @@ export default {
     },
     data:()=>({
         wordpress: false,
-            wprestapi:'',
-            loading: false,
-            filter: '',
-            editor: false,
-            slug:'',
-            articleSlug: null,
-            currentArticle: null,
-            currentImage: null,
-            editorImage: true,
-            selectTemplate: false,
-            media: false,
-            widgets: false,
-            start: 0,
-            limit: 10,
-            columns: [
-                { field: 'id' , label: '#' },
-                { field: 'title' , label: 'Title' },
-                { field: 'categories' , label: 'Category'},
-                { field: 'slug' , label: 'Slug' },
-                { field: 'homepage' , label: 'Homepage' },
-                { field: 'lang' , label: 'Language' },
-                { field: 'updated_at' , label: 'Updated'}
-            ],
-            createPage: false,
-            newArticle: {
-                title: 'A new page',
-                SEO: {
-                    title: '',
-                    description: 'A new nuxpresso page'
-                }
+        wprestapi:'',
+        loading: false,
+        filter: '',
+        editor: false,
+        slug:'',
+        articleSlug: null,
+        currentArticle: null,
+        currentImage: null,
+        editorImage: true,
+        selectTemplate: false,
+        media: false,
+        widgets: false,
+        start: 0,
+        limit: 10,
+        sortby: 'title',
+        order: 'asc',
+        columns: [
+            { field: 'id' , label: '#'  , sortable: true},
+            { field: 'title' , label: 'Title' , sortable: true },
+            { field: 'categories' , label: 'Category' , sortable: false },
+            { field: 'slug' , label: 'Slug' , sortable: false },
+            { field: 'homepage' , label: 'Homepage' , sortable: false },
+            { field: 'lang' , label: 'Language'  , sortable: true},
+            { field: 'updated_at' , label: 'Updated'  , sortable: true}
+        ],
+        createPage: false,
+        newArticle: {
+            title: 'A new page',
+            SEO: {
+                title: '',
+                description: 'A new nuxpresso page'
             }
+        }
     }),
     apollo:{
         articles: {
@@ -229,12 +242,14 @@ export default {
                     return {
                         limit: parseInt(this.limit),
                         start: parseInt(this.start),
+                        sort: this.sortby + ':' + this.order
                     }
                 } else {
                     return {
                         limit: parseInt(this.limit),
                         start: parseInt(this.start),
-                        cat: this.filter
+                        cat: this.filter,
+                        sort: this.sortby + ':' + this.order
                     }
                 }
             },
@@ -290,6 +305,14 @@ export default {
         }
     },
     methods:{
+        sortArticles(field){
+            if ( this.sortby === field ){
+                this.order === 'desc' ? this.order = 'asc' : this.order = 'desc'
+            } else {
+                this.sortby = field
+                this.order = 'asc'
+            }
+        },
         background(template){
             let image = ''
             template.image && template.image.url ?
@@ -334,10 +357,13 @@ export default {
         category(cat){
             return cat.map(c => { return c.name} ).join(',')
         },
-        setTemplate(id,blockID){
-            this.currentArticle.component = parseInt(id)
-            this.currentArticle.template_id = blockID 
-            this.selectTemplate =! this.selectTemplate
+        setTemplate(id,blockID,template){
+            this.$http.get( 'components/' +  id ).then ( result => {
+                this.currentArticle.blocks = result.data
+                this.currentArticle.component = parseInt(id)
+                this.currentArticle.template_id = blockID 
+                this.selectTemplate =! this.selectTemplate
+            })
         },
         checkTemplate(){
             if ( this.currentArticle.component === '0' ){

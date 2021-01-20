@@ -6,6 +6,8 @@
 import MokaText from '@/components/editor/preview/elements/moka.text'
 import MokaLink from '@/components/editor/preview/elements/moka.link'
 import MokaVideo from '@/components/editor/preview/elements/moka.video'
+import MokaAudio from '@/components/editor/preview/elements/moka.audio'
+import MokaIframe from '@/components/editor/preview/elements/moka.iframe'
 import MokaSvg from '@/components/editor/preview/elements/moka.svg'
 import MokaImg from '@/components/editor/preview/elements/moka.img'
 import MokaIcon from '@/components/editor/preview/elements/moka.icon'
@@ -19,6 +21,8 @@ export default {
     components: {
         MokaText,
         MokaVideo,
+        MokaAudio,
+        MokaIframe,
         MokaSvg,
         MokaImg,
         MokaInput,
@@ -42,8 +46,17 @@ export default {
                 return el.link ? MokaLink : MokaText
             }
             if ( el.type === 'video' ) {
-                this.child = MokaVideo
-                return el.link ? MokaLink : MokaVideo
+                if ( el.element != 'iframe' ){
+                    this.child = MokaVideo
+                    return el.link ? MokaLink : MokaVideo
+                } else {
+                    this.child = MokaIframe
+                    return MokaIframe
+                }
+            }
+            if ( el.type === 'audio' ) {
+                this.child = MokaAudio
+                return el.link ? MokaLink : MokaAudio
             }
             if ( el.type === 'svg' ){
                 this.child = MokaSvg

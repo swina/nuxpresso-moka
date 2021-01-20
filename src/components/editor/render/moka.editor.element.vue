@@ -29,14 +29,18 @@
                 :src="$imageURL(el.image)" :caption="el.image.caption" :alt="el.image.alternative_text" :class="$cssResponsive(el.css)"/>
             
             <div v-if="(el.element === 'img')  && el.image && el.image.ext === '.svg'" :class="el.css + ' fill-current'">     
-                <simple-svg :src="el.image.url" width="100%" height="100%"/>
+                <simple-svg :src="$imageURL(el.image)" width="100%" height="100%"/>
             </div>
             <!--<button v-if="el.element === 'button'" :class="el.css">{{ el.content }}</button>-->
 
             <img :class="$cssResponsive(el.css)" :ref="el.id" v-if="el.type==='video' && el.image && el.image.url && el.image.ext != '.svg'" :src="$imageURL(el.image)"/><!--el.image.previewUrl-->
 
-            <i :class="'material-icons text-10xl ' + $cssResponsive(el.css)" v-if="el.type==='video' && !el.image">movie</i> 
-            <i :class="'material-icons text-10xl ' + $cssResponsive(el.css)" v-if="el.type==='image' && !el.image">photo</i> 
+            <i :class="'material-icons text-10xl m-auto ' + $cssResponsive(el.css)" v-if="el.type==='video' && !el.image" :title="el.label">movie</i> 
+
+            
+            <i :class="'material-icons text-4xl m-auto ' + $cssResponsive(el.css)" v-if="el.type==='audio'" :title="el.label"> audiotrack</i>
+            
+            <i :class="'material-icons text-10xl m-auto ' + $cssResponsive(el.css)" v-if="el.type==='image' && !el.image">photo</i> 
 
             <input :type="el.type" v-if="el.element!= 'textarea' && el.tag === 'input' && el.type!='button'" :class="$cssResponsive(el.css)" :value="el.content" :placeholder="el.required?'required!':''"/><sup v-if="el.required" class="ml-1 nuxpresso-element-required">*</sup>
 

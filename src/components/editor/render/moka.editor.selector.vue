@@ -182,7 +182,8 @@
 
     <!-- EDIT CONTENT INLINE -->
     <transition name="fade">
-        <div v-if="editor.action==='edit' && editor.current && editor.current.type != 'image' && editor.current.type != 'video' && editor.current.tag != 'menu'" draggable="true" :class="'border shadow-lg text-sm z-2xtop ' + isFullScreen"> 
+        <div v-if="editor.action==='edit' && editor.current && editor.current.type != 'image' && editor.current.type != 'video' && editor.current.type != 'audio' && editor.current.tag != 'menu'" draggable="true" :class="'border shadow-lg text-sm z-2xtop ' + isFullScreen"> 
+
             <div class="bg-gray-700 text-white p-1 flex items-center">Edit 
                 <i class="material-icons ml-2 absolute right-0 mr-12 text-sm" title="Customize" @click="$store.dispatch('setAction','customize')">brush</i>
                 <i class="material-icons absolute  right-0  text-white mr-6 cursor-pointer" @click="fullscreen=!fullscreen" :title="fullscreen?'close fullscreen':'fullscreen'">{{fullscreen?'close_fullscreen':'fullscreen'}}</i>
@@ -208,8 +209,16 @@
                 <moka-edit-menu  :menu="editor.current" @menu="setMenuItems"/>
         </div>
         <!-- image element -->
-        <div v-if="editor.action === 'edit' && editor.current && (editor.current.type === 'image'||editor.current.type==='video')" class="nuxpresso-modal md:h-3/5 m-auto md:w-full lg:w-10/12 border shadow-lg text-sm z-top">
-            <moka-edit-media class="z-top" @newimage="setImage" :modal="true" @close="editContent=!editContent,$store.dispatch('setAction',null)"/>
+        <div v-if="editor.action === 'edit' && editor.current && (editor.current.type === 'image'||editor.current.type==='video' || editor.current.type === 'audio')" class="nuxpresso-modal md:h-3/5 m-auto md:w-full lg:w-10/12 border shadow-lg text-sm z-top">
+
+            <div class="m-auto p-10 flex flex-col" v-if="editor.current && editor.current.element === 'iframe'" >
+                <label>{{editor.current.label}} - Video ID</label>
+                <input type="text" class="w-3/4 text-base"v-model="editor.current.content"/>
+                <button @click="editor.action = null">OK</button>
+            </div>
+
+                
+            <moka-edit-media v-if="editor.current.element!='iframe'" class="z-top" @newimage="setImage" :modal="true" @close="editContent=!editContent,$store.dispatch('setAction',null)"/>
         </div>
     </transition>
     <!-- FORM SETTINGS -->

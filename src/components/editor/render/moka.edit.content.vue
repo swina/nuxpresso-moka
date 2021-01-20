@@ -17,8 +17,8 @@
         </div>
 
         <!-- video options -->
-        <div class="bg-gray-400 cursor-pointer hover:bg-blue-300 text-gray-800 px-1 mb-1" v-if="$attrs.element.type==='video'" @click="setOpt('video')">
-            Video Options
+        <div class="bg-gray-400 cursor-pointer hover:bg-blue-300 text-gray-800 px-1 mb-1" v-if="$attrs.element.type==='video' || $attrs.element.type === 'audio'" @click="setOpt('video')">
+            Audio/Video Options
         </div>
         <transition name="fade">
             <div class="flex flex-col my-1 text-left" v-if="label==='video'">

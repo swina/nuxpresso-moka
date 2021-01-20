@@ -38,10 +38,10 @@ export default {
     Vue.prototype.$imageURL = ( image ) => {
         if ( !image ) return false
         let url = ''
-            image.previewUrl ? 
-                image.previewUrl.includes('http') ? 
-                    url = image.previewUrl : 
-                        url = process.env.VUE_APP_API_URL + image.previewUrl.replace('/','') :
+            //image.previewUrl ? 
+            //    image.previewUrl.includes('http') ? 
+            //        url = image.previewUrl : 
+            //            url = process.env.VUE_APP_API_URL + image.previewUrl.replace('/','') :
                             image.url.includes('http') ? url = image.url : 
                                 url = process.env.VUE_APP_API_URL + image.url.replace('/','') 
         return url

@@ -120,8 +120,11 @@ export default {
         },
         background(block){
             return block.hasOwnProperty('image') ?
+                ' background-image:url(' + this.$imageURL(block.image) + ');' : ''
+                /*
                 block.image ? 
                     ' background-image:url(' + block.image.url + ');' : '' : ''
+                */
         },
         next(){
             this.index < (this.doc.blocks.length-1) ? this.index++ : this.index = 0

@@ -3,7 +3,7 @@
     <div v-if="templates" class="flex flex-row flex-wrap justify-around p-4">
         
         <template v-for="(template,index) in mokatemplates">
-            <div class="w-48 flex flex-col mb-4 cursor-pointer" v-if="index>=start && index < (start+limit)" @click="$emit('set',template.id,template.blocks_id)" :title="template.category">
+            <div class="w-48 flex flex-col mb-4 cursor-pointer" v-if="index>=start && index < (start+limit)" @click="$emit('set',template.id,template.blocks_id,template)" :title="template.category">
                 <div class="flex flex-row items-center justify-between text-gray-600">
                     <span class="text-sm">{{ template.name }}</span>
                     <i class="material-icons ml-1">{{ template.category === 'page' ? 'web' : 'dynamic_feed'}}</i>

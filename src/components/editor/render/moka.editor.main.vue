@@ -94,7 +94,7 @@
     <!-- COMPONENT SETTINGS -->
     <transition name="slideleft">
         <div class="fixed w-1/4 left-0 top-0 mt-8 flex flex-col shadow-lg p-2 pt-4 bg-white z-2xtop text-base" v-if="settings">
-            <div class="p-2 bg-gray-300 rounded">
+            <div class="p-2 bg-gray-200 rounded">
                 <i class="material-icons absolute top-0 right-0 text-xl text-gray-400" @click="settings=!settings">close</i>
                 <label class="font-bold">Name</label>
                 <input class="w-full" type="text" v-model="$attrs.component.name"/> 
@@ -118,7 +118,9 @@
                     <option :key="tipo" v-for="tipo in moka.elements.types.types" :value="tipo">{{ tipo }}</option>
                 </select>
 
-                <div class="flex flex-col p-2 w-full md:w-1/2 text-base">
+                <!-- BODY SETTINGS -->
+                <div class="bg-gray-300 w-full my-1 p-1 font-bold cursor-pointer" @click="bodySettings=!bodySettings">Body settings <i class="material-icons">expand_more</i></div>
+                <div v-if="bodySettings" class="flex flex-col p-2 w-full bg-white  text-base cursor-pointer">
                     <label class="font-bold">Body settings</label>
                     <div class="flex flex-row w-full text-sm">
                         <div class="mr-6">
@@ -131,21 +133,38 @@
                         </div>
                     </div>
                 </div>
+                <!-- Font settings -->
+                <div v-if="bodySettings">
+                    <label class="font-bold">Font</label>
+                    <select class="w-full" v-model="fontFamily">
+                        <option value="Arial">sans</option>
+                        <option value="serif">serif</option>
+                        <option v-for="gfont in moka.elements.types.fonts">{{gfont}}</option>
+                        <option v-for="font in moka.fonts" :value="font">{{font}}</option>
+                        
+                    </select>
+                </div>    
 
+                <div class="bg-gray-300 w-full cursor-pointer my-1 p-1 font-bold" @click="templateSettings=!templateSettings" v-if="$attrs.component.category === 'template'">Template settings <i class="material-icons">expand_more</i></div>
                 <!-- DOC IS A TEMPLATE : template settings -->
-                <div class="flex flex-col text-sm" v-if="$attrs.component.category === 'template'">
+                <div class="flex flex-col text-sm bg-white p-1" v-if="templateSettings">
                     <label class="font-bold">Default template</label>
                     <div class="text-xs text-gray-600"><input type="checkbox" v-model="$attrs.component.default"/> (apply to articles with no template)</div>
                 
-                    <label class="font-bold">Loop 
-                    <input class="w-full" type="checkbox" v-model="$attrs.component.loop"/></label>
+                    <div class="my-1">
+                        <input type="checkbox" v-model="$attrs.component.loop"/>
+                        <span class="font-bold">Loop </span>
+                    </div>
                     <div class="flex flex-col" v-if="$attrs.component.loop">
                         <select class="w-full" v-model="$attrs.component.loop_type">
                             <option value="">all</option>
                             <option value="articles">articles</option>
                             <option :key="opt.slug" v-for="opt in moka.categories" :value="opt.slug">articles/category/{{opt.name}}</option>
                         </select>
-                        <label class="font-bold">Pagination <input type="checkbox" v-model="$attrs.component.loop_pagination"/></label>
+                        <div class="my-1">
+                            <input type="checkbox" v-model="$attrs.component.loop_pagination"/>
+                            <label class="font-bold">Pagination</label> 
+                        </div>
                         <div>Articles per page</div>
                         <input class="w-full" type="number" min="1" max="100" v-model="$attrs.component.loop_limit"/>
                     </div>
@@ -160,15 +179,7 @@
                         <i :class="'material-icons moka-icons text-sm p-1 mr-2 ' + mobile('lg')" @click="breakpoint='lg'">tablet</i>
                         <i :class="'material-icons moka-icons text-sm p-1 mr-2 ' + mobile('xl')" @click="breakpoint='xl'">laptop_mac</i>
                     </div>
-                    <!-- Font settings -->
-                    <label class="font-bold">Font</label>
-                    <select class="w-full" v-model="fontFamily">
-                        <option value="Arial">sans</option>
-                        <option value="serif">serif</option>
-                        <option v-for="gfont in moka.elements.types.fonts">{{gfont}}</option>
-                        <option v-for="font in moka.fonts" :value="font">{{font}}</option>
-                        
-                    </select>
+                    
                 </div>
             </div>
         </div>
@@ -413,7 +424,9 @@ export default {
                 title: 'new page',
                 description: 'A SEO description '
             }
-        }
+        },
+        bodySettings: false,
+        templateSettings: false
     }),
    
     computed:{
