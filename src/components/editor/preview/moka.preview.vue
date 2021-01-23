@@ -1,5 +1,5 @@
 <template> 
-    <div :ref="doc.id" :class="doc.css + ' overflow-x-hidden '" :style="stile(doc,true) + ' ' + background(doc)" id="content">
+    <div :key="refreshID" :ref="doc.id" :class="doc.css + ' overflow-x-hidden '" :style="stile(doc,true) + ' ' + background(doc)" id="content">
         <!-- 1st level - BLOCKS LOOP -->
         
             <template v-for="(block,b) in doc.blocks">
@@ -20,12 +20,11 @@
         
               
                         
-        
-        <div v-if="!$attrs.dashboard" class="fixed bottom-0 right-0 z-top p-4 bg-black bg-opacity-50 opacity-0 hover:opacity-100">
+        <div id="actionButtons" v-if="!$attrs.dashboard" class="fixed bottom-0 right-0 z-top p-4 bg-black bg-opacity-50 opacity-0 hover:opacity-100">
             <i class="material-icons nuxpresso-icon-circle mr-2" @click="$store.dispatch('loading',true),$store.dispatch('message','Saving blocks ...'),$emit('save')">save</i>
             <i class="material-icons nuxpresso-icon-circle" @click="$emit('close')">close</i>
         </div> 
-        <div v-else class="fixed bottom-0 right-0 z-top p-4 bg-black bg-opacity-50">
+        <div id="actionButtons" v-else class="fixed bottom-0 right-0 z-top p-4 bg-black bg-opacity-50">
             <i class="material-icons nuxpresso-icon-circle" @click="$emit('close')">close</i>
         </div>
     </div>
@@ -48,7 +47,8 @@ import { mapState } from 'vuex'
 export default {
     name: 'MokaPreview',
     data:()=>({
-        printScreen: null
+        printScreen: null,
+        refreshID: null
     }),
     components: { 
         MokaContainer,
@@ -168,7 +168,7 @@ export default {
     },
     mounted(){
         window.scrollTo(0,0)
-        
+        this.refreshID = this.$randomID()
         this.doc.blocks.forEach ( block => {
             if ( block.hasOwnProperty('gsap') && block.gsap.animation  ){
                 this.animate(block, block.id)

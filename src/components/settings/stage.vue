@@ -31,9 +31,13 @@
 
                     <div v-if="mode==='components'">
                         <div class="font-bold">Components</div>
-                        <select size="10" class="w-64">
-                            <option v-for="option in localcomponents" :value="option"  @dblclick="origin=option,confirm=!confirm">{{ option.name }}</option>
-                        </select>
+                        <div class="grid grid-cols-2 gap-2">
+                            <select size="10" class="w-full">
+                                <option v-for="option in localcomponents" :value="option"  @dblclick="origin=option,confirm=!confirm" @click="origin=option">{{ option.name }}</option>
+                            </select>
+                            <div v-if="origin && origin.image_uri" class="bg-gray-800 h-64 w-full bg-contain bg-no-repeat bg-center border" :style="'background-image:url(' + origin.image_uri + ')'"></div>
+                            <div v-if="origin && origin.image && origin.image.url" class="bg-gray-800 h-64 w-full bg-contain bg-no-repeat bg-center border" :style="'background-image:url(' + $imageURL(origin.image) + ')'"></div>
+                        </div>
                     </div>
 
                     <div v-if="files && mode==='upload'">
@@ -76,9 +80,12 @@
                     <div class="bg-lime-300 text-sm p-1" v-if="!blocks && mode==='components'">Loading ...</div>
                     <div v-if="components && mode==='components'">
                         <div class="font-bold">Components</div>
-                        <select size="10" class="w-64">
-                            <option v-for="option in blocks" :value="option">{{ option.name }}</option>
-                        </select>
+                        <div class="grid grid-cols-2">
+                            <select size="10" class="w-64">
+                                <option v-for="option in blocks" :value="option">{{ option.name }}</option>
+                            </select>
+                            
+                        </div>
                     </div>
                     <div v-if="files && mode==='upload'">
                         <div class="font-bold">Media <span class="text-xs">Dblclick to remove image</span></div>

@@ -3,9 +3,13 @@
         
         <!-- DASHBOARD MAIN MENU -->
         <nav class="w-2/12 fixed min-h-screen bg-gray-800 text-white flex flex-col cursor-pointer">
-            <div class="flex flex-row items-center justify-center">
-                <img src="../assets/layers.png" class="h-10 w-10 mr-2"/> 
-                <div class="mr-2">N U X P R E S S O</div>
+            
+            <!-- LOGO -->
+            <div class="my-2 text-center font-thin ">
+                <div class="text-xl w-16 m-auto h-16 bg-gray-900 hover:border-gray-200 border-transparent border rounded-full flex flex-col text-gray-300 font-black animate-pulse cursor-pointer" @click="$router.push('/')">
+                    <div class="m-auto">M O K A</div>
+                </div>
+                <div class="text-gray-500 text-xs font-hairline">S T U D I O</div>
             </div>
 
             <!-- MENU DEFINED IN @/plugins/app.js -->
@@ -37,13 +41,11 @@
                 <i class="material-icons mr-2">help</i> Docs
             </div></a>
 
-            <!-- LOGO -->
-            <div class="absolute w-full bottom-0 m-auto mb-2 text-center font-thin ">
-                <div class="text-xl w-16 m-auto h-16 bg-gray-900 hover:border-gray-200 border-transparent border rounded-full flex flex-col text-gray-300 font-black animate-pulse cursor-pointer" @click="$router.push('/')">
-                <div class="m-auto">M O K A</div>
-                </div>
-                <div class="text-gray-500 text-xs mt-1 font-hairline">S T U D I O</div>
+            <div class="absolute bottom-0 flex flex-col w-full m-auto items-center justify-center">
+                <img src="../assets/layers.png" class="h-10 w-10 mr-2"/> 
+                <div class="mr-2">N U X P R E S S O</div>
             </div>
+
            
         </nav>
 

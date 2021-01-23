@@ -33,7 +33,7 @@
             </div>
             <!--<button v-if="el.element === 'button'" :class="el.css">{{ el.content }}</button>-->
 
-            <img :class="$cssResponsive(el.css)" :ref="el.id" v-if="el.type==='video' && el.image && el.image.url && el.image.ext != '.svg'" :src="$imageURL(el.image)"/><!--el.image.previewUrl-->
+            <img :class="$cssResponsive(el.css)" :ref="el.id" v-if="el.type==='video' && el.image && el.image.url && el.image.ext != '.svg'" :src="$imagePreviewURL(el.image)"/><!--el.image.previewUrl-->
 
             <i :class="'material-icons text-10xl m-auto ' + $cssResponsive(el.css)" v-if="el.type==='video' && !el.image" :title="el.label">movie</i> 
 

@@ -232,7 +232,7 @@ export default {
             component.name = comp.name + ' COPY'
             this.$http.post ( 'components' , component ).then ( result => {
                 this.$store.dispatch('loadComponents')
-                this.$store.dispatch('message','Component copied')
+                this.$store.dispatch('message','Blocks copied')
                 this.loading = false
             }).catch ( error => {
                 this.$store.dispatch('message','An error occured. Check you console log.')

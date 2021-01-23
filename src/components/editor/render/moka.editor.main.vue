@@ -26,7 +26,7 @@
 
                         <i class="material-icons hover:text-blue-500 mr-2" @click="$emit('savecopy')" title="Duplicate component">file_copy</i>
                         
-                        <i class="material-icons hover:text-blue-500 mr-2" @click="createPage=!createPage" title="Create a page/article">web</i>
+                        <i :class="'material-icons hover:text-blue-500 mr-2 ' + hasPages()" @click="createPage=!createPage" :title="'Create a page/article'">web</i>
 
                         <i class="material-icons hover:text-blue-500 mr-2" @click="$store.dispatch('setAction','addreusable')" title="Import component">system_update_alt</i>
                         
@@ -316,6 +316,7 @@
         <div v-if="createPage" class="nuxpresso-modal z-2xtop border w-1/3 bg-white p-2 rounded shadow">
             <i class="material-icons absolute top-0 right-0 m-1" @click="createPage=!createPage">close</i>
             <h5>Create CMS Article</h5>
+            <div class="text-orange-500 text-sm font-bold" v-if="hasPages">This document is used as template by {{articles.length}} page/s</div>
             <div class="flex flex-col bg-gray-300 p-2 rounded">
             <div class="text-sm">This block/document will be linked to a new page.</div>
             <div class="flex flex-col">
@@ -354,6 +355,7 @@
 </template>
 
 <script>
+import qryPageTemplate from '@/apollo/articles-template_id.gql'
 import MokaReusableElements from '@/components/editor/render/moka.reusable'
 import MokaReusable from '@/components/editor/render/moka.reusable.preview'
 import MokaEditorPreview from '@/components/editor/preview/moka.preview'
@@ -428,7 +430,18 @@ export default {
         bodySettings: false,
         templateSettings: false
     }),
-   
+    apollo: {
+        articles : {
+            query: qryPageTemplate,
+            variables(){
+                return {
+                    template_id : this.$attrs.component.blocks_id
+                }
+            },
+            update: data => data.articles
+            
+        }
+    },
     computed:{
         ...mapState ( ['moka','editor'] ),
         //body settings in preview mode
@@ -451,11 +464,13 @@ export default {
             this.doc.id ? null : this.doc.id = this.$randomID()
             this.page.template_id = this.$attrs.component.blocks_id
             this.page.component = this.$attrs.component.id
-            //this.$store.dispatch ( 'setCurrent' , this.doc )
-            //this.$store.dispatch ( 'selected' , this.doc.id )
+            this.page.blocks = this.$attrs.component
             this.mycomponent = this.$attrs.component
+            
+            
             return true
         },
+        
         //import elements schema
         schema(){
             return this.moka.elements.moka
@@ -468,6 +483,14 @@ export default {
             this.editor.current.blocks.push ( grid )
             //this.doc.blocks.push ( grid )
             this.grids = false
+        },
+        hasPages(){
+            let css = 'text-red-500'
+            this.articles && this.articles.length ? 
+                this.articles.length === 1 ?
+                    this.$store.dispatch ( 'message' , 'This block is used as template by ' + this.articles[0].title + ' article') : 
+                        this.$store.dispatch ( 'message' , 'This block is used as template by ' + this.articles.length + ' articles' ) : css = ''
+            return css
         },
         //save new elements type
         saveNewType(){
@@ -531,12 +554,12 @@ export default {
         },
         //replace a basic HTML element (not containers)
         replaceElement(component){
-            console.log ( component )
+            //console.log ( component )
             component.id = this.$randomID()
             let obj = JSON.parse(JSON.stringify(component))
             this.editor.current = obj 
             this.editor.parent[0][this.editor.parent[1]] = obj
-            console.log ( obj )
+            //console.log ( obj )
             delete obj.parent
             this.$store.dispatch('selected',obj.id)
             this.$store.dispatch('setCurrent',obj)
@@ -557,7 +580,7 @@ export default {
             obj.css.css = ''
             obj.cols = parseInt(this.grid.cols)
             let content 
-            console.log ( obj.cols )
+           //console.log ( obj.cols )
             for ( var n = 0 ; n < parseInt(this.grid.cols) ; n++ ){
                 content = JSON.parse(JSON.stringify(this.schema.text[2]))
                 content.id = this.$randomID()
@@ -576,12 +599,12 @@ export default {
                 obj.blocks[n] = el
             }
             this.doc.blocks.push ( obj )
-            console.log ( obj )
+            //console.log ( obj )
             this.grids = false
         },
         addMultipleBlocks(reusable){
             reusable.json.blocks.forEach ( block => {
-                console.log ('multiple blocks=>' , block )
+                //console.log ('multiple blocks=>' , block )
                 let obj = { json: { blocks: [ block ] }}
                 this.addReusable( obj )
             })
@@ -590,7 +613,7 @@ export default {
             this.reusable = false
             let component = {}
             let json , imported
-            console.log ( 'importing ... ' , obj )
+            //console.log ( 'importing ... ' , obj )
             if ( obj.hasOwnProperty ( 'json' ) ){
                 if ( !obj.json.hasOwnProperty('slider' ) ) {
                     imported = obj.json.blocks[0]
@@ -623,7 +646,7 @@ export default {
         },
         //add a reusable block (copied element or selected from the list)
         addReusable(id){
-            console.log ( id )
+            //console.log ( id )
             if ( typeof id != 'object' ){
                 this.$http.get('components/' + id ).then ( resp => {
                     let obj = resp.data
@@ -636,40 +659,6 @@ export default {
             } else {
                 this.addObject ( id )
             }
-            /*
-                this.reusable = false
-                let component = {}
-                let json , imported
-                if ( obj.hasOwnProperty ( 'json' ) ){
-                    if ( !obj.json.hasOwnProperty('slider' ) ) {
-                        imported = obj.json.blocks[0]
-                        component = this.$clone(imported)
-                    } else {
-                        imported = obj.json
-                        component = this.$clone(imported)
-                    }            
-                } else {
-                    imported = obj
-                    component = this.$clone(imported)
-                }
-                if ( component ){
-                    component['gsap'] = {
-                        animation: '',
-                        ease: '',
-                        duration: 0,
-                        delay:0
-                    }
-                    component.id = this.$randomID()
-                    let target = this.editor.current
-                    if ( !target || this.addBlock ){
-                        target = this.doc
-                    }
-                    target.blocks.push ( component )
-                    this.addBlock = false
-                    //this.copiedElement = null
-                    this.$store.dispatch('setAction',null)
-                }
-            */
         },
         //add an HTML element
         addComponent(component){
@@ -694,7 +683,10 @@ export default {
         //save screenshot of blocks
         save(screenshot){
             this.mycomponent.image = screenshot
-            this.mycomponent.image_uri = ''
+            this.mycomponent.image_uri = 
+                !screenshot.url.includes('http') ? 
+                    process.env.VUE_APP_API_URL + screenshot.url.replace('/','') : 
+                        screenshot.url
             this.$emit('save')
         },
         //screenshot print
@@ -712,11 +704,11 @@ export default {
             let screenshot = await this.$html2canvas(el, options)
             if ( this.$attrs.component.image && this.$attrs.component.image.id ){
                 this.$http.delete('/upload/files/' + this.$attrs.component.image.id ).then ( resp => {
-                    console.log ( resp )
+                    //console.log ( resp )
                 })
             }
             this.srcToFile ( screenshot ,  'moka-preview-' + this.$attrs.component.name + '.jpg' , 'image/jpg' ).then ( resp => { 
-                console.log ( 'src to file => ' , resp )
+                //console.log ( 'src to file => ' , resp )
                 let formData = new FormData()
                 formData.append("files", resp )
                 this.$http.post("/upload", 
@@ -730,7 +722,8 @@ export default {
                     this.save(screenshot)
                     return screenshot
                 }).catch ( error => {
-                    console.log ( error )
+                    this.$store.dispatch ( 'message' , 'An error occured. Check your console log')
+                    //console.log ( error )
                 })
             })
             
@@ -744,10 +737,10 @@ export default {
         //print an element (Ctrl+o)
         async printElement(id) {
             let el , options
-            console.log ( id )
+            //console.log ( id )
             el = document.querySelector('.moka-block-preview')
             el = el.querySelector('#content')
-            console.log ( el )
+            //console.log ( el )
             options = { type: "dataURL" , useCORS: true , scale: .70 }
             this.snapshot = await this.$html2canvas(el, options)
             this.$store.dispatch('message','Click on the image to download')
@@ -777,6 +770,7 @@ export default {
             return null
         },
         viewhtml(html){
+            
             this.html = this.$beautify ( html.replaceAll('<!---->','').replaceAll('[object Object]','') )
         }
         
@@ -790,6 +784,13 @@ export default {
             this.doc.fontFamily = font
         },
     },
-    
+    mounted(){
+        /*
+        this.hasPages = 'text-red-500'
+        this.articles && this.articles.length ? 
+            this.articles.length === 1 ?
+                this.$store.dispatch ( 'message' , 'This block is used as template by ' + this.articles[0].title ) : this.$store.dispatch ( 'message' , 'This block is used as template by ' + this.articles.length + ' pages' ) : this.hasPages = ''
+        */
+    }
 }
 </script>

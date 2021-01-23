@@ -1,5 +1,5 @@
 <template>
-    <div v-if="init">
+    <div v-if="init" :key="galleryID">
         <div v-if="$attrs.gallery" class="moka-components-gallery flex flex-col md:grid md:grid-cols-4 md:grid-flow-cols md:gap-8 w-full items-start justify-start cursor-pointer object-fit" style="grid-auto-rows: .5fr;">
             <moka-loading v-if="!objects"/>
             <!--<div v-if="!objects" class="nuxpresso-modal border-none shadow-none p-1">
@@ -58,7 +58,8 @@ export default {
         current: null,
         index: null,
         objects: null,
-        components: null
+        components: null,
+        galleryID: null
     }),
     props: ['filter','type'],
     computed:{
@@ -74,6 +75,7 @@ export default {
     mounted(){
         this.$apollo.queries.blocks.refetch()
         this.objects = this.blocks
+        this.galleryID = this.$randomID()
     },
     watch:{
         type(v){
@@ -87,7 +89,13 @@ export default {
     methods:{
         selectComponent(id,action){
             this.$http.get('components/' + id ).then ( result => {
-                this.$emit(action,result.data)
+                if ( action === 'duplicate' ){
+                    this.duplicateBlock ( result.data )
+                } else {
+                    this.$emit(action,result.data)
+                }
+                //this.galleryID = this.$randomID()
+                //console.log ( this.$apollo )
             })
         },
         selectComponentTable(comp){
@@ -108,13 +116,30 @@ export default {
                 comp.image_uri ? image = comp.image_uri : ''
             return image ? image : ''
         },
-        removeBlock(){
-            console.log ( 'removing block' , this.current )
-            this.blocks.splice(this.index,1)
-            this.$http.delete ( 'components/' + this.current ).then ( result => {
-                console.log ( result )
+        duplicateBlock(comp){
+            let component = Object.assign ( {} , comp )
+            component.id = this.$randomID()
+            component.blocks_id = null
+            component.name = comp.name + ' COPY'
+            this.$http.post ( 'components' , component ).then ( result => {
+                this.$store.dispatch('loadComponents')
+                this.$store.dispatch('message','Blocks copied')
+                this.$apollo.queries.blocks.refetch()
+            }).catch ( error => {
+                this.$store.dispatch('message','An error occured. Check you console log.')
+                console.log ( error )
+                this.loading = false
             })
         },
+        removeBlock(){
+            console.log ( 'removing block' , this.current )
+            //this.blocks.splice(this.index,1)
+            this.$http.delete ( 'components/' + this.current ).then ( result => {
+                console.log ( result )
+                this.$apollo.queries.blocks.refetch()
+            })
+        },
+       
         removeElement(){
             if ( this.current && this.confirm ){
                 this.$attrs.components.splice(this.index,1)

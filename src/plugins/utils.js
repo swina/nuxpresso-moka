@@ -36,7 +36,7 @@ export default {
         }
     }
     Vue.prototype.$imageURL = ( image ) => {
-        if ( !image ) return false
+        if ( !image ) return ''
         let url = ''
             //image.previewUrl ? 
             //    image.previewUrl.includes('http') ? 
@@ -44,6 +44,20 @@ export default {
             //            url = process.env.VUE_APP_API_URL + image.previewUrl.replace('/','') :
                             image.url.includes('http') ? url = image.url : 
                                 url = process.env.VUE_APP_API_URL + image.url.replace('/','') 
+        return url
+        
+    }
+
+    Vue.prototype.$imagePreviewURL = ( image ) => {
+        if ( !image ) return ''
+        let url = ''
+            image.previewUrl ? 
+                image.previewUrl.includes('http') ? 
+                    url = image.previewUrl : 
+                        url = process.env.VUE_APP_API_URL + image.previewUrl.replace('/','') :
+                            image.url.includes('http') ? url = image.url : 
+                                url = process.env.VUE_APP_API_URL + image.url.replace('/','') 
+        
         return url
         
     }
