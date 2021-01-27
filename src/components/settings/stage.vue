@@ -8,27 +8,36 @@
             <div class="flex flex-row">
                 <button class="rounded-none bg-white text-blue-300 mr-2" @click="start=0,limit=10,mode='articles'">Articles</button> 
                 <button class="rounded-none bg-white text-blue-300 mr-2" @click="start=0,limit=10,mode='components'">Components</button>
-                <button class="rounded-none bg-white text-blue-300 mr-2" @click="start=0,limit=16,mode='upload'">Media</button>
+                <!-- <button class="rounded-none bg-white text-blue-300 mr-2" @click="start=0,limit=16,mode='upload'">Media</button> -->
             </div>
             <div class="flex flex-row">
                 <div class="w-1/2 p-2">
                     <h4 class="bg-blue-200 p-1">Staging</h4>
-                    <div>SERVER: localhost</div>
-
+                    <div><i class="material-icons">dns</i> {{ staging }}</div>
                     <div v-if="mode==='articles'">
-                        <div class="font-bold">Articles</div>
-                        <draggable tag="div" :list="moka.articles" :group="{ name: 'articles', pull: 'clone', put: false }" class="flex flex-col">
-                            <template v-for="(article,index) in moka.articles">
-                                <div v-if="index >= start && index < (start+limit)" class="text-sm p-1 mb-1 border shadow cursor-pointer" title="double click to transfer"   @dblclick="origin=article,confirm=!confirm">{{index+1}} - <span class="mr-4">{{ $moment(article.updated_at)}}</span> {{article.title}}</div>
-                                
+                        <div class="font-bold">Articles  <span v-if="total">[{{total}}]</span></div>
+                        <!-- <draggable tag="div" :list="moka.articles" :group="{ name: 'articles', pull: 'clone', put: false }" -->
+                        
+                        <div class="flex flex-col"> 
+                            <template v-for="(article,index) in articles">
+                                <div class="text-sm p-1 flex-row flex mb-1 border shadow cursor-pointer" title="double click to transfer"   @dblclick="origin=article,confirm=!confirm">
+                                    <div class="w-8">{{index+1}}</div>
+                                    <div class="w-16 mr-4">{{ $moment(article.updated_at)}}</div> 
+                                    <div>
+                                        {{article.title}}
+                                        <br/>
+                                        slug: <i>{{ article.slug }}</i>
+
+                                    </div>
+                                </div>
                             </template> 
                         
-                        </draggable>
+                        </div>
                         <!--<select size="10" class="w-64">
                             <option v-for="article in moka.articles" :value="article"  @dblclick="origin=article,confirm=!confirm">{{ article.title }}</option>
                         </select>-->
                     </div>
-
+                    
                     <div v-if="mode==='components'">
                         <div class="font-bold">Components</div>
                         <div class="grid grid-cols-2 gap-2">
@@ -39,7 +48,7 @@
                             <div v-if="origin && origin.image && origin.image.url" class="bg-gray-800 h-64 w-full bg-contain bg-no-repeat bg-center border" :style="'background-image:url(' + $imageURL(origin.image) + ')'"></div>
                         </div>
                     </div>
-
+                    <!--
                     <div v-if="files && mode==='upload'">
                         <div class="font-bold">Media <span class="text-xs">Drag&Drop to server</span></div>
                         <draggable tag="div" :list="files" :group="{ name: 'media', pull: 'clone', put: false }" class="flex flex-row flex-wrap justify-center">
@@ -54,25 +63,33 @@
                         </draggable>
                     
                     </div>
+                    -->
                     <div class="w-full flex justify-around">
                                 <i @click="prev" v-if="start > 0" class="material-icons mr-2 text-3xl cursor-pointer">chevron_left</i>
                                 <i v-if="start < 1" class="material-icons mr-2 text-3xl text-gray-300">chevron_left</i>
-                                <i @click="next" class="material-icons text-3xl cursor-pointer">chevron_right</i>
+                                <i @click="next" v-if="(limit+start)<total" class="material-icons text-3xl cursor-pointer">chevron_right</i>
+                                <i v-else="(limit+start)<total" class="material-icons text-3xl cursor-pointer text-gray-300">chevron_right</i>
                                 
                             </div>
                 </div>
                 <div class="w-1/2 p-2">
                     <h4 class="bg-purple-500 p-1">Production</h4>
-                    <draggable :list="trash" group="removed">SERVER: {{ master }}</draggable>
+                    <draggable :list="trash" group="removed"><i class="material-icons">dns</i> {{ master }}</draggable>
                     <div class="bg-lime-300 text-sm p-1" v-if="!articlesRemote && mode==='articles'">Loading ...</div>
                     <div v-if="production && mode==='articles'">
                         <div class="font-bold">Articles</div>
-                        <draggable :list="serverArticles" group="articles" class="flex flex-col" @add="onEndArticle">
-                            <template v-for="(article,index) in articlesRemote">
-                                <div class="text-sm p-1 mb-1 border shadow cursor-pointer">{{index+1}} - <span class="mr-4">{{ $moment(article.updated_at)}}</span> {{article.title}}</div>
-                                
+                        <template v-for="(article,index) in articlesRemote">
+                                <div class="text-sm p-1 flex-row flex mb-1 border shadow cursor-pointer" title="double click to transfer"   @dblclick="origin=article,confirm=!confirm">
+                                    <div class="w-8">{{index+1}}</div>
+                                    <div class="w-16 mr-4">{{ $moment(article.updated_at)}}</div> 
+                                    <div>
+                                        {{article.title}}
+                                        <br/>
+                                        slug: <i>{{ article.slug }}</i>
+
+                                    </div>
+                                </div>
                             </template> 
-                        </draggable>
                         <!--<select multiple size="10" class="w-64">
                             <option v-for="article in articles" :value="article">{{ article.title }}</option>
                         </select>-->
@@ -131,14 +148,14 @@ export default {
     name: 'MokaStaging',
     components: { draggable },
     data:()=>({
-        articles: null,
         articlesRemote: null,
+        total: 0,
         blocks: null,
         origin:null,
-        mode: '',
+        mode: 'articles',
         confirm: false,
         start: 0,
-        limit:15,
+        limit:10,
         serverArticles:[],
         serverMedia:[],
         trash:[],
@@ -161,6 +178,9 @@ export default {
         },
         master(){
             return this.moka.remote_api
+        },
+        staging(){
+            return process.env.VUE_APP_API_URL
         },
         production(){
             console.log ( 'loading' )
@@ -262,9 +282,12 @@ export default {
                         
                         this.origin = article
                         this.origin.id = art.id 
-                        this.origin.SEO = art.SEO
-                        this.origin.SEO.title = article.title
-                        this.origin.SEO.description = article.description 
+                        this.origin.seo_title = article.title
+                        this.origin.seo_description = article.seo_description
+                        if ( this.origin.image ){
+                            this.origin.featured_img = this.origin.image
+                            this.origin.image = null
+                        }
                         this.message = 'An article is present in production with the same slug. Do you want to update the remote article?'
                     } else {
                         this.save ( this.mode , article )
@@ -278,6 +301,10 @@ export default {
     },
     mounted(){
         console.log ( this.$apolloData.loading )
+        this.$http.get('articles/count').then ( response => {
+            this.total = parseInt(response.data )
+            console.log ( 'total=>' , response )
+        })
         if ( this.enabled ){
             this.remote.post ( this.master + 'auth/local' , {
                 identifier: this.moka.remote_user,
@@ -311,7 +338,7 @@ export default {
         articles: {
             query: articlesQry,
             variables(){
-                return { limit : this.limit , start: this.start }
+                return { limit : this.limit , start: this.start , sort: 'title:ASC'}
             },
             update: data => data.articles
         },

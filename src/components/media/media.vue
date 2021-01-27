@@ -47,7 +47,7 @@
         <div class="w-full text-center my-4 grid grid-cols-3 grid-cols-auto">
             <div class="text-left">
                 <span class="text-sm" v-if="selected">{{ selected.name }} 
-                    <button @click="deleteMedia">Delete</button>
+                    <button @click="$store.dispatch('setAction','deleteMedia')">Delete</button>
                     <button class="ml-2" @click="edit=!edit">Edit</button>
                 </span>
             </div>
@@ -67,27 +67,35 @@
         </transition>
          <transition name="fade">
             <div class="nuxpresso-modal z-2xtop w-2/3  h-2/3 shadow-xl border rounded p-2" v-if="edit">
-                <moka-edit-media :img="selected" @close="edit=!edit"/>
+                <moka-edit-media :img="selected" @close="edit=!edit" @delete="$store.dispatch('setAction','deleteMedia')"/>
             </div>
         </transition>
-         <transition name="fade">
-        <div v-if="selectThumbnail" class="nuxpresso-modal w-3/4 p-2 z-2xtop">
-            <i class="material-icons absolute right-0 top-0 m-1" @click="selectThumbnail=!selectThumbnail">close</i>
-            <p>This image has a different formats. Select one.</p>
-            <div class="flex flex-row text-xs">
-                <div class="w-2/3 p-2">
-                    <img :src="selectedImage.url" class="border w-full object-fit" @click="assignImg('')"/>
-                    {{ selectedImage.width}} x {{ selectedImage.height}} - 
-                    {{ selectedImage.size }} KB
-                </div>
-                <div class="w-1/3 p-2">
-                    <img :src="selectedImage.formats.thumbnail.url" class="border w-full h-auto" @click="assignImg('thumb')"/>
-                    {{ selectedImage.formats.thumbnail.width}} x {{ selectedImage.formats.thumbnail.height}} - 
-                    {{ selectedImage.formats.thumbnail.size }} KB
+        <transition name="fade">
+            <div v-if="selectThumbnail" class="nuxpresso-modal w-3/4 p-2 z-2xtop">
+                <i class="material-icons absolute right-0 top-0 m-1" @click="selectThumbnail=!selectThumbnail">close</i>
+                <p>This image has a different formats. Select one.</p>
+                <div class="flex flex-row text-xs">
+                    <div class="w-2/3 p-2">
+                        <img :src="selectedImage.url" class="border w-full object-fit" @click="assignImg('')"/>
+                        {{ selectedImage.width}} x {{ selectedImage.height}} - 
+                        {{ selectedImage.size }} KB
+                    </div>
+                    <div class="w-1/3 p-2">
+                        <img :src="selectedImage.formats.thumbnail.url" class="border w-full h-auto" @click="assignImg('thumb')"/>
+                        {{ selectedImage.formats.thumbnail.width}} x {{ selectedImage.formats.thumbnail.height}} - 
+                        {{ selectedImage.formats.thumbnail.size }} KB
+                    </div>
                 </div>
             </div>
-        </div>
-    </transition>
+        </transition>
+        <!-- DELETE OBJECT MODAL -->
+        <transition name="fade">
+            <div class="nuxpresso-modal bg-white border shadow p-4 z-2xtop" v-if="editor && editor.action==='deleteMedia'">
+                <h5>Delete this object ?</h5>
+                <button @click="$store.dispatch('setAction',null)">No</button>
+                <button class="ml-2 danger" @click="deleteMedia">Yes, delete</button>
+            </div>  
+        </transition>
     </div>
     </div>
 </template>
@@ -113,7 +121,7 @@ export default {
         total:0
     }),
     computed:{
-        ...mapState ( ['moka'] ),
+        ...mapState ( ['moka','editor'] ),
         media(){
             return this.files
         }
@@ -179,6 +187,8 @@ export default {
             this.$http.delete ( 'upload/files/' +  this.selected.id ).then ( resp => {
                 this.total--
                 this.selected = null
+                this.edit = false
+                this.$store.dispatch('setAction',null)
                 this.$apollo.queries.files.refetch()
             })
         }

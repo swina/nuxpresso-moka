@@ -22,7 +22,7 @@
                     </div>
                     <div class="text-center font-black" style="">M O K A</div>
                     <div class="absolute right-0 mr-2 flex flex-row items-center">
-                        <i class="material-icons hover:text-blue-500 mr-2" @click="$emit('save')" title="Save">save</i>
+                        <i class="material-icons hover:text-blue-500 mr-2" @click="saveComponent" title="Save">save</i>
 
                         <i class="material-icons hover:text-blue-500 mr-2" @click="$emit('savecopy')" title="Duplicate component">file_copy</i>
                         
@@ -188,7 +188,7 @@
     
     <!-- SAVE AS COMPONENT -->
     <transition name="fade">
-        <div v-if="saveBlockAsComponent" class="nuxpresso-modal rounded w-full md:w-1/4 p-2 flex flex-col bg-white z-2xtop">
+        <div v-if="saveBlockAsComponent" class="nuxpresso-modal rounded w-full md:w-1/3 p-2 flex flex-col bg-white z-2xtop">
             <i class="material-icons absolute top-0 right-0 cursor-pointer" @click="saveBlockAsComponent=!saveBlockAsComponent">close</i>
             
             <h4>Save Block As Reusable</h4>
@@ -199,6 +199,11 @@
                 <label>Category</label>
                 <select class="w-full" v-model="newComponent.category">
                     <option v-for="category in $categories()">{{ category }}</option>
+                </select>
+                <label>Type</label>
+                <select class="w-full" v-model="newComponent.tags">
+                    <option value=""></option>
+                    <option v-for="tipo in moka.elements.types.types" :value="tipo">{{ tipo }}</option>
                 </select>
                 <label>Description</label>
                 <textarea class="w-full" v-model="newComponent.description"/>
@@ -316,7 +321,7 @@
         <div v-if="createPage" class="nuxpresso-modal z-2xtop border w-1/3 bg-white p-2 rounded shadow">
             <i class="material-icons absolute top-0 right-0 m-1" @click="createPage=!createPage">close</i>
             <h5>Create CMS Article</h5>
-            <div class="text-orange-500 text-sm font-bold" v-if="hasPages">This document is used as template by {{articles.length}} page/s</div>
+            <!-- <div class="text-orange-500 text-sm font-bold" v-if="hasPages && articles">This document is used as template by {{articles.length}} page/s</div> -->
             <div class="flex flex-col bg-gray-300 p-2 rounded">
             <div class="text-sm">This block/document will be linked to a new page.</div>
             <div class="flex flex-col">
@@ -413,7 +418,8 @@ export default {
             name: 'A new component',
             description: 'A new component by MOKA',
             category: '',
-            enabled: true
+            enabled: true,
+            tags: ''
         },
         snapshot: null,
         html: null,
@@ -484,13 +490,41 @@ export default {
             //this.doc.blocks.push ( grid )
             this.grids = false
         },
+        saveComponent(){
+            if ( this.articles ){
+                console.log ( this.$attrs.component.id )
+                let inUseTemplate = this.articles.filter ( article => {
+                    console.log ( article.component.id )
+                    return parseInt(article.component.id) === parseInt(this.$attrs.component.id)
+                })
+                if ( inUseTemplate.length ){
+                    console.log ( 'savingPage ...')
+                    inUseTemplate.forEach ( templ => {
+                        templ.blocks = this.$attrs.component
+                        this.$http.put ( 'articles/' + templ.id , templ ).then ( response => {
+                            console.log ( 'update article ' , templ.title )
+                        })
+                    })
+                    this.$emit('save')
+                    //inUseTemplate[0].blocks = this.$attrs.component
+                    //let updateArticle = inUseTemplate[0]
+                    //this.$http.put ( 'articles/' + updateArticle.id , updateArticle ).then ( response => {
+                    //    this.$emit('save')
+                    //})
+                } else {
+                    this.$emit('save')
+                }
+            } else {
+                this.$emit('save')
+            }
+        },
         hasPages(){
             let css = 'text-red-500'
-            this.articles && this.articles.length ? 
-                this.articles.length === 1 ?
-                    this.$store.dispatch ( 'message' , 'This block is used as template by ' + this.articles[0].title + ' article') : 
-                        this.$store.dispatch ( 'message' , 'This block is used as template by ' + this.articles.length + ' articles' ) : css = ''
-            return css
+            return ''
+                //this.articles.length === 1 ?
+                    //this.$store.dispatch ( 'message' , 'This block is used as template by ' + this.articles[0].title + ' article') : 
+                        //this.$store.dispatch ( 'message' , 'This block is used as template by ' + this.articles.length + ' articles' ) : css = ''
+            //return css
         },
         //save new elements type
         saveNewType(){
@@ -682,11 +716,13 @@ export default {
         },
         //save screenshot of blocks
         save(screenshot){
-            this.mycomponent.image = screenshot
-            this.mycomponent.image_uri = 
-                !screenshot.url.includes('http') ? 
-                    process.env.VUE_APP_API_URL + screenshot.url.replace('/','') : 
-                        screenshot.url
+            if ( screenshot ){
+                this.mycomponent.image = screenshot
+                this.mycomponent.image_uri = 
+                    !screenshot.url.includes('http') ? 
+                        process.env.VUE_APP_API_URL + screenshot.url.replace('/','') : 
+                            screenshot.url
+            }
             this.$emit('save')
         },
         //screenshot print
@@ -784,13 +820,5 @@ export default {
             this.doc.fontFamily = font
         },
     },
-    mounted(){
-        /*
-        this.hasPages = 'text-red-500'
-        this.articles && this.articles.length ? 
-            this.articles.length === 1 ?
-                this.$store.dispatch ( 'message' , 'This block is used as template by ' + this.articles[0].title ) : this.$store.dispatch ( 'message' , 'This block is used as template by ' + this.articles.length + ' pages' ) : this.hasPages = ''
-        */
-    }
 }
 </script>

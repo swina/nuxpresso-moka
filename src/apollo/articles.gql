@@ -1,5 +1,5 @@
-query Articles {
-  articles {
+query Articles ( $start: Int , $limit: Int $sort : String ) {
+  articles ( start: $start , limit: $limit , sort: $sort ) {
     id
     title
     slug

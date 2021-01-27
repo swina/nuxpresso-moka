@@ -8,6 +8,7 @@ query Articles ( $limit : Int, $start : Int , $cat: String , $sort: String ) {
     excerpt
     updated_at
     random_image
+    featured_img
     lang
     categories {
       name

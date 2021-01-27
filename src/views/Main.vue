@@ -62,7 +62,7 @@
       </div>
       <div class="flex flex-row m-auto justify-around">
         <div v-if="!firstRun">
-          <div class="m-auto"><button class="w-24" @click="$router.push('dashboard')">Guest</button></div>
+          <!--<div class="m-auto"><button class="w-24" @click="$router.push('dashboard')">Guest</button></div>-->
           <div class="m-auto" v-if="!logged && !loginOK"><button class="w-24" @click="showLogin=!showLogin">Login</button></div>
         </div>
         <div class="m-auto" v-if="firstRun"><button class="w-24" @click="createUser">Create user</button></div>
@@ -75,6 +75,10 @@
         <input type="password" v-model="password" class="w-full dark"/>
         <button class="mt-2" @click="login">Login</button>
       </div>
+    </div>
+    <div class="absolute bottom-0 right-0 m-3 text-gray-500 flex flex-row items-center">
+      <i class="material-icons text-gray-500 mr-2" v-if="logged">lock</i>
+      <span class="text-sm">User: {{ JSON.parse(user.user).username }}</span>
     </div>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
     <div :class="' object-fit cursor-pointer flex flex-col justify-center items-center relative m-auto'">
-        <img v-if="$attrs.image && ( $attrs.image.ext === '.svg' || $attrs.image.ext === '.webm' || $attrs.image.ext === '.mp4')" :src="$imagePreviewURL($attrs.image)"  
+        <img v-if="$attrs.image && $attrs.image.hasOwnProperty('url')" :src="$imagePreviewURL($attrs.image)"  
         :class="'m-auto mb-2 ' + size" @click="$emit('media')"/>
         <!--<i class="material-icons text-5xl" v-if="editor && editor.current && editor.current.type==='video'">movie</i>-->
         <i class="material-icons text-5xl" v-if="editor && editor.current && editor.current.type==='audio'">audiotrack</i>

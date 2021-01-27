@@ -19,7 +19,7 @@
         
         <div class="capitalize flex flex-row justify-between p-2 border-b">
           <div>Media  </div>
-          <div>{{ media.length }}</div>
+          <div v-if="media">{{ media.length }}</div>
         </div>
         <div class="capitalize flex flex-row justify-between p-2 border-b">
           <div>Space  </div>

@@ -3,5 +3,9 @@ query Articles ( $template_id : String){
     id
     title
     template_id
+    component {
+        id
+    }
+    blocks
   } 
 }

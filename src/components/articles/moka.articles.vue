@@ -1,19 +1,21 @@
 <template>
     <div class="p-2 flex flex-col">
-        <div class="grid grid-cols-2 grid-flow-row items-center" style="grid-template-columns:1fr .2fr .6fr .2fr;">
-            <h3 class="">
-                <i class="material-icons" v-if="editor" @click="editor=!editor">chevron_left</i>
-                Articles <i v-if="!editor" class="material-icons" @click="$apollo.queries.articles.refetch()">refresh</i>
-            </h3> 
-            <button @click="createPage=!createPage">Create New</button>
+        <div class="grid grid-cols-2 grid-flow-row items-center" style="grid-template-columns:2fr 1fr;">
+            <div class="flex flex-row items-center">
+                <h3 class="">
+                    <i class="material-icons" v-if="editor" @click="editor=!editor">chevron_left</i>
+                    Articles <i v-if="!editor" class="material-icons" @click="$apollo.queries.articles.refetch()">refresh</i>
+                </h3> 
+                <button class="h-8 ml-4" @click="createPage=!createPage">Create New</button>
+            </div>
             <div class="text-right">Category 
                 <select v-model="filter">
                     <option value="">all</option>
                     <option v-for="category in moka.categories" :value="category.name">{{ category.name }}</option>
                 </select>
             </div>
-            <button @click="updateSEO">SEO Update</button>
-            <!--<a href="#" @click="gallery=!gallery" class="text-right"><i class="material-icons" v-if="!gallery">grid_on</i><i class="material-icons" v-if="gallery">list</i></a> -->
+            <!--<button @click="updateSEO">SEO Update</button>
+            <a href="#" @click="gallery=!gallery" class="text-right"><i class="material-icons" v-if="!gallery">grid_on</i><i class="material-icons" v-if="gallery">list</i></a> -->
         </div>
             <table class="w-full border text-sm text-left p-1" v-if="!editor">
                 <thead class="bg-gray-200">
@@ -93,18 +95,21 @@
                             </div>
                             <div class="mb-2 flex flex-col">
                                 Category
-                                <select class="w-full" v-model="currentArticle.categories" multiple>
+                                <select class="w-full" v-model="currentArticle.categories">
                                     <option v-for="(category,c) in categories" :value="category"> {{ category.name }} </option>
                                 </select>
                             </div>
                             <div><input type="checkbox" v-model="currentArticle.homepage"/> Homepage</div>
-                            <div class="flex h-48">
+                            <div class="flex h-32">
+                                <!--<img v-if="currentArticle.featured_image" :src="currentArticle.featured_image"/>
+                            <button v-if="!currentArticle.featurd_image" @click="media=!media,editorImage=false">Featured Image</button>-->
                                 <moka-image-placeholder :image="currentArticle.image" @click="media=!media" size="sm" @media="media=!media,editorImage=false" @noimage="currentArticle.image=null"/>
+                            
                             </div>
                             
                             <label>Tags</label>
-                            <textarea v-model="currentArticle.tags" class="h-32 w-full text-xs"></textarea>
-                            <div class="text-xs text-gray-300">Set a tag per line</div>
+                            <textarea v-model="currentArticle.tags" class="h-16 w-full text-xs"></textarea>
+                            <div class="text-xs text-gray-600">Set a tag per line</div>
                             <div class="flex flex-col">
                                 <div class="text-xl">SEO</div>
                                 <label>Title</label>
@@ -186,7 +191,8 @@ export default {
         templateImage(){
             if ( !this.currentArticle.component ) return ''
             if ( this.currentArticle.template_id ){ 
-                let template = this.templates.filter ( templ => { return templ.blocks_id === this.currentArticle.template_id } )
+                //let template = this.templates.filter ( templ => { return templ.blocks_id === this.currentArticle.template_id } )
+                let template = this.templates.filter ( templ => { return parseInt(templ.id) === parseInt(this.currentArticle.component) } )
                 if ( template.length && template[0].image && template[0].image.url ) return template[0].image.url
                 if ( template.length && template[0].image_uri ) return template[0].image_uri
                 return false
@@ -270,7 +276,7 @@ export default {
     watch:{
         articleSlug(id){
             this.$http.get ( 'articles/' + id ).then ( response => {
-                //console.log ( response )
+                
                 this.currentArticle = response.data
                 if ( this.currentArticle.component && !this.currentArticle.template_id ){
                     let template = this.moka.components.filter ( comp => {
@@ -377,6 +383,7 @@ export default {
         save(){
             let vm = this
             vm.currentArticle.id = parseInt(vm.currentArticle.id)
+            vm.currentArticle.featured_img = vm.currentArticle.image
             this.$http.put ( 'articles/' + vm.currentArticle.id , vm.currentArticle ).then ( response => {
                 //vm.currentArticle = response.data
                 this.createPage = false
@@ -415,7 +422,9 @@ export default {
                     this.$refs['editor'].quill.insertEmbed(range.index, 'image', img.url ) :
                         this.$emit('message','Set a position in the editor to place the image')
             } else {
+                this.currentArticle.featured_image = img.url
                 this.currentArticle.image = this.$cleanImage(img)
+                this.currentArticle.featured_img = this.$cleanImage(img)
             }
         }, 
         setWidget(widget){

@@ -20,9 +20,9 @@
                         <input type="text" v-model="moka.settings.seo_title"/>
                         <label class="font-bold">SEO Description (default)</label>
                         <textarea v-model="moka.settings.seo_description" class="w-3/4"/>
-                        <label class="font-bold">Google Analytics Code</label>
+                        <!--<label class="font-bold">Google Analytics Code</label>
                         <input type="text" v-model="moka.settings.google_analytics"/>
-                        <div class="text-xs">Leave blank to not apply</div>
+                        <div class="text-xs">Leave blank to not apply</div>-->
                         
                         
                         <label class="font-bold">Read More text</label>

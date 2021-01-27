@@ -20,9 +20,9 @@ const menu = {
             ]
         },
         { label: 'Media' , icon: 'photo' , component: 'MokaMedia' , filter: 'manager' },
-        { label: 'Settings' , icon: 'settings' , component: 'MokaSettings' , filter: '' },
         { label: 'Staging' , icon: 'dns' , component: 'MokaStage' , filter: '' },
-        { label: 'Deploy' , icon: 'dynamic_form' , component: 'MokaDeploy' , filter: '' },
+        { label: 'Publish' , icon: 'dynamic_form' , component: 'MokaDeploy' , filter: '' },
+        { label: 'Settings' , icon: 'settings' , component: 'MokaSettings' , filter: '' },
         { label: 'Grid Templates' , icon: 'grid_on' , component: 'MokaGrid' , filter: 'demo' },
         
     ]

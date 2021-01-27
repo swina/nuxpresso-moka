@@ -15,7 +15,8 @@
             <label>URL</label>
             <input class="w-full" type="text" readonly v-model="image.url"/>
             <div class="w-full text-right mt-4">
-                <button class="danger mr-2" @click="$emit('close')">Close</button>
+                <button class="danger mr-2" @click="$emit('delete')">Delete</button>
+                <button class="bg-gray-100 text-black mr-2" @click="$emit('close')">Close</button>
                 <button @click="save">Save</button>
             </div>
         </div>

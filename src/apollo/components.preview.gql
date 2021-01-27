@@ -1,0 +1,22 @@
+query Components ( $start: Int , $limit: Int, $type: String , $category: String ) {
+  components ( 
+        where: { 
+            enabled: true , 
+            category: $category , 
+            tags_contains: $type
+        }, 
+        start: $start,
+        limit: $limit,
+        sort: "name:ASC"  )
+    {
+        name
+        id
+        blocks_id
+        category
+        tags
+        image_uri
+        image {
+            url
+        }
+    }
+}

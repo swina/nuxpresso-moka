@@ -275,7 +275,7 @@ export default {
             this.$http.post ( 'components' , component ).then ( result => {
                 this.$store.dispatch('loadComponents')
                 this.$store.dispatch('message','New component saved')
-                console.log ( result )
+                
                 this.loading = false
             }).catch ( error => {
                 this.$store.dispatch('message','An error occured. Check you console log.')

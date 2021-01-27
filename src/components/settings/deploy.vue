@@ -1,7 +1,7 @@
 <template>
     <div class="p-4" v-if="enabled">
-        <h3>NUXPRESSO DEPLOY</h3>
-        <input type="text" v-model="user.build" class="w-1/2"/><button @click="deployNuxpresso">Deploy</button>
+        <h3>NUXPRESSO PUBLISH WEBHOOK</h3>
+        <input type="text" v-model="user.build" class="w-1/2"/><button @click="deployNuxpresso">Publish</button>
         <br/>
         <i class="text-sm">This will deploy nuxpresso front-end website</i>
         <br/>
