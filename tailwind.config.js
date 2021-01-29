@@ -165,6 +165,11 @@ module.exports = {
         }
     },
   },
+  purge: [
+    './src/**/*.html',
+    './src/**/*.vue',
+    './src/**/*.js',
+  ],
   variants: {
     transform: ['responsive'],
     translate: ['responsive'],

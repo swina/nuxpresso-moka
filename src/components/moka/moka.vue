@@ -63,12 +63,21 @@ export default {
         },
     }),
     computed: {
-        ...mapState ( ['moka'] )
+        ...mapState ( ['moka'] ),
+        devMode(){
+             if ( typeof webpackHotUpdate === 'undefined' ) {
+                 
+                 return false
+             }
+             return true
+        },
     },
     mounted(){
         this.component = this.$store.getters.component
-        this.$http.defaults.headers.common = {
-            'Authorization': window.localStorage.getItem('nuxpresso-jwt')
+        if ( process.env.NODE_ENV === 'development' ){
+            this.$http.defaults.headers.common = {
+                'Authorization': window.localStorage.getItem('nuxpresso-jwt')
+            }
         }
         this.$http.get('upload/files').then ( response => {
             this.$store.dispatch ( 'loadMedia' , response.data )
@@ -76,6 +85,7 @@ export default {
     },
     methods: {
         save(){
+            
             this.loading = true
             console.log ( 'save =>' , this.component.blocks_id , this.component.json.id )
             this.$store.dispatch ( 'loading' , true )

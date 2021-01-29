@@ -52,6 +52,13 @@
         
       </div>
     </div>
+    <div v-if="!devMode" class="w-full flex-col p-2 border">
+      Welcome to MOKAStudio Playground.
+      <br/><br/>
+      This a demo and many options are available only in development mode.
+      <br/><br/>
+      Save is disabled.
+    </div>
     <div class="fixed bottom-0 left-0 p-2 text-sm w-full text-center bg-gray-600 text-white" v-if="isLoading">
       Loading data ...
     </div>
@@ -74,6 +81,9 @@ export default {
   }),
   computed:{
     ...mapState ( [ 'moka' , 'user' ] ),
+    devMode(){
+      return process.env.NODE_ENV === 'development' ? true : false
+    },
     grouped(){
       return this.$arrayGroup(this.components,'category','id')
     },
