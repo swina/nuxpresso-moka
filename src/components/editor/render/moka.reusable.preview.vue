@@ -7,7 +7,9 @@
             <div class="w-1/2 flex flex-col mb-4 cursor-pointer relative p-1 justify-center items-center" @click="$emit('add',template.id)" :title="template.name">
                 <span class="text-sm p-1">{{ template.name.substring(0,20) }}</span>
                 <div v-if="template.image && template.image.url" :style="'background-image:url(' + $imageURL(template.image) + ')'" class="h-24 w-full bg-center bg-no-repeat bg-contain shadow" ></div>
-                <div v-else class="h-24 w-full shadow flex flex-col items-center"><img class="w-16 m-auto opacity-50" src="img/logo.png"/></div>
+                <div v-if="template.image_uri"  :style="'background-image:url(' + $imageURL(template.image_uri) + ')'" class="h-24 w-full bg-center bg-no-repeat bg-contain shadow" ></div>
+                
+                <div v-if="!template.image && !template.image_uri" class="h-24 w-full shadow flex flex-col items-center"><img class="w-16 m-auto opacity-50" src="img/logo.png"/></div>
             </div>
         </template>
     </div>
