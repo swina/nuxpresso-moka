@@ -22,6 +22,7 @@ const menu = {
         { label: 'Media' , icon: 'photo' , component: 'MokaMedia' , filter: 'manager' },
         { label: 'Staging' , icon: 'dns' , component: 'MokaStage' , filter: '' },
         { label: 'Publish' , icon: 'dynamic_form' , component: 'MokaDeploy' , filter: '' },
+        //{ label: 'Build' , icon: 'dynamic_form' , component: 'MokaBuild' , filter: '' },
         { label: 'Settings' , icon: 'settings' , component: 'MokaSettings' , filter: '' },
         { label: 'Grid Templates' , icon: 'grid_on' , component: 'MokaGrid' , filter: 'demo' },
         

@@ -8,7 +8,6 @@ import moment from 'moment'
     Vue.use(icons)
     */
 
-
 export default {
     install: function (Vue) {
 

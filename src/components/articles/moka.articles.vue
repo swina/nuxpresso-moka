@@ -84,6 +84,7 @@
                         <button class="warning mr-2" @click="editor=!editor">Close</button>
                         <button class="success mr-2" @click="save">Save</button>    
                         <button @click="wordpress=!wordpress">WP page</button>
+                        <button @click="exportPage=!exportPage">Export</button>
                         <div class="flex flex-col mt-6" v-if="templates">
                             <div class="mb-2 flex flex-col">
                                 <button class="sm mb-2" @click="selectTemplate=!selectTemplate">Page / Template</button> 
@@ -164,6 +165,9 @@
                     <input type="text" v-model="wprestapi"/><button @click="importWPPage">Import</button>
                 </div>
             </transition>
+            <transition name="fade">
+                <moka-export-article :article="currentArticle" :title="currentArticle.homepage?'homepage':currentArticle.slug" v-if="exportPage && currentArticle" @close="exportPage=!exportPage"/>
+            </transition>
     </div>
 </template>
 
@@ -175,12 +179,13 @@ import MokaTextEditor from '@/components/editor/render/moka.text.editor'
 import MokaImagePlaceholder from '@/components/editor/render/moka.editor.image.placeholder'
 import MokaTemplates from '@/components/articles/moka.articles.templates'
 import MokaMedia from '@/components/media/media'
+import MokaExportArticle from '@/components/articles/moka.article.export'
 import { mapState } from 'vuex'
 var self = this
 
 export default {
     name: 'MokaArticles',
-    components: { MokaTextEditor , MokaImagePlaceholder , MokaMedia , MokaTemplates  },
+    components: { MokaTextEditor , MokaImagePlaceholder , MokaMedia , MokaTemplates, MokaExportArticle  },
     computed : { 
         ...mapState ( ['moka' ] ),
         templates (){
@@ -237,7 +242,8 @@ export default {
                 title: '',
                 description: 'A new nuxpresso page'
             }
-        }
+        },
+        exportPage: false
     }),
     apollo:{
         articles: {
@@ -390,8 +396,8 @@ export default {
                 this.$store.dispatch('message','Article has been saved successfully')
                 this.$apollo.queries.articles.refetch()
             }).catch ( error => {
-                vm.$emit('message','An error occurred. Check you console log')
-                //console.log ( error )
+                this.$store.dispatch('message','An error occurred. Check you console log')
+                console.log ( error )
                 this.createPage = false
             })
             
@@ -401,8 +407,8 @@ export default {
                 this.$store.dispatch('message','Article has been created successfully')
                 this.$apollo.queries.articles.refetch()
             }).catch ( error => {
-                vm.$emit('message','An error occurred. Check you console log')
-                //console.log ( error )
+                this.$store.dispatch('message','An error occurred. Check you console log')
+                console.log ( error )
             })
         },
         addImage(){
@@ -450,9 +456,13 @@ export default {
                 article.seo_description = 'A nuxpresso article'
                 this.$http.put ( 'articles/' + article.id , article ).then ( resp => {
                     console.log ( resp )
+                }).catch ( error => {
+                    this.$store.dispatch('message','An error occurred. Check you console log')
+                    console.log ( error )
                 })
             })
-        }
+        },
+        
     },
 }
 </script>

@@ -1,5 +1,6 @@
 const user = {
     state: {
+        mode: process.env.NODE_ENV ,
         login: false,
         user: null,
         dashboard: 'MokaHome',

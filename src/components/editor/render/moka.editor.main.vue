@@ -451,6 +451,13 @@ export default {
     computed:{
         ...mapState ( ['moka','editor'] ),
         //body settings in preview mode
+        devMode(){
+             if ( typeof webpackHotUpdate === 'undefined' ) {
+                 
+                 return false
+             }
+             return true
+        },
         body_settings(){
             return this.preview ?
                 this.doc.body_bg  + ' ' + this.doc.body_color :
@@ -491,6 +498,10 @@ export default {
             this.grids = false
         },
         saveComponent(){
+            if ( !this.devMode ){
+                this.$store.dispatch('message','This option is available only in development mode')
+                return 
+            }
             if ( this.articles ){
                 console.log ( this.$attrs.component.id )
                 let inUseTemplate = this.articles.filter ( article => {
@@ -727,10 +738,18 @@ export default {
         },
         //screenshot print
         saveprint(){
+            if ( !this.devMode ){
+                this.$store.dispatch('message','This option is available only in development mode')
+                return
+            }
             this.print()
         },
         //print action
         async print(block='content') {
+            if ( !this.devMode ){
+                this.$store.dispatch('message','This option is available only in development mode')
+                return
+            }
             let el , options
             el = document.querySelector('#' + block)
             if (!el){

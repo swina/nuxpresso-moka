@@ -9,10 +9,6 @@ query Articles ( $slug : String){
     featured_img
     tags
     lang
-    user {
-      firstname
-      lastname
-    }
     image { 
         name 
         url
