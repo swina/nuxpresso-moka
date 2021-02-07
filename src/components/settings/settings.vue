@@ -27,6 +27,13 @@
                         
                         <label class="font-bold">Read More text</label>
                         <input type="text" v-model="moka.settings.read_more"/>
+
+                        <label class="font-bold">Responsive menu class</label>
+                        <textarea v-model="moka.settings.responsive_menu_css" class="w-3/4"/>
+
+                        <label class="font-bold">Responsive menu transition</label>
+                        <input type="text" v-model="moka.settings.responsive_menu_transition"/>
+                        <p class="text-xs">(default fade)</p>
                     </div>
                     <div class="w-1/2">
                         <label class="font-bold">Layout settings</label>

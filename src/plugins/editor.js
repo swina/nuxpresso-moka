@@ -284,7 +284,7 @@ export default {
                     "css": {
                         "css": "",
                         //"container": "flex flex-col md:grid md:grid-cols-" + cols
-                        "container" : "grid md:grid-rows-1 md:grid-cols-" + cols +  " grid-cols-1 grid-rows-" + cols
+                        "container" : "grid md:grid-rows-1 md:grid-cols-" + cols +  " grid-cols-1"
                         //"container" : "grid sm:grid-rows-" + cols + " md:grid-cols-" + cols
                     },
                     "cols" : cols,
@@ -585,9 +585,9 @@ export default {
                 css = css.replace(/\s\s+/g, ' ') 
                 let key = css.split('-')[0]
                 let val = css.split('-')[1]
-                if (  pixelsAttrs[key] ){
+                if (  pixelsAttrs[key] && textSizes.indexOf ( css ) < 0 ){
                     let value = pixels.indexOf ( parseInt(css.split('-')[1])*4 )
-                    let rval = value > 5 ? pixels[value-5]/4 : 1
+                    let rval = value > 4 ? pixels[value-4]/4 : 1
                     responsiveCss += ' ' + key + '-' + parseInt(rval) + ' md:' + css
                 } else {
                     if ( textSizes.indexOf ( css ) > -1 ){

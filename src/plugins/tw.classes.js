@@ -202,6 +202,7 @@ var classes = {
         'font-black'
     ],
     bgOpacity: setOpacity('bg-opacity'),
+    opacity: setOpacity('opacity'),
     colors: colors,
     bgcolor : setColors('bg'),
     flexdirection : [ 'flex-col' , 'flex-row' , 'flex-col-reverse' , 'flex-row-reverse' ],
@@ -479,6 +480,7 @@ var classes = {
         'shadow-xl',
         'shadow-2xl'
     ],
+    grayscale : ['grayscale'],
     animation: [
         'animate-none',
         'animate-ping',

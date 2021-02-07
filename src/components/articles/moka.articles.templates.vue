@@ -40,6 +40,9 @@ export default {
             template.image && template.image.url ?
                 image = template.image.url : 
                     template.image_uri ? image = template.image_uri : ''
+            if ( !image.includes('http') ){
+                image = process.env.VUE_APP_API_URL + image.substring(1)
+            }
             return image
         },
         next(){

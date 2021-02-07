@@ -3,9 +3,17 @@
     <nav v-if="el.element === 'menu'" :class="menu_responsive(el) + ' z-top ' + el.css.align"> 
         <div v-for="(item,i) in el.items" :class="el.css.css + ' cursor-pointer relative pr-4'" :key="el.id + '_' + i"> 
 
-            <a :class="el.css.css" v-if="!item.submenu && !$attrs.develop && item.link && !item.link.includes('http')" :href="item.link">{{ item.label }} <i v-if="item.submenu" class="material-icons moka-icons">arrow_drop_down</i></a>
+            <a :class="el.css.css" v-if="!item.submenu && !$attrs.develop && item.link && !item.link.includes('http')" :href="item.link">
+                <span v-if="!item.hasOwnProperty('icon') && !item.icon">{{ item.label }}</span>
+                <span v-else><i :class="'bi-' + item.icon"></i></span> 
+                <i v-if="item.submenu" class="material-icons moka-icons">arrow_drop_down</i>
+            </a>
             
-            <div v-else @mouseover="menuover=i" :class="el.css.css" @click="menuover=i">{{item.label}} <i v-if="item.submenu && item.submenu.length" :class="el.css.css + ' material-icons moka-icons text-sm'">arrow_drop_down</i></div>
+            <div v-else @mouseover="menuover=i" :class="el.css.css" @click="menuover=i">
+                <span v-if="!item.hasOwnProperty('icon') && !item.icon">{{ item.label }}</span>
+                <span v-else><i :class="'bi-' + item.icon"></i></span>
+                <i v-if="item.submenu && item.submenu.length" :class="el.css.css + ' material-icons moka-icons text-sm'">arrow_drop_down</i>
+            </div>
             
             <div v-if="item.submenu && item.submenu.length" :class="isOver(i) + ' ' + el.css.submenu + ' absolute flex flex-col z-2xtop'" @mouseleave="menuover=-1"> 
                 <div v-for="sub in item.submenu">
@@ -16,13 +24,14 @@
     </nav>
     
     <!-- responsive -->
-    <i :class="'material-icons moka-icons z-max fixed md:hidden top-0 left-0 m-1 ' + el.css.css" v-if="el.element === 'menu' && el.responsive" @click="showmenu">menu</i>
-    <transition name="fade">
-        <nav v-if="menu_show" :class="el.css.responsive"> 
-            <i :class="'material-icons moka-icons z-max md:hidden top-0 left-0 m-1 ' + el.css.css" v-if="el.element === 'menu' && el.responsive" @click="showmenu">menu</i>
+    <i :class="'bi-list moka-icons z-max fixed md:hidden top-0 left-0 m-1 text-3xl' + el.css.css " v-if="el.element === 'menu' && el.responsive" @click="showmenu"></i>
+    <transition :name="'fade' || moka.settings.responsive_menu_transition">
+        <nav v-if="menu_show" :class="el.css.responsive + ' ' + moka.settings.responsive_menu_css"> 
+            <i :class="'bi-list moka-icons z-max fixed md:hidden top-0 left-0 m-1 text-3xl ' + el.css.css" v-if="el.element === 'menu' && el.responsive" @click="showmenu"></i>
+            <div class="h-6"></div>
             <div v-for="(item,i) in el.items" :class="el.css.css + ' cursor-pointer relative p-1'"> 
                 
-                <a :class="el.css.css" :href="item.link">{{ item.label }}</a>
+                <a :class="el.css.css + ' text-xl'" :href="item.link">{{ item.label }}</a>
                 
                 
                 <div v-if="item.submenu && item.submenu.length" :class="el.css.css + ' ml-2 flex flex-col'"> 
@@ -38,6 +47,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 var gsap
 export default {
     name: 'MokaMenuElement',
@@ -47,6 +57,9 @@ export default {
         menuover: -1,
         menu_show: false
     }),
+    computed:{
+        ...mapState ( ['moka'] )
+    },
     methods:{
         showmenu(){
             this.menu_show =! this.menu_show

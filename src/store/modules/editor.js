@@ -3,7 +3,8 @@ const editor = {
         current: null,
         action: null,
         level: null,
-        parent: null
+        parent: null,
+        autosave: null
     },
     mutations: {
         current ( state , current ){
@@ -17,6 +18,9 @@ const editor = {
         },
         parent ( state , parent ){
             state.parent = parent
+        },
+        autosave ( state , blocks ){
+            state.autosave = blocks
         }
     },
     actions: {
@@ -31,6 +35,9 @@ const editor = {
         },
         setParent ( { commit } , parent ){
             commit ( 'parent' , parent)
+        },
+        autoSave ( { commit } , blocks ){
+            commit ( 'autosave' , blocks )
         }
     }
 

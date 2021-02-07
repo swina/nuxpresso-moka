@@ -61,6 +61,8 @@ button {
     width: fit-content;
 }
 
+
+
 button:hover {
     @apply bg-white text-black border-gray-300;
 }
@@ -580,3 +582,9 @@ pre {
 
 
 @tailwind utilities;
+
+@layer utilities {
+  .grayscale {
+    filter: grayscale(1)
+  }
+}

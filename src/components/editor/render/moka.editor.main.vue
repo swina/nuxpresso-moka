@@ -11,7 +11,7 @@
                 <!-- TOP BAR -->
                 <div :class="'fixed z-xtop top-0 left-0 bg-gray-500 p-1 grid grid-cols-3 items-center w-full m-auto cursor-pointer'" title="Select component body">
                     <div class="flex flex-row items-center">
-                        <i class="material-icons text-red-500" @click="$store.dispatch('setAction',null),$router.push('dashboard')" title="Close">fiber_manual_record</i>
+                        <i class="material-icons text-red-500" @click="checkAutosave()" title="Close">fiber_manual_record</i>
                         <i class="material-icons text-yellow-500" title="Select document" @click="$store.dispatch('setCurrent',doc),$store.dispatch('selected',doc.id)">fiber_manual_record</i>
                         <i class="material-icons text-green-500" @click="preview=!preview" title="preview">fiber_manual_record</i>
                         <div class="text-sm ml-4">
@@ -47,7 +47,7 @@
                         :category="$attrs.component.category"
                         :root="true"
                         @slidersettings="sliderSettings=!sliderSettings"
-                        @save="save" 
+                        @save="saveComponent" 
                         @preview="preview=!preview"
                         @slider="slider=!slider,disable=false"
                         @animations="animations=!animations"
@@ -81,7 +81,7 @@
                     <i class="material-icons nuxpresso-icon-circle ml-2 text-gray-300 bg-green-400 " v-if="$attrs.component && $attrs.component.category==='slider'" title="Preview" @click="slider=!slider,disable=false">remove_red_eye</i>
                     
                     <!-- SAVE DOCUMENT -->
-                    <i class="material-icons moka-icons nuxpresso-icon-circle text-gray-300 ml-2" @click="$emit('save')"
+                    <i class="material-icons moka-icons nuxpresso-icon-circle text-gray-300 ml-2" @click="saveComponent"
  title="Save document">save</i>
                     
                 
@@ -356,6 +356,16 @@
     <transition name="fade">
         <moka-loading v-if="moka.loading"/>
     </transition>
+
+    <transition name="fade">
+        <div class="nuxpresso-modal z-2xtop w-1/3 p-4 flex flex-col" v-if="endEditor">
+            <p>Save before to close ?</p>
+            <div class="mt-4 flex flex-row justify-center">
+                <button class="danger mr-2" @click="$store.dispatch('setAction',null),$router.push('dashboard')">Close</button>
+                <button class="success" @click="$emit('save'),$store.dispatch('setAction',null),$router.push('dashboard')">Save</button>
+            </div>
+        </div>
+    </transition>
 </div>
 </template>
 
@@ -434,7 +444,9 @@ export default {
             }
         },
         bodySettings: false,
-        templateSettings: false
+        templateSettings: false,
+        timer: null,
+        endEditor: false
     }),
     apollo: {
         articles : {
@@ -503,12 +515,11 @@ export default {
                 return 
             }
             if ( this.articles ){
-                console.log ( this.$attrs.component.id )
-                let inUseTemplate = this.articles.filter ( article => {
+                let inUseTemplate = this.articles.filter ( article => { 
                     console.log ( article.component.id )
                     return parseInt(article.component.id) === parseInt(this.$attrs.component.id)
                 })
-                if ( inUseTemplate.length ){
+                if ( inUseTemplate ){
                     console.log ( 'savingPage ...')
                     inUseTemplate.forEach ( templ => {
                         templ.blocks = this.$attrs.component
@@ -566,8 +577,9 @@ export default {
             element = JSON.parse(JSON.stringify(this.editor.current))
             element = this.$clone ( element )
             element.id = this.$randomID()
+            window.localStorage.setItem('nuxpresso-clipboard', JSON.stringify(element))
             this.copiedElement = element
-            this.current = current
+            this.current = element
             this.$store.dispatch('message','Element copied')
         },
         //remove current element
@@ -576,7 +588,15 @@ export default {
         },
         //paste current copied element
         pasteElement(){
-            this.addReusable ( this.copiedElement )
+            let clipboard = JSON.parse(window.localStorage.getItem('nuxpresso-clipboard'))
+            //console.log ( clipboard )
+            //console.log ( this.copiedElement.id )
+            this.copiedElement = clipboard
+            this.copiedElement.id = this.$randomID()
+            let pastedElement = Object.assign ({}, this.copiedElement )
+            pastedElement.id = this.$randomID()
+            console.log ( pastedElement )
+            this.addReusable ( pastedElement )
         },
         //duplicate current element
         duplicateElement(current){
@@ -589,13 +609,13 @@ export default {
             this.$findNode ( this.editor.current.id , this.moka.component.json )
             this.editor.parent.blocks.push ( obj )
             delete this.editor.current.parent
-            if ( this.editor.parent.type === 'grid' ){
-                let parent = this.editor.parent
-                let cols = parseInt(parent.cols) + 1
-                parent.css.container = parent.css.container.replace('grid-cols-' + parent.cols,'grid-cols-'+cols)
-                parent.cols = parseInt(parent.cols) + 1
-                this.$store.dispatch('setParent',parent)
-            }
+            //if ( this.editor.parent.type === 'grid' ){
+                //let parent = this.editor.parent
+                //let cols = parseInt(parent.cols) + 1
+                //parent.css.container = parent.css.container.replace('grid-cols-' + parent.cols,'grid-cols-'+cols)
+                //parent.cols = parseInt(parent.cols) + 1
+                //this.$store.dispatch('setParent',parent)
+            //}
         },
         //replace a basic HTML element (not containers)
         replaceElement(component){
@@ -621,7 +641,7 @@ export default {
             obj['blocks'] = []
             obj.id = this.$randomID()
             //obj.css.container = "flex flex-col md:grid md:grid-cols-" + this.grid.cols
-            obj.css.container = "grid md:grid-rows-1 md:grid-cols-" + this.grid.cols +  " grid-cols-1 grid-rows-" + this.grid.cols 
+            obj.css.container = "grid md:grid-rows-1 md:grid-cols-" + this.grid.cols +  " grid-cols-1"  
             obj.css.css = ''
             obj.cols = parseInt(this.grid.cols)
             let content 
@@ -729,10 +749,10 @@ export default {
         save(screenshot){
             if ( screenshot ){
                 this.mycomponent.image = screenshot
-                this.mycomponent.image_uri = 
-                    !screenshot.url.includes('http') ? 
-                        process.env.VUE_APP_API_URL + screenshot.url.replace('/','') : 
-                            screenshot.url
+                this.mycomponent.image_uri = screenshot.url
+                    //!screenshot.url.includes('http') ? 
+                        //process.env.VUE_APP_API_URL + screenshot.url.replace('/','') : 
+                            //screenshot.url
             }
             this.$emit('save')
         },
@@ -827,8 +847,10 @@ export default {
         viewhtml(html){
             
             this.html = this.$beautify ( html.replaceAll('<!---->','').replaceAll('[object Object]','') )
+        },
+        checkAutosave(){
+            this.endEditor = true
         }
-        
     },
     watch:{
         preview(v){
@@ -839,5 +861,27 @@ export default {
             this.doc.fontFamily = font
         },
     },
+    mounted(){
+        let vm = this
+        this.timer = window.setInterval (()=>{
+            
+            let blocks = {
+                blocks: vm.doc,
+                component: vm.$attrs.component,
+                lastUpdate: new Date()
+            }
+            let data = {
+                autosave:  blocks
+            }
+            vm.$http.put ( 'components/' + vm.$attrs.component.id , data ).then ( response => {
+                console.log ( response )
+            })
+            vm.$store.dispatch ( 'autoSave' , blocks )
+            window.localStorage.setItem('nuxpresso-autosave',JSON.stringify(blocks))
+        }, 60000*5 )
+    },
+    beforeDestroy(){
+        window.clearInterval(this.timer)
+    }
 }
 </script>

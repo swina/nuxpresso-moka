@@ -94,6 +94,19 @@
                 </div>
             </div>
         </transition>
+        <transition name="fade">
+            <div class="nuxpresso-modal w-1/4 text-xs p-4 z-50 border h-1/2 overflow-y-auto" v-if="bootstrap_icons">
+                <i class="material-icons absolute top-0 right-0 m-1" @click="bootstrap_icons=!bootstrap_icons">close</i>
+                Icon Search
+                <input type="text" v-model="bt_icon_search"/>
+                <div class="absolute flex mt-6 max-h-64 h-64 flex-row flex-wrap overflow-y-auto" style="" v-if="bt_icons">
+                    <template v-for="icon in bt_icons_found">
+                        <i :class="'bi-' + icon + ' text-2xl m-1'" :title="icon" @click="createBTIcon(icon)"></i>
+                        <!--<b-icon :icon="icon.split('.')[0]" class="border p-1 rounded text-2xl float-left mx-1 my-1"/>-->
+                    </template>
+                </div>
+            </div>
+        </transition>
     </div>
         <!-- media -->
         <transition name="fade" v-if="media">
@@ -107,6 +120,7 @@
 import componentsQry from '@/apollo/components.gql'
 import MokaGrids from '@/components/editor/render/moka.grids'
 import waves from '@/plugins/svg' 
+import booticons from '@/plugins/bootstrap.icons'
 import { mapState } from 'vuex'
 export default {
     name: 'MokaReusable',
@@ -212,6 +226,10 @@ export default {
         heading_level: '1',
         icons: false,
         groupicon: '',
+        bootstrap_icons:false,
+        bt_icons: null,
+        bt_icon_search:'',
+        bt_icons_found:null,
         cols: 2,
         grids: false,
         grid: {
@@ -223,6 +241,9 @@ export default {
         components:null,
         isloop: false,
     }),
+    mounted(){
+        this.bt_icons = booticons
+    },
     computed:{
         ...mapState(['moka']), 
         setcomponents(){
@@ -239,6 +260,11 @@ export default {
         }
     },
     watch:{
+        bt_icon_search(v){
+            if ( v ){
+                this.bt_icons_found = this.bt_icons.filter ( icon => icon.includes(v) )
+            }
+        }
     },
     methods:{
         createComponent ( type , component ){
@@ -255,8 +281,12 @@ export default {
                 this.grids = true
                 return
             }
-            if ( component.element === 'icon' ){
+            if ( component.element === 'icon' && component.type === 'icon' ){
                 this.icons = true
+                return
+            }
+            if ( component.element === 'icon' && component.type === 'icon_bootstrap' ){
+                this.bootstrap_icons = true
                 return
             }
             if ( component.element === 'h' ){
@@ -463,22 +493,24 @@ export default {
                         "element": "icon",
                         "id": 'moka-' + Math.random().toString(36).substr(2, 5)
                         }
-                /*
-                let comp = 
-                {
-                    css: 'w-full',
-                    elements: [{
-                        element: 'icon',
-                        content: icon,
-                        icon: icon,
-                        css: '',
-                        type: 'icon',
-                        link: ''
-                    }],
-                    tag: 'icon',
-                    style: '',
-                    image: null
-                }*/
+                
+            
+            this.$emit('add',comp)
+        },
+        createBTIcon(icon){
+            let comp = {
+                        "css": "",
+                        "tag": "icon_bt",
+                        "icon": "crop_original",
+                        "link": "",
+                        "type": "media",
+                        "label": "Icon",
+                        "style": "",
+                        "content": icon,
+                        "element": "icon",
+                        "id": 'moka-' + Math.random().toString(36).substr(2, 5)
+                        }
+                
             
             this.$emit('add',comp)
         },
@@ -544,8 +576,12 @@ export default {
                 this.grids = true
                 return
             } else {
-                if ( obj.tag === 'icon' ) {
+                if ( obj.tag === 'icon' && obj.type === 'icon' ) {
                     this.icons = true
+                    return
+                }
+                if ( obj.tag === 'icon' && obj.type === 'icon_bootstrap' ) {
+                    this.bootstrap_icons = true
                     return
                 }
                 if ( obj.element === 'h' ) {

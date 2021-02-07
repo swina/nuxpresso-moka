@@ -3,7 +3,7 @@
     <moka-loading v-if="isLoading"/>
     <h2>Dashboard</h2>
 
-    <div class="w-full flex flex-row justify-around" v-if="components">
+    <div class="w-full flex flex-row justify-around" v-if="components && grouped">
       <div class="border w-1/4 mr-4 border-t-8 border-blue-400 flex flex-col">
       <div class="bg-gray-300 p-1">BLOCKS</div>
       <template v-for="(group,index) in grouped.keys">

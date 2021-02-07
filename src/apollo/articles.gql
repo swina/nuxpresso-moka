@@ -8,6 +8,16 @@ query Articles ( $start: Int , $limit: Int $sort : String ) {
     template_id
     seo_title
     seo_description
+    image {
+      caption
+      alternativeText
+      url
+      previewUrl
+    }
+    categories {
+      name
+      slug
+    }
     
   }
 }

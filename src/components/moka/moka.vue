@@ -43,6 +43,7 @@
 
 <script>
 //import MokaEditor from '@/components/editor/moka.editor'
+import articlesQry from '@/apollo/articles.gql'
 import MokaEditor from '@/components/editor/render/moka.editor.main'
 import MokaPreview from '@/components/editor/preview/moka.preview'
 import { mapState } from 'vuex'
@@ -84,33 +85,50 @@ export default {
         })
     },
     methods: {
-        save(){
-            
-            this.loading = true
-            console.log ( 'save =>' , this.component.blocks_id , this.component.json.id )
-            this.$store.dispatch ( 'loading' , true )
-            this.$http.defaults.headers.common = {
-                'Authorization': window.localStorage.getItem('nuxpresso-jwt')
+        async templateArticles(){
+            const data = await this.$apollo.provider.defaultClient.query (
+                { 
+                    query: articlesQry
+                }
+            )
+            return {
+                articles : data.data.articles
             }
-            this.component.blocks_id ?
-                this.component.blocks_id === this.component.json.id ?
-                    null :
-                        this.component.blocks_id = this.component.json.id 
-                            : this.component.blocks_id = this.component.json.id 
-            //this.component.json.id ? this.component.blocks_id = this.component.json.id : null
-            this.$http.put ( 'components/' + this.component.id , this.component ).then ( result => {
-                //this.$store.dispatch('loadComponents')
-                //this.$apollo.queries.refresh()
-                //console.log ( this )
-                this.$store.dispatch('loading',false)
-                this.$emit('message','Block saved')
-                this.loading = false
-            }).catch ( error => {
-                this.$store.dispatch('loading',false)
-                this.$emit('message','An error occured. Check you console log.')
-                console.log ( error )
-                this.loading = false
-            })
+        },
+        save(){
+            this.loading = true
+            this.component.loop ?
+                this.templateArticles().then ( resp => {
+                    this.component.autosave = resp
+                    this.saveMe()
+                }) : this.saveMe()
+        },
+        saveMe(){    
+                this.$store.dispatch ( 'loading' , true )
+                this.$http.defaults.headers.common = {
+                    'Authorization': window.localStorage.getItem('nuxpresso-jwt')
+                }
+                this.component.blocks_id ?
+                    this.component.blocks_id === this.component.json.id ?
+                        null :
+                            this.component.blocks_id = this.component.json.id 
+                                : this.component.blocks_id = this.component.json.id
+                
+
+                //this.component.json.id ? this.component.blocks_id = this.component.json.id : null
+                this.$http.put ( 'components/' + this.component.id , this.component ).then ( result => {
+                    //this.$store.dispatch('loadComponents')
+                    //this.$apollo.queries.refresh()
+                    //console.log ( this )
+                    this.$store.dispatch('loading',false)
+                    this.$emit('message','Block saved')
+                    this.loading = false
+                }).catch ( error => {
+                    this.$store.dispatch('loading',false)
+                    this.$emit('message','An error occured. Check you console log.')
+                    console.log ( error )
+                    this.loading = false
+                })
         },
         saveAsReusable(component){
             this.loading = true

@@ -13,6 +13,8 @@ query Settings {
     authentication
     scrolltop
     read_more
+    responsive_menu_css
+    responsive_menu_transition
     logo_img {
       url
       caption

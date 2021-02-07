@@ -1,5 +1,5 @@
 <template>
-    <a :href="link" class="" @click="action">
+    <a :href="link" :target="target" @click="action">
         <component :is="component" :component="component" :el="el"/>
     </a>
 </template>
@@ -23,6 +23,9 @@ export default {
                 return '#' + this.el.link.split('?')[1]
             }
             return this.el.link
+        },
+        target(){
+            return this.el.link.includes('http') ? '_blank' : ''
         }
     },
     methods:{

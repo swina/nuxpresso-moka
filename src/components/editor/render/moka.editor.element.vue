@@ -46,8 +46,14 @@
 
             <!-- icon -->
             <i v-if="el.tag==='icon' && !el.link" :class="'material-icons moka-icons ' + $cssResponsive(el.css)">{{el.content}}</i>
+
+            <i v-if="el.tag==='icon_bt' && !el.link" :class="'bi-' + el.content + '  moka-icons ' + $cssResponsive(el.css)"></i>
+            
             <a v-if="el.link && el.tag==='icon'" :href="el.link">
                 <i v-if="el.tag==='icon'" :class="'material-icons moka-icons ' + $cssResponsive(el.css)">{{el.content}}</i>
+            </a>
+            <a v-if="el.link && el.tag==='icon_bt'" :href="el.link">
+                <i :class="'bi-' + el.content + ' ' + $cssResponsive(el.css)"></i>
             </a>
 
 
@@ -58,9 +64,17 @@
                 <div v-for="(item,i) in el.items" :class="el.css.css + ' cursor-pointer relative pr-4'" :key="el.id + '_' + i"> 
                     
                     
-                    <a :class="el.css.css" v-if="!item.submenu && !$attrs.develop && item.link && !item.link.includes('http')" :href="item.link">{{ item.label }} <i v-if="item.submenu" class="material-icons moka-icons">arrow_drop_down</i></a>
+                    <a :class="el.css.css" v-if="!item.submenu && !$attrs.develop && item.link && !item.link.includes('http')" :href="item.link">
+                        <span v-if="!item.hasOwnProperty('icon') && !item.icon">{{ item.label }}</span>
+                        <span v-else><i :class="'bi-' + item.icon"></i></span> 
+                        <i v-if="item.submenu" class="material-icons moka-icons">arrow_drop_down</i>
+                    </a>
                     
-                    <div v-else @mouseover="menuover=i" :class="el.css.css" @click="menuover=i">{{item.label}} <i v-if="item.submenu && item.submenu.length" :class="el.css.css + ' material-icons moka-icons text-sm'">arrow_drop_down</i></div>
+                    <div v-else @mouseover="menuover=i" :class="el.css.css" @click="menuover=i">
+                        <span v-if="!item.hasOwnProperty('icon') && !item.icon">{{ item.label }}</span>
+                        <span v-else><i :class="'bi-' + item.icon"></i></span>  
+                        <i v-if="item.submenu && item.submenu.length" :class="el.css.css + ' material-icons moka-icons text-sm'">arrow_drop_down</i>
+                    </div>
                     
                     <div v-if="item.submenu && item.submenu.length && !$attrs.develop" :class="isOver(i) + ' ' + el.css.css + ' absolute w-48 p-1 flex flex-col z-max'" @mouseleave="menuover=-1"> 
                         <div v-for="sub in item.submenu">

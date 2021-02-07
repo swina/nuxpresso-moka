@@ -66,7 +66,7 @@ export default {
                 this.child = MokaImg
                 return el.link ? MokaLink : MokaImg
             }
-            if ( el.tag === 'icon' ){
+            if ( el.tag === 'icon' || el.tag === 'icon_bt' ){
                 this.child = MokaIcon
                 return el.link ? MokaLink : MokaIcon
             }

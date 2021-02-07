@@ -101,7 +101,8 @@
                                 </select>
                             </div>
                             <div><input type="checkbox" v-model="currentArticle.homepage"/> Homepage</div>
-                            <div class="flex h-32">
+                            <div class="flex flex-col mb-2 h-32">
+                                <label>Featured image</label>
                                 <!--<img v-if="currentArticle.featured_image" :src="currentArticle.featured_image"/>
                             <button v-if="!currentArticle.featurd_image" @click="media=!media,editorImage=false">Featured Image</button>-->
                                 <moka-image-placeholder :image="currentArticle.image" @click="media=!media" size="sm" @media="media=!media,editorImage=false" @noimage="currentArticle.image=null"/>
@@ -134,6 +135,7 @@
 
             <transition name="fade">
                 <div v-if="selectTemplate" class="nuxpresso-modal w-4/5 p-2 border rounded bg-white">
+                <i class="material-icons absolute top-0 right-0 m-2 mr-8" @click="$apollo.queries.components.refetch()">refresh</i>
                     <i class="material-icons absolute top-0 right-0 m-2" @click="selectTemplate=!selectTemplate">close</i>
                     <moka-templates 
                         :templates="templates" 
@@ -198,8 +200,15 @@ export default {
             if ( this.currentArticle.template_id ){ 
                 //let template = this.templates.filter ( templ => { return templ.blocks_id === this.currentArticle.template_id } )
                 let template = this.templates.filter ( templ => { return parseInt(templ.id) === parseInt(this.currentArticle.component) } )
-                if ( template.length && template[0].image && template[0].image.url ) return template[0].image.url
-                if ( template.length && template[0].image_uri ) return template[0].image_uri
+
+                if ( template.length && template[0].image && template[0].image.url ) {
+                    return template[0].image.url.includes('http') 
+                        ? template[0].image.url : process.env.VUE_APP_API_URL + template[0].image.url.substring(1)
+                }
+                if ( template.length && template[0].image_uri ) {
+                    return template[0].image_uri.includes('http') 
+                        ? template[0].image_uri : process.env.VUE_APP_API_URL + template[0].image_uri.substring(1)
+                }
                 return false
             }
             return false
@@ -330,6 +339,9 @@ export default {
             template.image && template.image.url ?
                 image = template.image.url : 
                     template.image_uri ? image = template.image_uri : ''
+            if ( !image.includes('http') ){
+                image = process.env.VUE_APP_API_URL + image.substring(1)
+            }
             return image
         },
         getTemplatePreview(blocks_id){

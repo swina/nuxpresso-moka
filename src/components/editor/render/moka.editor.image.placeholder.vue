@@ -1,7 +1,8 @@
 <template>
     <div :class="' object-fit cursor-pointer flex flex-col justify-center items-center relative m-auto'">
-        <img v-if="$attrs.image && $attrs.image.hasOwnProperty('url')" :src="$imagePreviewURL($attrs.image)"  
-        :class="'m-auto mb-2 ' + size" @click="$emit('media')"/>
+        
+        <img v-if="$attrs.image && !$attrs.image.hasOwnProperty('url')" :src="getImage($attrs.image)" :class="'m-auto mb-2 ' + size" @click="$emit('media')"/>
+        <img v-else :src="getImage($attrs.image)" :class="'m-auto mb-2 ' + size" @click="$emit('media')"/>
         <!--<i class="material-icons text-5xl" v-if="editor && editor.current && editor.current.type==='video'">movie</i>-->
         <i class="material-icons text-5xl" v-if="editor && editor.current && editor.current.type==='audio'">audiotrack</i>
         <div v-if="$attrs.image" class="w-full text-xs">
@@ -43,6 +44,11 @@ export default {
             } else {
                 Math.round ( parseFloat(img.size)/1000 , 2 ) + ' Kb'
             }
+        },
+        getImage( img ){
+            if ( !img ) return ''
+            
+            return img.url.includes('http') ? img : process.env.VUE_APP_API_URL + img.url.substring(1)
         }
     }
 }

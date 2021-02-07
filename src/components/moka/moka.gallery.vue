@@ -1,6 +1,6 @@
 <template>
     <div v-if="init" :key="galleryID">
-        <div v-if="$attrs.gallery" class="moka-components-gallery flex flex-col md:grid md:grid-cols-4 md:grid-flow-cols md:gap-8 w-full items-start justify-start cursor-pointer object-fit" style="grid-auto-rows: .5fr;">
+        <div v-if="$attrs.gallery" class="moka-components-gallery grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 md:grid-flow-cols md:gap-8 lg:grid.cols-4 w-full items-start justify-start cursor-pointer object-fit" style="grid-auto-rows: .5fr;">
             <moka-loading v-if="!objects"/>
             <!--<div v-if="!objects" class="nuxpresso-modal border-none shadow-none p-1">
                 <i class="material-icons animate-spin  text-5xl text-gray-600">bubble_chart</i>
@@ -112,9 +112,12 @@ export default {
         },
         background(comp){
             let image = ''
-            comp.image && comp.image.url ? image = comp.image.url :
-                comp.image_uri ? image = comp.image_uri : ''
-            return image ? image : ''
+            return comp.image ?
+                    this.$imageURL(comp.image) : comp.image_uri ? comp.image_uri : '' 
+                    
+            //comp.image && comp.image.url ? image = comp.image.url :
+            //    comp.image_uri ? image = comp.image_uri : ''
+            //return image ? image : ''
         },
         duplicateBlock(comp){
             let component = Object.assign ( {} , comp )

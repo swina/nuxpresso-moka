@@ -3,7 +3,7 @@
         v-if="doc"
         :level="$attrs.level"  
         :class="'p-2 fill-current ' + classe(doc.css)" :style="doc.style + ' ' +  background(doc)" @dblclick="doc.blocks.length===0?$store.dispatch('setAction','addcomponent'):null" >
-        <div v-if="!doc.blocks && !doc.image" class="text-xs">Dblclick here to add an element</div>
+        <div v-if="doc.blocks && !doc.blocks.length && !doc.image" class="text-xs">Dblclick here to add an element</div>
         <template v-for="(block,b) in doc.blocks">
             
             <moka-element

@@ -94,9 +94,11 @@ const twgroups = [
         { name: 'MokaOptions' , attr: 'borderType' },
         { name: 'MokaRange' , attr: 'borderOpacity' , title: 'opacity' }
     ]},
-    { label: 'rounded / shadow', components : [ 
+    { label: 'rounded / shadow / grayscale / opacity', components : [ 
         { name: 'MokaOptions' , attr: 'rounded' },
-        { name: 'MokaOptions' , attr: 'shadow' }, 
+        { name: 'MokaOptions' , attr: 'shadow' },
+        { name: 'MokaCheckbox' , attr: 'grayscale' , title: 'grayscale' },
+        { name: 'MokaRange' , attr: 'opacity' , title: 'opacity'} 
     ]},
     { label: 'CSS Animation', components : [ 
         { name: 'MokaOptions' , attr: 'animation' , title: 'animation'}

@@ -197,17 +197,22 @@
                 <!-- rich text element -->
                 <moka-text-editor v-if="editor.current && editor.current.tag === 'element' && editor.current.element === 'p'"  v-model="editor.current.content" @close="editContent=!editContent"/>
 
-                <moka-edit-icon v-if="editor.current && editor.current.tag === 'icon'" v-model="editor.current.content"/>
+                <moka-edit-icon v-if="editor.current && ( editor.current.tag === 'icon' || editor.current.tag === 'icon_bt')" v-model="editor.current.content"/>
 
                 
                 
             </div>
             
         </div>
+        <!-- menu editor -->
         <div class="fixed left-0 top-0 w-1/5 z-2xtop min-h-screen bg-gray-800" v-if="editor.action==='edit' && editor.current && editor.current.tag === 'menu'">
-                <i class="material-icons absolute top-0 right-0 mt-1 text-white mr-1 cursor-pointer" @click="editContent=!editContent,$store.dispatch('setAction',null)">close</i>
-                <moka-edit-menu  :menu="editor.current" @menu="setMenuItems"/>
+            
+            <i class="material-icons absolute top-0 right-0 mt-1 mr-1 cursor-pointer" 
+            @click="editContent=!editContent,$store.dispatch('setAction',null)">close</i>
+            
+            <moka-edit-menu  :menu="editor.current" @menu="setMenuItems"/>
         </div>
+
         <!-- image element -->
         <div v-if="editor.action === 'edit' && editor.current && (editor.current.type === 'image'||editor.current.type==='video' || editor.current.type === 'audio')" class="nuxpresso-modal md:h-3/5 m-auto md:w-full lg:w-10/12 border shadow-lg text-sm z-top">
 

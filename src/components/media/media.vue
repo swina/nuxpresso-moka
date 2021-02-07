@@ -71,19 +71,31 @@
             </div>
         </transition>
         <transition name="fade">
-            <div v-if="selectThumbnail" class="nuxpresso-modal w-3/4 p-2 z-2xtop">
+            <div v-if="selectThumbnail" class="nuxpresso-modal w-3/4 p-2 z-2xtop max-h-screen">
                 <i class="material-icons absolute right-0 top-0 m-1" @click="selectThumbnail=!selectThumbnail">close</i>
                 <p>This image has a different formats. Select one.</p>
                 <div class="flex flex-row text-xs">
-                    <div class="w-2/3 p-2">
-                        <img :src="selectedImage.url" class="border w-full object-fit" @click="assignImg('')"/>
+                    <div class="w-1/2 p-2">
+                        <img :src="$imageURL(selectedImage)" class="border w-full object-fit" @click="assignImg('')"/>
                         {{ selectedImage.width}} x {{ selectedImage.height}} - 
                         {{ selectedImage.size }} KB
                     </div>
-                    <div class="w-1/3 p-2">
-                        <img :src="selectedImage.formats.thumbnail.url" class="border w-full h-auto" @click="assignImg('thumb')"/>
+                    <div class="w-1/2 p-2">
+                        <div v-if="Object.keys(selectedImage.formats)" class="flex flex-row flex-wrap">
+                            <template v-for="format in Object.keys(selectedImage.formats)">
+                                <div>
+                                <img  :src="$imageURL(selectedImage.formats[format])" class="border w-24 h-auto" @click="assignImg(selectedImage.formats[format])"/>
+                                {{ selectedImage.formats[format].width}} x {{ selectedImage.formats[format].height}} - 
+                                {{ selectedImage.formats[format].size }} KB
+                                </div>
+                            </template>
+
+                        </div>
+                        <div v-else>
+                        <img :src="$imageURL(selectedImage)" class="border w-full h-auto" @click="assignImg('thumb')"/>
                         {{ selectedImage.formats.thumbnail.width}} x {{ selectedImage.formats.thumbnail.height}} - 
                         {{ selectedImage.formats.thumbnail.size }} KB
+                        </div>
                     </div>
                 </div>
             </div>

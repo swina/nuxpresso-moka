@@ -48,7 +48,7 @@
                 <input class="nodark" type="text" v-model="$attrs.element.link"/>
                 <label>Article/Page</label>
                 <select class="nodark" v-model="$attrs.element.link">
-                    <option v-for="(opt,o) in moka.articles" :value="'/articles/' + opt.slug">{{ opt.title }}</option>
+                    <option v-for="(opt,o) in moka.articles" :value="'/' + opt.slug">{{ opt.title }}</option>
                 </select>
                 <label>Anchor</label>
                 <input class="nodark" type="text" v-model="$attrs.element.anchor"/>
@@ -67,11 +67,11 @@
         </transition>
 
         <!-- icon options -->
-        <div class="bg-gray-700 cursor-pointer hover:bg-blue-300 text-gray-100 px-1 mt-1 mb-1" v-if="$attrs.element.tag==='icon'" @click="setOpt('icon')">
+        <div class="bg-gray-400 cursor-pointer hover:bg-blue-300 text-gray-800 px-1 mb-1" v-if="$attrs.element.tag==='icon' || $attrs.element.tag === 'icon_bt'" @click="setOpt('icon')">
             Icon
         </div>
         <!-- icon settings -->
-        <moka-icons v-if="label==='icon'" :icon="$attrs.element.content" v-model="$attrs.element.content"/>
+        <moka-icons v-if="label==='icon'" :tag="$attrs.element.tag" :icon="$attrs.element.content" v-model="$attrs.element.content"/>
         
         <!-- popup -->
         <div v-if="$attrs.element.hasOwnProperty('popup')" class="flex flex-col">
