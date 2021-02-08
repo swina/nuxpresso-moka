@@ -608,7 +608,7 @@ export default {
                     obj.blocks.push( this.schema.text[2] )
                     obj.blocks[0].content = 'Modal/Popup'
                 }
-                obj.content = 'Add your content here'
+                obj.content = component.content //'Add your content here'
                 let reusable = this.$clone ( obj )
                 this.selected = reusable
                 console.log ( 'element => ' , reusable )

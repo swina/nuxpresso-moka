@@ -108,13 +108,14 @@ export default {
                 this.$http.defaults.headers.common = {
                     'Authorization': window.localStorage.getItem('nuxpresso-jwt')
                 }
+                
                 this.component.blocks_id ?
                     this.component.blocks_id === this.component.json.id ?
                         null :
                             this.component.blocks_id = this.component.json.id 
                                 : this.component.blocks_id = this.component.json.id
                 
-
+                //this.component.json =  this.$clean(JSON.stringify(this.component.json) )
                 //this.component.json.id ? this.component.blocks_id = this.component.json.id : null
                 this.$http.put ( 'components/' + this.component.id , this.component ).then ( result => {
                     //this.$store.dispatch('loadComponents')
