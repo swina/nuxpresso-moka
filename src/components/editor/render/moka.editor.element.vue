@@ -150,7 +150,7 @@ export default {
         element(){
             //this.$attrs.element && this.$attrs.element.css ? this.$attrs.element.css = this.$clean(this.$attrs.element.css,'md:') : null
             return this.$attrs.element  ? this.el = this.$attrs.element : false
-        },
+        },  
         tag(){
             if ( !this.editor.current ){
                 return this.$attrs.element.element === 'h' ? 

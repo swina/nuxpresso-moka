@@ -75,11 +75,11 @@ export default {
     },
     mounted(){
         this.component = this.$store.getters.component
-        if ( process.env.NODE_ENV === 'development' ){
-            this.$http.defaults.headers.common = {
-                'Authorization': window.localStorage.getItem('nuxpresso-jwt')
-            }
-        }
+        //if ( process.env.NODE_ENV === 'development' ){
+        //    this.$http.defaults.headers.common = {
+        //        'Authorization': window.localStorage.getItem('nuxpresso-jwt')
+        //    }
+        //}
         this.$http.get('upload/files').then ( response => {
             this.$store.dispatch ( 'loadMedia' , response.data )
         })
@@ -105,10 +105,11 @@ export default {
         },
         saveMe(){    
                 this.$store.dispatch ( 'loading' , true )
-                this.$http.defaults.headers.common = {
-                    'Authorization': window.localStorage.getItem('nuxpresso-jwt')
+                if ( process.env.NODE_ENV === 'production' ){
+                    this.$http.defaults.headers.common = {
+                        'Authorization': window.localStorage.getItem('nuxpresso-jwt')
+                    }
                 }
-                
                 this.component.blocks_id ?
                     this.component.blocks_id === this.component.json.id ?
                         null :

@@ -104,6 +104,10 @@ export default {
   computed:{
     ...mapState ( [ 'moka' , 'user'] ),
     logged(){
+      if ( process.env.NODE_ENV === 'development' ) {
+        this.user.login = true
+        return true
+      }
       if ( !this.user.login || !window.localStorage.getItem('nuxpresso-jwt') ){
         this.user.login = false
         return false
@@ -116,6 +120,30 @@ export default {
  
   beforeMount(){
     let vm = this
+    if ( process.env.NODE_ENV === 'development' ) {
+      let user = {
+        "id":4,
+        "username":"moka",
+        "email":"moka@moka.test",
+        "provider":"local",
+        "confirmed":true,
+        "blocked":null,
+        "role":{
+          "id":1,
+          "name":"Authenticated",
+          "description":
+          "Default role given to authenticated user.",
+          "type":"authenticated"
+        },
+        "created_at":"2021-01-16T17:06:41.814Z",
+        "updated_at":"2021-01-16T17:06:41.832Z"
+      }
+      vm.$store.dispatch('login',true)
+      vm.$store.dispatch('user',user)
+      vm.loginOK = true
+      vm.firstRun = false
+      return
+    }
     if ( !this.user.login || !window.localStorage.getItem('nuxpresso-jwt') ){
       if ( process.env.NODE_ENV === 'development' ){
         this.$http.post('auth/local' , {
