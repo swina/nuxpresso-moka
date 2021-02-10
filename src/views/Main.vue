@@ -120,7 +120,7 @@ export default {
  
   beforeMount(){
     let vm = this
-    if ( process.env.NODE_ENV === 'development' ) {
+    if ( process.env.NODE_ENV === 'development' && process.env.VUE_APP_LOCAL ) {
       let user = {
         "id":4,
         "username":"moka",
