@@ -83,6 +83,17 @@ export default {
                 this.child = MokaSimpleSvg
                 return el.link ? MokaLink : MokaSimpleSvg    
             }
+            if ( el.tag === 'article' && el.element != 'img' ){
+                console.log ( 'article => ' , el.label )
+                return MokaText
+            }
+            if ( el.tag === 'article' && el.element === 'img' ){
+                return MokaImg
+            }
+            if ( el.type === 'file' && el.link ){
+                this.child = MokaText
+                return MokaLink
+            }
         }
     },
     methods: {

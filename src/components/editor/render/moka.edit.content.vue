@@ -13,7 +13,7 @@
             Media
         </div>
         <div class="p-4 text-center" v-if="label==='image' && $attrs.entity && $attrs.entity.entity.hasOwnProperty('image')">
-            <moka-image-placeholder v-if="$attrs.entity" size="sm" :image="$attrs.entity.entity.image" @noimage="$attrs.entity.entity.image=null" @media="$emit('media')"/> 
+            <moka-image-placeholder v-if="$attrs.entity" size="sm" :image="$attrs.entity.entity.image" @noimage="$attrs.entity.entity.image=null,$attrs.entity.entity.link=''" @media="$emit('media')"/> 
         </div>
 
         <!-- video options -->

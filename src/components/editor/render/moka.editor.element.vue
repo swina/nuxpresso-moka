@@ -44,6 +44,7 @@
 
             <input :type="el.type" v-if="el.element!= 'textarea' && el.tag === 'input' && el.type!='button'" :class="$cssResponsive(el.css)" :value="el.content" :placeholder="el.required?'required!':''"/><sup v-if="el.required" class="ml-1 nuxpresso-element-required">*</sup>
 
+            <button :class="$cssResponsive(el.css)" v-if="el.type==='file'">{{el.content}}</button>    
             <!-- icon -->
             <i v-if="el.tag==='icon' && !el.link" :class="'material-icons moka-icons ' + $cssResponsive(el.css)">{{el.content}}</i>
 

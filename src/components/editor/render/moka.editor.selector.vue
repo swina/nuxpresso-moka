@@ -449,6 +449,15 @@ export default {
         },
         
         setImage(img){
+            if ( this.editor.current.type === 'file' ){
+                this.editor.current.link = img.url
+                this.editor.current.image = {}
+                this.editor.current.image.size = img.size
+                this.editor.current.image.name = img.name
+                this.current = this.editor.current
+                this.$store.dispatch('setCurrent', this.current)
+                return
+            }
             this.current = this.editor.current
             this.editor.current.image = img
             this.current.image = img

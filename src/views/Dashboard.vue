@@ -79,7 +79,6 @@ import MokaBuild from '@/components/settings/build'
 import MokaGrid from '@/components/editor/render/moka.grids'
 import { mapState } from 'vuex'
 import menu from '@/plugins/app'
-
 export default {
     name: 'MokaDashboard',
     components: {
@@ -114,9 +113,8 @@ export default {
         }
     },
     beforeMount(){
-      //this.$store.dispatch('loadComponents')
       this.$store.dispatch('loadElements')
-      //this.$store.dispatch('loadMedia')
+     
     },
     methods:{
         activeItem(component){
