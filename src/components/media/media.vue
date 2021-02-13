@@ -61,8 +61,8 @@
         </div>
         <!--</div>-->
         <transition name="fade">
-            <div class="nuxpresso-modal w-1/2 shadow border rounded p-4" v-if="uploadFile">
-                <moka-upload @uploaded="refresh()" @close="uploadFile=!uploadFile"/>
+            <div class="nuxpresso-modal w-2/3 shadow border rounded p-4" v-if="uploadFile">
+                <moka-upload @uploaded="refresh(),uploadFile=!uploadFile" @close="uploadFile=!uploadFile"/>
             </div>
         </transition>
          <transition name="fade">

@@ -77,12 +77,13 @@ import MokaStage from '@/components/settings/stage'
 import MokaDeploy from '@/components/settings/deploy'
 import MokaBuild from '@/components/settings/build'
 import MokaGrid from '@/components/editor/render/moka.grids'
+import MokaThemes from '@/components/moka/moka.themes'
 import { mapState } from 'vuex'
 import menu from '@/plugins/app'
 export default {
     name: 'MokaDashboard',
     components: {
-        MokaList,  MokaArticles, MokaCategories, MokaMedia,  MokaHome , MokaSettings, MokaStage, MokaDeploy , MokaGrid , MokaBuild
+        MokaList,  MokaArticles, MokaCategories, MokaMedia,  MokaHome , MokaSettings, MokaStage, MokaDeploy , MokaGrid , MokaBuild, MokaThemes
     },
     data:()=>({
         label: '',
@@ -113,8 +114,13 @@ export default {
         }
     },
     beforeMount(){
-      this.$store.dispatch('loadElements')
-     
+        this.$store.dispatch('loadElements')
+        const libraries = require.context(
+                '@/assets/blocks',
+                true,
+                /^.*\.json$/
+            )
+        console.log ( libraries.keys() )
     },
     methods:{
         activeItem(component){

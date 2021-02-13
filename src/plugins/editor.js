@@ -226,6 +226,25 @@ function findNode(id,currentNode ,remove){
     }
 }
 
+function findKey(key,currentNode){
+    if (currentNode.hasOwnProperty(key)) {
+        return currentNode;
+    } else {
+        var node = null
+        for(var index in currentNode.blocks){
+            
+            node = currentNode.blocks[index];
+            
+            if(node.hasOwnProperty(key)){
+                return node;
+            }
+            findNode(key, node);
+        }
+        return node
+
+    }
+}
+
 function clone(currentNode){
         var node = null
         for(var index in currentNode.blocks){
@@ -250,7 +269,10 @@ export default {
             if ( !obj ) return null
             return traverse ( obj )
         }
-
+        Vue.prototype.$findObjectKey = ( obj , key )=>{
+            if ( !obj ) return null
+            return findKey ( key , obj  )
+        }
         
         Vue.prototype.$categories = ()=>{
             return categories

@@ -56,7 +56,7 @@ export default {
                 this.json = e.target.result //JSON.parse ( JSON.stringify(e.target.result) )
                 this.json = JSON.parse(this.json) 
                 this.json.map ( (comp,index) => {
-                    comp = JSON.parse(comp)
+                    //comp = JSON.parse(comp)
                     comp.image && comp.image.url ? comp.image_uri = comp.image.url : null
                     comp.image = null
                     this.json[index] = comp

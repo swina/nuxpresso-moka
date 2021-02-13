@@ -76,6 +76,9 @@ Vue.use(VueHtml2Canvas);
 import {SimpleSVG} from 'vue-simple-svg'
 Vue.component('simple-svg', SimpleSVG)
 
+import VueFileAgent from 'vue-file-agent';
+import VueFileAgentStyles from 'vue-file-agent/dist/vue-file-agent.css';
+Vue.use ( VueFileAgent )
 //import './registerServiceWorker'
 
 Vue.config.productionTip = false

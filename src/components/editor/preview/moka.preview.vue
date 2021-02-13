@@ -1,5 +1,5 @@
 <template> 
-    <div :key="refreshID" :ref="doc.id" :class="doc.css + ' overflow-x-hidden '" :style="stile(doc,true) + ' ' + background(doc)" id="content">
+    <div :key="refreshID" :ref="doc.id" :class="'bg-white ' + doc.css + ' overflow-x-hidden '" :style="stile(doc,true) + ' ' + background(doc)" id="content">
         <!-- 1st level - BLOCKS LOOP -->
         
             <template v-for="(block,b) in doc.blocks">

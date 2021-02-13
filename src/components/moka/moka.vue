@@ -105,6 +105,7 @@ export default {
         },
         saveMe(){    
                 this.$store.dispatch ( 'loading' , true )
+                delete this.component.autosave
                 if ( process.env.NODE_ENV === 'production' ){
                     this.$http.defaults.headers.common = {
                         'Authorization': window.localStorage.getItem('nuxpresso-jwt')

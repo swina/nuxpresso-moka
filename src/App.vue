@@ -25,8 +25,6 @@
 </template>
 
 <script>
-import WebFontLoader from 'webfontloader';
-import FontFaceObserver from 'fontfaceobserver'
 import { mapState } from 'vuex'
 export default {
   name: 'App',
@@ -58,7 +56,13 @@ export default {
     },
   },
   mounted(){
-    
+    if ( process.env.VUE_APP_LOCAL ) {
+      if ( window.localStorage.getItem('nuxpresso-jwt') ){
+        window.localStorage.removeItem('nuxpresso-jwt')
+        window.localStorage.removeItem('nuxpresso-user')
+        return
+      }
+    }
     if ( window.localStorage.getItem('nuxpresso-jwt') ){
       this.$http.defaults.headers.common = {
           'Authorization': window.localStorage.getItem('nuxpresso-jwt')

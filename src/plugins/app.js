@@ -13,6 +13,7 @@ const menu = {
                 { label: 'Favorites' , icon: '' , component: 'MokaList' , filter: 'starred' },
             ] 
         },
+        { label: 'Themes' , icon: 'web' , component: 'MokaThemes' , filter: ''},
         { label: 'CMS' , icon: 'article' , component: null , 
             items : [
                 { label: 'Articles' , icon: 'article' , component: 'MokaArticles' , filter: 'article' },

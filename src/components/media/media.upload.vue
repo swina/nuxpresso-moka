@@ -1,8 +1,18 @@
 <template>
   <div class="">
     <i class="material-icons absolute top-0 right-0 m-1" @click="$emit('close')">close</i>
+    <i class="material-icons absolute top-0 right-0 m-1 mr-6" @click="theme=!theme">{{theme?'grid_on':'list'}}</i>
     <h3>Media Upload</h3>
-    <div class="grid grid-cols-1">
+    <vue-file-agent 
+      :multiple="true"
+      :deletable="true"
+      @beforedelete="onBeforeDelete($event)"
+      :theme="theme?'list':''"
+      ref="vueFileAgent" v-model="fileRecords"></vue-file-agent>
+    <button :disabled="!fileRecords.length" @click="uploadFiles()">
+    Upload {{ fileRecords.length }} files
+    </button>
+    <!--<div class="grid grid-cols-1">
       <div class="text-center">
         <div v-if="currentFile" class="progress">
           <div
@@ -30,19 +40,16 @@
           {{message}}
         </div>
       </div>
-      <!--<div>
-        <img v-if="preview" :src="preview" class="w-64"/>
-      </div> -->
+     
     </div>
-  
+    -->
   </div>
 </template>
 <script>
 //import FileUpload from 'vue-upload-component'
+
 export default {
-  //components: {
-  //  FileUpload,
-  //},
+  
   data:()=>({
       selectedFiles: null,
       currentFile: undefined,
@@ -51,8 +58,17 @@ export default {
       fileInfos: [],
       filename: '',
       preview: null,
-      uploading: false
+      uploading: false,
+      theme: true,
+      fileRecords:[],
+      fileRecordsForUpload: [], // maintain an upload queue
+      currentFile: null
   }),
+  computed:{
+    uploadUrl(){
+      return process.env.VUE_APP_API_URL + 'upload'
+    }
+  },
   methods: {
     selectFile() {
       this.preview = null
@@ -106,12 +122,45 @@ export default {
 
       reader.readAsDataURL(file);
     },
-    uploadFile(file, onUploadProgress) {
+    uploadFiles(){
+      //this.$refs.vueFileAgent.upload( process.env.VUE_APP_API_URL + 'uploads', 
+      //  {
+      //              "Content-Type": "multipart/form-data"
+      //          }
+      //          , this.fileRecords);
+      this.fileRecordsForUpload = this.fileRecords
+      this.fileRecordsForUpload.forEach ( (file,index) => {
+        this.uploadFile ( file.file , event => {
+        this.uploading = true
+        this.message = 'Uploading ...'
+        this.progress = Math.round((100 * event.loaded) / event.total);
+      } , index ).then ( response => {
+        this.fileRecordsForUpload.splice(index,1)
+        this.$emit('uploaded')
+      })
+      })
+      this.fileRecords = []
+    },
+    onBeforeDelete: function (fileRecord) {
+        var i = this.fileRecordsForUpload.indexOf(fileRecord);
+        if (i !== -1) {
+        // queued file, not yet uploaded. Just remove from the arrays
+          this.fileRecordsForUpload.splice(i, 1);
+          var k = this.fileRecords.indexOf(fileRecord);
+          if (k !== -1) this.fileRecords.splice(k, 1);
+        } else {
+          
+          this.$refs.vueFileAgent.deleteFileRecord(fileRecord); // will trigger 'delete' event
+          
+        }
+      },
+    uploadFile(file, onUploadProgress , index ) {
         let formData = new FormData()
         formData.append("files", file )
         for (var key of formData.entries()) {
 			    console.log(key[0] + ', ' + key[1])
-		    }
+        }
+        
         return this.$http.post("/upload", 
              formData ,
              {   
