@@ -19,6 +19,7 @@
     "graphql": "^15.3.0",
     "graphql-tag": "^2.11.0",
     "gsap": "^3.5.1",
+    "jsonpath": "^1.1.0",
     "jszip": "^3.6.0",
     "moment": "^2.29.0",
     "quill-image-drop-module": "^1.0.3",

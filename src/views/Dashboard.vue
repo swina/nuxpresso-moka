@@ -115,6 +115,7 @@ export default {
     },
     beforeMount(){
         this.$store.dispatch('loadElements')
+        this.$store.dispatch('loadThemes')
         const libraries = require.context(
                 '@/assets/blocks',
                 true,

@@ -8,6 +8,7 @@
             
             <moka-element
                 v-if="block && !block.hasOwnProperty('blocks') || block.hasOwnProperty('items') && !doc.hasOwnProperty('slider')"
+                :component="$attrs.component"
                 :key="block.id"
                 :element="block" 
                 :coords="[b]"
@@ -57,14 +58,14 @@
         <div :class="'absolute transform border-2 border-dashed top-0 left-0 bottom-0 right-0 z-' + zindex + ' scale-x-' + (105-root) + ' ' + active(doc.id,doc)" @click="setCurrent(doc)" v-if="doc && !doc.hasOwnProperty('items')">
             <!--{{ $attrs.level }} {{ $attrs.index }}-->
             <span v-if="doc && doc.hasOwnProperty('loop') && doc.loop" class="text-xs"><i class="material-icons">article</i> Article Loop</span>
-            <div class="h-2 w-2 absolute top-0 right-0 bg-black rounded-full -m-1"></div>
+            <div class="h-2 w-2 absolute top-0 right-0 bg-black rounded-full -m-1" @click="moveUp(doc.id)"></div>
             <div class="h-3 w-3 absolute top-0 left-0 bg-blue-500 rounded-full -m-2" @dblclick="$store.dispatch('setAction','addcomponent')" title="Dblclick to add an element"></div>
             <div class="h-2 w-2 absolute bottom-0 right-0 bg-black rounded-full -m-1"></div>
             <div class="h-2 w-2 absolute bottom-0 left-0 bg-black rounded-full -m-1"></div>
             <div v-if="doc.id===moka.selected" class="z-2xtop absolute top-0 left-0 ml-4 p-1 -mt-6  h-6 w-auto bg-gray-800 text-gray-300 text-xs rounded-2xl items-center flex flex-row justify-around">
-                
-                <i class="transform scale-100 material-icons text-sm mr-2" v-if="doc.icon">{{doc.icon}}</i>
-                <i class="transform scale-100 material-icons text-sm mr-2" v-if="!doc.icon">select_all</i>
+                <i class="transform scale-100 material-icons text-lime-400 hover:text-red-500  text-sm mr-2" v-if="doc.icon">{{doc.icon}}</i>
+                <i class="transform scale-100 material-icons text-lime-400 hover:text-red-500 text-sm mr-2" v-if="!doc.icon">select_all</i>
+                <i class="transform scale-100 material-icons text-base mr-2" @click="moveUp(doc.id)" title="Move up">expand_less</i>
                 <i v-if="doc.type==='flex' || doc.type==='grid'" class="mr-2 material-icons hover:text-blue-500 text-sm leading-4" @click="$store.dispatch('setAction','addcomponent')" title="Add element">add</i>
                 <i v-if="doc.tag==='form'" class="mr-2 material-icons hover:text-blue-500 text-sm leading-4" @click="$store.dispatch('setAction','formsetting')" title="Settings">settings</i> 
                 <i class="mr-2 material-icons hover:text-blue-500 text-sm leading-4 " @click="$store.dispatch('setAction','customize')" title="Customize">brush</i>
@@ -89,6 +90,7 @@ import MokaElement from '@/components/editor/render/moka.editor.element'
 import MokaSlider from '@/components/editor/preview/moka.slider'
 import MokaEditorSlides from '@/components/editor/render/moka.editor.slides'
 import { mapState } from 'vuex'
+import jp from 'jsonpath'
 export default {
     name: 'MokaContainer',
     components: { MokaElement , MokaSlider , MokaEditorSlides },
@@ -108,6 +110,21 @@ export default {
         
     },
     methods:{
+        moveUp(id){
+            var parent = jp.parent ( this.$attrs.component , '$..blocks[?(@.id=="' + id + '")]' )
+            if ( parent.length === 1 ) return
+            let i
+            parent.forEach ( (p,index) => {
+                if ( p.id === id ){
+                    i = index
+                }
+            })
+            if ( i > 0 ){
+                let obj = Object.assign({},this.doc)
+                parent.splice(i,1)
+                parent.splice(i-1,0,this.doc)
+            }
+        },
         classe(css){
             if ( !css ) return 'relative'
             let cl = css.hasOwnProperty('css') ? css.css + ' ' + css.container : css

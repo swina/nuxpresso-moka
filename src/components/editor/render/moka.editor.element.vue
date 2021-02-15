@@ -102,7 +102,7 @@
             </nav>
             </transition>
             <div v-if="$attrs.develop " :class="'absolute border border-green-500 border-dashed z-top top-0 left-0 bottom-0 right-0 scale-x-102 scale-y-102 transform ' + active(el.id,el.css) + ' bg-transparent'" style="min-height:2rem" @click="select(el)">
-                <div class="h-2 w-2 absolute top-0 right-0 bg-black rounded-full -m-1"></div>
+                <div class="h-2 w-2 absolute top-0 right-0 bg-black rounded-full -m-1" @click="moveUp(el.id)"></div>
                 <div class="h-2 w-2 absolute top-0 left-0 bg-black rounded-full -m-1"></div>
                 <div class="h-2 w-2 absolute bottom-0 right-0 bg-black rounded-full -m-1"></div>
                 <div class="h-2 w-2 absolute bottom-0 left-0 bg-black rounded-full -m-1"></div>
@@ -112,8 +112,9 @@
             </div>
              <div v-if="el.id===moka.selected" class="z-top absolute top-0 left-0 -mt-6 h-6 bg-gray-800 text-gray-300 text-xs rounded-2xl items-center flex flex-row">
                     <!--,$store.dispatch('setParent',$attrs.parent)-->
-                    <i class="material-icons text-sm text-gray-600 leading-4 ml-2" @click="toolbar=!toolbar,$store.dispatch('setAction','replaceelement'),$store.dispatch('setParent',$attrs.parent)" title="Replace element">{{ el.icon }}</i>
-                    <i class="material-icons text-sm text-gray-600 hover:text-blue-500 leading-4 mr-2" @click="toolbar=!toolbar" v-if="!toolbar">arrow_right</i>
+                    <i class="material-icons text-sm text-lime-400 hover:text-red-500 leading-4 ml-2" @click="toolbar=!toolbar,$store.dispatch('setAction','replaceelement'),$store.dispatch('setParent',$attrs.parent)" title="Replace element">{{ el.icon }}</i>
+                    <!--<i class="material-icons text-sm text-gray-600 hover:text-blue-500 leading-4 mr-2" @click="toolbar=!toolbar" v-if="!toolbar">arrow_right</i>-->
+                    <i class="material-icons text-sm hover:text-blue-500 leading-4 ml-2" @click="moveUp(el.id)" title="Move up">expand_less</i>
                     <i class="material-icons text-sm text-gray-600 hover:text-blue-500 leading-4 mr-2" @click="toolbar=!toolbar" v-if="toolbar">arrow_left</i>
                         <div v-if="toolbar||!toolbar" class="flex flex-row items-center">
                         <i class="material-icons hover:text-blue-500 text-sm leading-4 mx-2" @click="$store.dispatch('setAction','edit')" title="Edit content">edit</i>
@@ -129,6 +130,7 @@
 import MokaTextEditor from '@/components/editor/render/moka.text.editor'
 import MokaInlineEditor from '@/components/editor/render/moka.editor.inline'
 import { mapState } from 'vuex'
+import jp from 'jsonpath'
 export default {
     name: 'MokaEditorElement',
     components: { MokaTextEditor , MokaInlineEditor },
@@ -182,6 +184,21 @@ export default {
     },
     */
     methods:{
+        moveUp(id){
+            var parent = jp.parent ( this.$attrs.component , '$..blocks[?(@.id=="' + id + '")]' )
+            if ( parent.length === 1 ) return
+            let i
+            parent.forEach ( (p,index) => {
+                if ( p.id === id ){
+                    i = index
+                }
+            })
+            if ( i > 0 ){
+                let obj = Object.assign({},this.el)
+                parent.splice(i,1)
+                parent.splice(i-1,0,this.el)
+            }
+        },
         select(el){
             this.$store.dispatch('selected',el.id)
             this.$emit('selected',el)
@@ -242,6 +259,7 @@ export default {
             this.editor.current.content = text//e.target.innerHTML
             //this.editor.current.content = this.editor.current.content.replace(/<style.*?<\/style>/g, '')
         },
-    }
+    },
+   
 }
 </script>   

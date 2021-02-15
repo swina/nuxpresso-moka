@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col p-4">
-        <div class="text-xl">Import Component</div>
+        <div class="text-xl">Import Blocks</div>
         <i class="material-icons absolute top-0 right-0 m-1" @click="$emit('close')">close</i>
         <div v-if="loaded">
             <div v-if="!isLibrary" class="flex flex-col p-2">
@@ -33,7 +33,7 @@
         </div>
         <div class="flex text-white relative text-center p-2" v-if="!loaded">
             <input type="file" class="absolute top-0 left-0 right-0 bottom-0 opacity-0" @change="loadTextFromFile"/>
-            <button class="w-full warning">Upload Component</button>
+            <button class="w-full warning">Select File</button>
         </div>
     </div>
 </template>
@@ -93,7 +93,7 @@ export default {
                     this.loadedComponent = component.name
                     if ( n >= this.json.length ){
                         this.$store.dispatch ( 'loadComponents' )
-                        this.$store.dispatch('message','Component uploaded successfully' )
+                        this.$store.dispatch('message','Blocks uploaded successfully' )
                         this.loadedComponent = 'Blocks loaded successfully !'
                     }
                 }).catch ( error => {

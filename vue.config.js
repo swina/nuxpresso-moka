@@ -1,17 +1,21 @@
 var webpack = require('webpack');
 console.log ( 'Themes at ' + process.env.VUE_APP_NUXPRESSO_URL )
 module.exports = {
-    
+  /*  
   devServer: {
-    proxy: { 
+    proxy:  
+    { 
       '^/uploads' : {
         target: process.env.VUE_APP_NUXPRESSO_URL || 'http://localhost:3000/',
+        ws: true,
         changeOrigin: true,
         pathRewrite: {'^/uploads': '/uploads'}, 
         logLevel: 'debug'
       }
     }
+    
   },
+  */
   configureWebpack: {
     
     plugins: [

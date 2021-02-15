@@ -1,6 +1,7 @@
 import axios from 'axios'
 import icons  from '@/plugins/icons.js'
 import articlesQry from '@/apollo/articles.gql'
+import JSZip from 'jszip'
 
 const moka = {
     state:  {
@@ -26,7 +27,8 @@ const moka = {
         slide: 0,
         popup: '',
         blocks: null,
-        library: []
+        library: [],
+        themes: null
     },
     mutations: {
         SET_SETTINGS ( state , settings ){
@@ -96,7 +98,8 @@ const moka = {
         },
         async loadComponents ( { commit } ){
             const comps = await axios.get ( process.env.VUE_APP_API_URL + 'components' )
-            commit ( 'SET_COMPONENTS' , comps.data.sort( (a, b) => a.name < b.name ? -1 : 1) ) 
+            commit ( 'SET_COMPONENTS' , comps.data.sort( (a, b) => a.name < b.name ? -1 : 1) )
+            
             
         },
         async loadElements ( { commit } ){
@@ -110,6 +113,8 @@ const moka = {
                     window.localStorage.removeItem('nuxpresso-jwt')
                 }
             })
+
+            
             //const els = await axios.get ( strapi_url + 'elements' )
             //console.log ( 'Loading elements ... ' , els )
             //commit ( 'SET_ELEMENTS' , els.data )
