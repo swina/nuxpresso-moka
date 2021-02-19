@@ -1,5 +1,19 @@
+/** 
+ * * GSAP Animations
+ * Animation presets for MOKAStudio
+ * For each animation 
+ * @duration    => animation duration in secs
+ * @delay       => animation delay in secs
+ * @ease        => animation ease mode (presets) 
+*/
 import gsap from 'gsap'
 const duration = .7
+
+
+
+/**
+ * Scale effect
+ */
 gsap.registerEffect({
     name: "scale",
     effect: (targets, config) => {
@@ -18,10 +32,12 @@ gsap.registerEffect({
         );
     },
     defaults: {duration: duration,delay:0,ease:"power1"}, //defaults get applied to any "config" object passed to the effect
-    extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
+    extendTimeline: true, 
 });
 
-
+/**
+ * Scale In effect
+ */
 gsap.registerEffect({
     name: "scalein",
     effect: (targets, config) => {
@@ -40,9 +56,12 @@ gsap.registerEffect({
         );
     },
     defaults: {duration: duration,delay:0,ease:"power1"}, //defaults get applied to any "config" object passed to the effect
-    extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
+    extendTimeline: true, 
 });
 
+/**
+ * Fade effect
+ */
 gsap.registerEffect({
     name: "fade",
     effect: (targets, config) => {
@@ -58,10 +77,13 @@ gsap.registerEffect({
             }
         );
     },
-    defaults: {duration: duration,delay:0,ease:"power1"}, //defaults get applied to any "config" object passed to the effect
-    extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
+    defaults: {duration: duration,delay:0,ease:"power1"}, 
+    extendTimeline: true 
 });
 
+/**
+ * Rotate and scale effect
+ */
 gsap.registerEffect({
     name: "rotatescale",
     effect: (targets, config) => {
@@ -82,10 +104,13 @@ gsap.registerEffect({
             }
         );
     },
-    defaults: {duration: duration , delay: 0,ease:"power1"}, //defaults get applied to any "config" object passed to the effect
-    extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
+    defaults: {duration: duration , delay: 0,ease:"power1"}, 
+    extendTimeline: true, 
 });
 
+/**
+ * Rotate X 360 effect
+ */
 gsap.registerEffect({
     name: "rotate",
     effect: (targets, config) => {
@@ -99,10 +124,13 @@ gsap.registerEffect({
             }
         );
     },
-    defaults: {duration: duration}, //defaults get applied to any "config" object passed to the effect
-    extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
+    defaults: {duration: duration}, 
+    extendTimeline: true, 
 });
 
+/**
+ * Flip X effect
+ */
 gsap.registerEffect({
     name: "flipx",
     effect: (targets, config) => {
@@ -120,10 +148,13 @@ gsap.registerEffect({
             }
         );
     },
-    defaults: {duration: duration, delay: 0,ease:"power1"}, //defaults get applied to any "config" object passed to the effect
-    extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
+    defaults: {duration: duration, delay: 0,ease:"power1"}, 
+    extendTimeline: true, 
 });
 
+/**
+ * Flip Y effect
+ */
 gsap.registerEffect({
     name: "flipy",
     effect: (targets, config) => {
@@ -137,14 +168,19 @@ gsap.registerEffect({
                 scale:1,
                 duration: config.duration,
                 delay: config.delay ,
-                ease: config.ease
+                ease: config.ease,
+                clearProps: 'all'
             }
         );
     },
-    defaults: {duration: duration , delay: 0,ease:"power1"}, //defaults get applied to any "config" object passed to the effect
-    extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
+    defaults: {duration: duration , delay: 0,ease:"power1"}, 
+    extendTimeline: true, 
 });
 
+/**
+ * Rotate hover effect 
+ * * to be tested
+ */
 gsap.registerEffect({
     name: "rotatehover",
     effect: (targets, config) => {
@@ -164,10 +200,13 @@ gsap.registerEffect({
             }
         );
     },
-    defaults: {duration: duration,delay:0,ease:"power1"}, //defaults get applied to any "config" object passed to the effect
-    extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
+    defaults: {duration: duration,delay:0,ease:"power1"}, 
+    extendTimeline: true, 
 });
 
+/**
+ * Slide from left effect
+ */
 gsap.registerEffect({
     name: "slideleft",
     effect: (targets, config) => {
@@ -187,10 +226,13 @@ gsap.registerEffect({
             }
         )
     },
-    defaults: {duration: duration, delay:0,ease:"power1"}, //defaults get applied to any "config" object passed to the effect
-    extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
+    defaults: {duration: duration, delay:0,ease:"power1"}, 
+    extendTimeline: true, 
 });
 
+/**
+ * Slide from right effect
+ */
 gsap.registerEffect({
     name: "slideright",
     effect: (targets, config) => {
@@ -210,8 +252,8 @@ gsap.registerEffect({
             }
         )
     },
-    defaults: {duration: duration,delay:0,ease:"power1"}, //defaults get applied to any "config" object passed to the effect
-    extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
+    defaults: {duration: duration,delay:0,ease:"power1"}, 
+    extendTimeline: true, 
 });
 
 
@@ -235,10 +277,13 @@ gsap.registerEffect({
             }
         )
     },
-    defaults: {duration: duration, delay: 0,ease:"power1"}, //defaults get applied to any "config" object passed to the effect
-    extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
+    defaults: {duration: duration, delay: 0,ease:"power1"}, 
+    extendTimeline: true, 
 });
 
+/**
+ * Slide from top effect
+ */
 gsap.registerEffect({
     name: "slidedown",
     effect: (targets, config) => {
@@ -258,10 +303,13 @@ gsap.registerEffect({
             }
         )
     },
-    defaults: {duration: duration, delay: 0,ease:"power1"}, //defaults get applied to any "config" object passed to the effect
-    extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
+    defaults: {duration: duration, delay: 0,ease:"power1"}, 
+    extendTimeline: true, 
 });
 
+/**
+ * Width grow effect
+ */
 gsap.registerEffect({
     name: "growwidth",
     effect: (targets, config) => {
@@ -281,11 +329,14 @@ gsap.registerEffect({
             }
         )
     },
-    defaults: {duration: duration, delay: 0,ease:"power1"}, //defaults get applied to any "config" object passed to the effect
-    extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
+    defaults: {duration: duration, delay: 0,ease:"power1"}, 
+    extendTimeline: true, 
 });
 
-
+/**
+ * Width revers effect
+ * ! To be tested
+ */
 gsap.registerEffect({
     name: "widthreverse",
     effect: (targets, config) => {
@@ -307,11 +358,13 @@ gsap.registerEffect({
             }
         )
     },
-    defaults: {duration: duration, delay: 0,ease:"power1"}, //defaults get applied to any "config" object passed to the effect
-    extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
+    defaults: {duration: duration, delay: 0,ease:"power1"}, 
+    extendTimeline: true, 
 });
 
-
+/**
+ * Close (width from 100% to 0, curtains open) effect
+ */
 gsap.registerEffect({
     name: "closeleft",
     effect: (targets, config) => {
@@ -329,11 +382,14 @@ gsap.registerEffect({
             }
         )
     },
-    defaults: {duration: duration, delay: 0,ease:"power1"}, //defaults get applied to any "config" object passed to the effect
-    extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
+    defaults: {duration: duration, delay: 0,ease:"power1"}, 
+    extendTimeline: true, 
 });
 
 
+/**
+ * Close right (width from 100% to 0, curtains open) effect
+ */
 gsap.registerEffect({
     name: "closeright",
     effect: (targets, config) => {
@@ -349,12 +405,15 @@ gsap.registerEffect({
             }
         )
     },
-    defaults: {duration: duration, delay: 0,ease:"power1"}, //defaults get applied to any "config" object passed to the effect
-    extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
+    defaults: {duration: duration, delay: 0,ease:"power1"},
+    extendTimeline: true, 
 });
 
 
 
+/**
+ * Grow height (height from 0 to 100%) effect
+ */
 gsap.registerEffect({
     name: "growheight",
     effect: (targets, config) => {
@@ -373,7 +432,7 @@ gsap.registerEffect({
         )
     },
     defaults: {duration: duration , delay: 1,ease:"power1"}, //defaults get applied to any "config" object passed to the effect
-    extendTimeline: true, //now you can call the effect directly on any GSAP timeline to have the result immediately inserted in the position you define (default is sequenced at the end)
+    extendTimeline: true, 
 });
 
 // ---- YOUR ANIMATIONS GO HERE ---

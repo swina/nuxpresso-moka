@@ -1,3 +1,14 @@
+
+/**
+ * Main menu
+ * @label       => Menu title
+ * @icon        => Icon
+ * @component   => Component invoked
+ * @filter      => Default filter (if applicable)
+ * @items       => Submenu items
+ * Submenus
+ * same as Main menu 
+ */
 const menu = {
     items : [
         { label: 'Home' , icon: 'home' , component: 'MokaHome' , filter: '' },

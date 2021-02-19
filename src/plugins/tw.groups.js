@@ -1,8 +1,19 @@
+/**
+ * Customizer panel options
+ * @label   => Option label
+ * @filter  => Apply only to elements with type === filter
+ * @components => Array of components for each group
+ * 
+ * @components => 
+ *  @name   *String => component name  
+ *  @attr   *String => variable from the twclasses
+ *  @title  *String => option title
+ *  @css    String  => extra class to assign to the option
+ *  @icon   String  => material icon name if control uses an icon
+ *  @negative Boolean => true = slider has negative values
+ */
 const twgroups = [
     { label: 'grid' , filter: ['grid'] , components: [
-        //{ name: 'MokaOptions' , attr: 'gridcols' , title: 'columns' },
-        //{ name: 'MokaGrid' , attr: 'grid'  },
-        
         { name: 'MokaOptions' , attr: 'gridgap' , title: 'grid gap'}
     ]},
     { label: 'flex' ,  components: [

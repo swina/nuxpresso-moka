@@ -2,7 +2,7 @@
 <!-- MAIN CONTAINER -->
 <div class="w-full h-auto pb-10 mb-10 top-0 left-0 relative" data="init">
     
-    <div v-if="$attrs.category!='element' && $attrs.category != 'slider'">
+    <div v-if="$attrs.category!='element' && $attrs.category != 'slider'" >
           
         <div :class="'relative border-4 border-dashed p-4 text-black ' + docCss" :style="stile(doc,true) + ' ' + background(doc)" id="content">
             <template v-for="(block,b) in doc.blocks">
@@ -63,7 +63,7 @@
                 <button class="mx-2" @click="addSlide()">Add slide</button>
                 <button class="danger mx-2" v-if="!slideDelete && slideIndex > -1" @click="slideDelete=!slideDelete">Delete slide</button>
                 <button class="danger" v-if="slideDelete" @click="doc.blocks.splice(slideIndex,1),slideIndex=0,slideDelete=!slideDelete">Confirm to delete this slide?</button>
-                <!--<button class="rounded-none mx-2" v-if="currentSlide">Duplicate</button>-->
+                <button class="rounded-none mx-2" v-if="currentSlide" @click="$emit('duplicate',editor.current)">Duplicate</button>
             </div>
             
                 <draggable :list="doc.blocks" class="flex flex-row mb-4">
@@ -583,7 +583,6 @@ export default {
         let vm = this
         this.current = this.moka.current
         window.addEventListener("keydown", e => {
-            
             if ( e.altKey && e.code === 'KeyB' ){
                 !this.doc.hasOwnProperty('slider') ?
                     vm.$emit('preview') :
@@ -628,6 +627,7 @@ export default {
                 }
             }
             if ( e.altKey && e.code === 'KeyC' ){
+                console.log ( 'copy element ...')
                 if ( this.editor.current ){
                     this.$store.dispatch('message','Element copied')
                     this.$emit('copy',this.editor.current)

@@ -1,21 +1,25 @@
+/**
+ * General usage functions
+ */
 import Vue from 'vue'
 import moment from 'moment'
-    /*
-    const baseURL = 'https://js.api.here.com/v3/3.1/'
-    const src = 'mapsjs.bundle.js' //'mapsjs-core.js','mapsjs-service.js','mapsjs-ui.js','mapsjs-mapevents.js']
-    const styles = 'mapsjs-ui.css'
-    import icons from './icons'
-    Vue.use(icons)
-    */
+import store from '../store'
 
 export default {
     install: function (Vue) {
+
+    
+    Vue.prototype.$message = ( msg => {
+        store.dispatch ( 'message' , msg )
+    })
+
 
     Vue.prototype.$clean = function ( str = '' ){
         if ( !str ) return ''
         str = str.replace(/\s\s+/g, ' ')
         return [...new Set(str.split(' '))].join(' ')
     }
+
     Vue.prototype.$trim = function ( str = '' ){
         if ( !str ) return ''
         return str.replace(/\s\s+/g, ' ')
@@ -34,15 +38,13 @@ export default {
             caption: img.caption
         }
     }
+
     Vue.prototype.$imageURL = ( image ) => {
         if ( !image ) return ''
         let url = ''
-            //image.previewUrl ? 
-            //    image.previewUrl.includes('http') ? 
-            //        url = image.previewUrl : 
-            //            url = process.env.VUE_APP_API_URL + image.previewUrl.replace('/','') :
-                            image.url.includes('http') ? url = image.url : 
-                                url = process.env.VUE_APP_API_URL + image.url.replace('/','') 
+        image.url.includes('http') ? 
+            url = image.url : 
+                url = process.env.VUE_APP_API_URL + image.url.replace('/','') 
         return url
         
     }
@@ -226,15 +228,17 @@ export default {
     }
 
     Vue.prototype.$arrayGroup = function ( arr , key , summ = {} ){
-        // @arr = array of objects (required)
-        // @key = key to group (required)
-        // @summ = key to sum
-        // group array of objects on given key, sum on key , count for given key
-        // return object grouped
-        //    keys = grouped keys
-        //    values = values for the each grouped keys
-        //    sums = sum of values of field x for each grouped keys
-        //    counters = counter for each grouped key
+        /**
+         @arr = array of objects (required)
+         @key = key to group (required)
+         @summ = key to sum
+         group array of objects on given key, sum on key , count for given key
+         return object grouped
+            keys = grouped keys
+            values = values for the each grouped keys
+            sums = sum of values of field x for each grouped keys
+            counters = counter for each grouped key
+         */
         if ( arr != 'undefined' ){
           let counter = 0
           let sums = []

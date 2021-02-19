@@ -1,3 +1,7 @@
+/**
+ Run GSAP Animation 
+ The animation uses the ScrollTrigger plugin so they will be fired only when the element is visibile
+*/
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin ( ScrollTrigger )
@@ -6,7 +10,12 @@ import gsapEffects from './animations'
 
 export default {
     install: function (Vue) {
-    
+        /**
+        * Start the animation of an element
+            @element      Object      => Element object
+            @id           String      => Element id
+            @refs         Object      => Vue $refs
+         */
         Vue.prototype.$animation = (element,id,refs)=>{
             if ( refs && element.hasOwnProperty('gsap') && element.gsap.animation ){
                 let ani = gsap.effects[element.gsap.animation]( refs[id] ,{

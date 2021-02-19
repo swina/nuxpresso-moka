@@ -1,3 +1,7 @@
+/**
+ * Used by Quill editor to add custom colors
+ * Fonts doesn't work yet
+ */
 const typo = {
     fonts : [
         'Barlow Condensed',

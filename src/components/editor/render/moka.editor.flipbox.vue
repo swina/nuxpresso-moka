@@ -5,123 +5,71 @@
         :class="'p-2 fill-current ' + classe(doc.css)" :style="doc.style + ' ' +  background(doc)" @dblclick="doc.blocks.length===0?$store.dispatch('setAction','addcomponent'):null" >
         <div v-if="doc.blocks && !doc.blocks.length && !doc.image" class="text-xs">Dblclick here to add an element</div>
         <template v-for="(block,b) in doc.blocks">
-
-            <moka-element
-                v-if="block && !block.hasOwnProperty('blocks') || block.hasOwnProperty('items') && !doc.hasOwnProperty('slider') && !block.hasOwnProperty('blocks_flip')"
-                :component="$attrs.component"
-                :key="block.id"
-                :element="block" 
-                :coords="[b]"
-                :develop="true"
-                :level="parseInt($attrs.level)+1" 
-                @selected="setCurrent(block),$store.dispatch('setCurrent',block),$store.dispatch('selected',block.id)"
-                @customize="customize"
-                :parent="[doc.blocks,b]"
-                @copy="$emit('copy')"
-                @animation="$emit('animations')"
-                @delete="$emit('delete')" 
-                @editinline="setCurrent(block),edit"/> 
             
-            <moka-container
-                :key="block.id"
-                :component="$attrs.component"
-                :top="false"
-                :root="$attrs.root||false"
-                :coords="coords"
-                :slide="$attrs.slide"
-                :flipbox="doc.hasOwnProperty('blocks_flip')? true : false" 
-                :index="b"
-                :level="parseInt($attrs.level)+1" 
-                :zi="$attrs.zi + parseInt($attrs.level)"
-                v-if="block && block.hasOwnProperty('blocks') && !block.hasOwnProperty('items')  && !block.hasOwnProperty('slider') && !block.hasOwnProperty('blocks_flip')" 
-                :doc="block"
-                @copy="$emit('copy')"/>
-
-            
-            <!--<moka-editor-slides
-                v-if="block && block.hasOwnProperty('slider')" 
-                :doc="block"
-                @remove="doc.blocks.splice(b,1)"/>-->
-
-              
-            <moka-slides-container
-                :key="block.id"
-                :component="$attrs.component"
-                :top="false"
-                :root="$attrs.root||false"
-                :coords="coords"
-                :slide="$attrs.slide" 
-                :index="b"
-                :level="parseInt($attrs.level)+1" 
-                :zi="$attrs.zi + parseInt($attrs.level)"
-                v-if="block && block.hasOwnProperty('slider') && !block.hasOwnProperty('blocks_flip')" 
-                :doc="block"/>
-                
-            <moka-editor-flipbox
-                v-if="block.hasOwnProperty('blocks_flip')"
+            <moka-single-container
+                v-if="index === b && block.hasOwnProperty('blocks')"
                 :key="block.id"
                 :doc="block"
                 :component="$attrs.component"
                 :top="false"
                 :root="$attrs.root||false"
                 :coords="coords"
-                :slide="$attrs.slide" 
+                :flipside="b" 
                 :index="b"
                 :level="parseInt($attrs.level)+1" 
                 :zi="$attrs.zi + parseInt($attrs.level)"/>
-              
+            
+            
         </template>
        
-        <div :class="'absolute transform border-2 border-dashed top-0 left-0 bottom-0 right-0 z-' + zindex + ' scale-x-' + (105-root) + ' ' + active(doc.id,doc)" @click="setCurrent(doc)" v-if="doc && !doc.hasOwnProperty('items')"  @contextmenu="$contextMenu($event,doc,'customize')">
-            <!--{{ $attrs.level }} {{ $attrs.index }}-->
+                
+        <div :class="'absolute transform border-2 border-dashed top-0 left-0 bottom-0 right-0 z-' + zindex + ' scale-x-' + (105-root) + ' ' + active(doc.id,doc)" @click="setCurrent(doc)" v-if="doc && !doc.hasOwnProperty('items')" @contextmenu="$contextMenu($event,doc)">
+            
             <span v-if="doc && doc.hasOwnProperty('loop') && doc.loop" class="text-xs"><i class="material-icons">article</i> Article Loop</span>
-            <span v-if="doc && doc.hasOwnProperty('blocks_flip')" class="text-xs"><i class="material-icons">flip_camera_android</i> Flipbox</span>
+            
             <div class="h-2 w-2 absolute top-0 right-0 bg-black rounded-full -m-1" @click="moveUp(doc.id)"></div>
             <div class="h-3 w-3 absolute top-0 left-0 bg-blue-500 rounded-full -m-2" @dblclick="$store.dispatch('setAction','addcomponent')" title="Dblclick to add an element"></div>
-            <div class="h-2 w-2 absolute bottom-0 right-0 bg-black rounded-full -m-1"></div>
+            <div :class="'h-2 w-2 absolute bottom-0 right-0 rounded-full -m-1 ' + side"></div>
             <div class="h-2 w-2 absolute bottom-0 left-0 bg-black rounded-full -m-1"></div>
-            <div v-if="doc.id===moka.selected" class="z-highest absolute top-0 left-0 ml-4 p-1 -mt-6  h-6 w-auto bg-gray-800 text-gray-300 text-xs rounded-2xl items-center flex flex-row justify-around">
+            <div v-if="doc.id===moka.selected" class="z-2xtop absolute top-0 left-0 ml-4 p-1 -mt-6  h-6 w-auto bg-gray-800 text-gray-300 text-xs rounded-2xl items-center flex flex-row justify-around">
                 <i class="transform scale-100 material-icons text-lime-400 hover:text-red-500  text-sm mr-2" v-if="doc.icon">{{doc.icon}}</i>
                 <i class="transform scale-100 material-icons text-lime-400 hover:text-red-500 text-sm mr-2" v-if="!doc.icon">select_all</i>
-                <i class="transform scale-100 material-icons hover:text-blue-500  text-base mr-2" @click="moveUp(doc.id)" title="Move up">expand_less</i>
+                <i class="transform scale-100 material-icons text-base mr-2" @click="moveUp(doc.id)" title="Move up">expand_less</i>
                 <i v-if="doc.type==='flex' || doc.type==='grid'" class="mr-2 material-icons hover:text-blue-500 text-sm leading-4" @click="$store.dispatch('setAction','addcomponent')" title="Add element">add</i>
                 <i v-if="doc.tag==='form'" class="mr-2 material-icons hover:text-blue-500 text-sm leading-4" @click="$store.dispatch('setAction','formsetting')" title="Settings">settings</i> 
                 <i class="mr-2 material-icons hover:text-blue-500 text-sm leading-4 " @click="$store.dispatch('setAction','customize')" title="Customize">brush</i>
                 <i v-if="doc.type === 'flex' || doc.type==='grid'" class="material-icons text-gray-400 hover:text-blue-400 mr-2" title="Add block" @click="$store.dispatch('setAction','addreusable')">widgets</i> 
                 <i class="mr-2 material-icons hover:text-blue-500 text-sm leading-4 " @click="$store.dispatch('setAction','delete')" title="Delete">delete</i>
             </div>
-            <!--<div class="absolute bottom-0 left-0 -mb-4 text-xs" v-if="doc.gsap && doc.gsap.animation">{{ doc.gsap.animation }}</div>
-            -->
+            
             <span v-if="doc && doc.hasOwnProperty('slider')" class="px-4 py-1 rounded-xl text-sm bg-yellow-500">SLIDER</span>
             <div v-if="doc.type==='grid'" class="opacity-100 hover:opacity-100 border rounded-tl rounded-bl bg-gray-800 absolute left-0 top-0 -mx-5 text-black flex flex-col" style="top:50%;transform:translateY(-50%)">
                 <i class="material-icons hover:bg-blue-200 text-gray-200 hover:text-gray-700" @click="move(true)">expand_less</i>
                 <i class="material-icons hover:bg-blue-200 text-gray-200 hover:text-gray-700" @click="move(false)">expand_more</i>
             </div>
-            <!--
-            <div class="absolute left-0 bottom-0 -mb-6 rounded-xl items-center flex text-sm z-2xtop bg-gray-800 text-gray-300 px-2" v-if="$attrs.flipside > -1" @click="$attrs.flipside?$attrs.flipside=0:$attrs.flipside=1">
-                <i class="material-icons mr-2">flip_camera_android</i> 
-                <span :class="$attrs.flipside?'text-red-400':'text-lime-400'">{{ $attrs.flipside ? 'Backside' : 'Frontside' }}</span>
-            </div>-->
-        </div> 
-        
+            
+        </div>
+        <div class="absolute bottom-0 right-0 -mb-3 mr-1 text-xs">
+            <span :class="index?'text-red-400':'text-lime-400'">{{ index ? 'Backside' : 'Frontside' }}</span>
+        </div>
+        <div :class="'opacity-0 hover:opacity-100 absolute left-0 bottom-0 mb-2 rounded-xl items-center flex text-sm z-top bg-gray-800 text-gray-300 px-2'" v-if="doc.hasOwnProperty('blocks_flip') || (editor.current && editor.current.id === doc.id)" @click="index?index=0:index=1">
+            <i class="material-icons mr-2">flip_camera_android</i> 
+            <span :class="index?'text-lime-400':'text-red-400'">{{ index ? 'Frontside' : 'Backside' }}</span>
+        </div>
     </div>
-
 </template>
 
 <script>
 import MokaElement from '@/components/editor/render/moka.editor.element'
-import MokaSlider from '@/components/editor/preview/moka.slider'
-import MokaEditorSlides from '@/components/editor/render/moka.editor.slides'
-import MokaEditorFlipbox from '@/components/editor/render/moka.editor.flipbox'
-import MokaSlidesContainer from '@/components/editor/render/moka.editor.slides'
+import MokaSingleContainer from '@/components/editor/render/moka.single.container'
 import { mapState } from 'vuex'
 import jp from 'jsonpath'
 export default {
-    name: 'MokaContainer',
-    components: { MokaElement , MokaSlider , MokaEditorSlides , MokaEditorFlipbox , MokaSlidesContainer },
+    name: 'MokaEditorFlipbox',
+    components: { MokaElement,  MokaSingleContainer },
     props: [ 'doc' , 'coords' ,'pos' ],
     data:()=>({
-        index: 0,
+        index:0,
         position: null
     }),
     computed:{
@@ -132,13 +80,15 @@ export default {
         },
         root(){
             return this.$attrs.top ? 0 : parseInt(this.$attrs.level)
+        },
+        side(){
+            return this.index ? ' bg-red-500 ' : ' bg-lime-500 '
         }
         
     },
     methods:{
         moveUp(id){
             var parent = jp.parent ( this.$attrs.component , '$..blocks[?(@.id=="' + id + '")]' )
-            console.log ( parent , id )
             if ( parent.length === 1 ) return
             let i
             parent.forEach ( (p,index) => {
@@ -206,24 +156,6 @@ export default {
             
             
         },
-        /*
-        blocksLen(obj,coord){
-            let o = this.doc
-            let len = 0
-            coord.forEach ( index => {
-                if ( o.hasOwnProperty ( 'blocks' ) ){
-                    o = o.blocks
-                    if ( o.length ) len = o.length
-                    o = getObj (o,index)
-                }
-            })
-            return len
-
-            function getObj(obj,index){
-                return obj[index]
-            }
-        },
-        */
         customize(){
             console.log ( 'element customize')
             this.$emit('customize')
@@ -236,13 +168,13 @@ export default {
         },
         active(id,doc){
             if ( !doc ) return 
-            let color = 'border-blue-500 '
-            doc && !doc.hasOwnProperty('type') ? color = 'border-red-500 ' : null
-            doc && doc.hasOwnProperty('slider') ? color = 'border-yellow-500 ' : null
-            doc && doc.hasOwnProperty('popup') ? color = 'border-teal-200 ' : null
+            let color = 'border-brown-400 '
+            //doc && !doc.hasOwnProperty('type') ? color = 'border-red-500 ' : null
+            //doc && doc.hasOwnProperty('slider') ? color = 'border-yellow-500 ' : null
+            //doc && doc.hasOwnProperty('popup') ? color = 'border-teal-200 ' : null
             doc.type === 'flex' ?
                 doc.hasOwnProperty('popup') ? color = 'border-teal-200 border-2 ' :
-                    color = 'border-red-500 border-2 bg-gray-300 bg-opacity-25 ' : ''
+                    color = 'border-yellow-700 border-2 bg-gray-300 bg-opacity-25 ' : ''
             if ( this.moka && this.moka.selected ) {
                 return this.moka.selected === id ? color + 'opacity-100 ' : color + 'opacity-0 hover:opacity-100'
             } else {

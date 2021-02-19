@@ -1,4 +1,5 @@
 
+// NOT USED //
 // Return the first few bytes of the file as a hex string
 function getBLOBFileHeader(url, blob, callback) {
     var fileReader = new FileReader();

@@ -6,6 +6,7 @@
     <div v-for="(block,b) in doc.blocks" ref="slide" :class="'slide flex-none top-0 left-0 right-0 bottom-0 w-full bg-center bg-cover bg-no-repeat ' + responsive(block.css.css) + ' ' + block.css.container" :style="stile(block) + background(block)" :key="block.id" :ref="block.id">
         <!-- 2nd level - BLOCKS LOOP --->
         <div v-for="(row) in block.blocks" :class="'flex flex-col h-full ' + responsive(row.css)" :style="stile(row) + background(row)" :key="row.id" :ref="row.id">
+            
             <!-- BLOCKS ELEMENTS LOOP -->
             <div v-for="(element) in row.blocks" v-if="!row.hasOwnProperty('slider')" :key="element.id" :ref="element.id" @mouseover="checkAni(element)">
                 <moka-element
@@ -15,7 +16,9 @@
                     :coords="[]"
                     :develop="false"/>
 
-                <div flex v-else :class="responsive(element.css.css) + ' text-base ' + element.css.container" :style="stile(element) + ' ' + background(element)">
+                <div flex v-else 
+                    :class="responsive(element.css.css) + ' text-base ' + element.css.container" 
+                    :style="stile(element) + ' ' + background(element)">
                     
                     <moka-element
                         @click="hasSlideAction"
@@ -27,6 +30,7 @@
                         :coords="[]"
                         :loop="$attrs.loop"
                         :develop="false"/>
+                        
                 <!-- BLOCK ELEMENT IS A GRID/CONTAINER -->
                 <!--<div v-else :class="responsive(element.css.css) + ' ' + element.css.container">-->
                     <div v-if="!element.loop && element.type!='flex'" v-for="(subrow) in element.blocks" :class="responsive(subrow.css) + ' bg-center bg-cover bg-no-repeat'" :style="stile(subrow) + background(subrow)" :key="subrow.id">

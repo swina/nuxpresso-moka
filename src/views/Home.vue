@@ -31,7 +31,7 @@
         </div>
         <div class="capitalize flex flex-row justify-between p-2 border-b">
           <div>Space  </div>
-          <div>{{ total }}</div>
+          <div v-if="total">{{ total }}</div>
         </div>
       </div>
 

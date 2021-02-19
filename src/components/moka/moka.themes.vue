@@ -1,18 +1,21 @@
 <template>
     <div class="p-4">
         <h3 class="">Themes Kit</h3>
-        <button @click="importTheme=!importTheme,zipInfo=null">Import</button>
         <div v-if="!zipInfo" class="p-10">
             <blockquote>With Themes Kit you can import a set of selected pages, templates, blocks and images created by nuxpresso and ready to use in your projects.<br/><br/>
             You can download Themes Kit from nuxpresso website<br/>
             <small>Images are copyright free.</small>
             </blockquote>
+            <div class="w-full text-center">
+            <button class="success text-xl p-2 px-4 rounded m-auto" @click="importTheme=!importTheme,zipInfo=null">Import</button>
+            </div>
         </div>
         <transition name="fade">
             <div v-if="importTheme" class="nuxpresso-modal w-1/3 p-4">
                 <h5>Import Theme</h5>
                 <input type="file" class="absolute top-0 left-0 right-0 bottom-0 opacity-0" @change="loadThemeFromFile"/>
                 <button class="w-full warning">Select File</button>
+                
             </div>
         </transition>   
         
@@ -45,7 +48,7 @@
                     <i class="material-icons absolute top-0 right-0 m-4 text-gray-500 text-4xl"  @click="themeElements=!themeElements">close</i>
                     <h4 class="absolute top-0 left-0 m-4">Theme Blocks</h4>
                     <div class="absolute top-0 right-0 mt-6 mr-16">
-                        <button class="success" @click="importThemeZip()">Import</button>
+                        <button class="success" @click="importThemeZip()">Save</button>
                     </div>
                     <div class="absolute h-4/5 p-2 bg-white mx-4 overflow-y-auto overflow-x-hidden">
                         <div class="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-3 gap-10">
@@ -98,6 +101,7 @@ export default {
         current_zip: '',
         zipInfo: null,
         zipImages: [],
+        zipUploadImages: [],
         doc: null,
         category: null,
         preview: false,
@@ -169,6 +173,7 @@ export default {
                                     }
                                 }).then ( image => {
                                     vm.zipImages.push ( image )
+                                    
                                 })
                            });
                         }
@@ -229,14 +234,15 @@ export default {
                 let image = this.entryImage ( block.image_uri)
                 let obj = Object.assign ( {} , block )
                 obj.image_uri = image
-                console.log ( obj )
-                /*this.$http.post ( 'components' , block ).then ( response => {
-
+                this.$http.post ( 'components' , obj ).then ( response => {
+                    console.log ( 'Imported Block => ' , block.name )
                 }).catch ( error => {
                     console.log ( error )
                 })
-                */
+                
             })
+            this.$message ( 'Theme Kit imported ')
+            
         },
         createUri ( ){
             //this function populate the saveThemes array to download

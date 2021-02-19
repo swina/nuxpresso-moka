@@ -20,11 +20,12 @@ const themes = {
     },
     actions: {
         async loadThemes ( { commit } ){
-            const themes = await axios.get ( process.env.VUE_APP_API_URL + 'themes')
-            console.log ( themes )
-            if ( themes ){
-                commit ( 'SET_THEMES' , themes.data)
-            }
+            return
+            //const themes = await axios.get ( process.env.VUE_APP_API_URL + 'themes')
+            //console.log ( themes )
+            //if ( themes ){
+            //    commit ( 'SET_THEMES' , themes.data)
+            //}
             /*
             axios({
                 url: '/uploads/themes.zip',

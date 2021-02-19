@@ -2,29 +2,7 @@
 <div class="z-2xtop">
 
         <div class="fixed right-0 w-1/5 z-2xtop top-0 cursor-pointer h-screen border-l shadow overflow-y-auto bg-white">
-            <!--
-            <div v-if="components && $attrs.importReusable">
-                <div class="p-1 bg-gray-200 flex flex-row items-center">
-                    Reusable Components
-                    <i class="material-icons z-top absolute  right-0 mr-2 cursor-pointer text-gray-500" @click="$emit('close')">close</i>
-                </div>
-                <div  class="w-full flex flex-col flex-wrap justify-between">
-                    <div v-for="(group,index) in components.keys" :key="'group_' + index">
-                        <div class="p-1 bg-gray-200 mt-4 capitalize">
-                            {{ group}}
-                        </div>
-                        <div class="flex flex-row flex-wrap justify-between">
-                            <div v-for="(component,c) in components.values[index]" :key="component.id" class="flex flex-col p-1">
-                                <div class="hover:bg-blue-200 hover:text-black flex-auto flex flex-col justify-center  p-1 text-center text-xs w-16 h-16 cursor-pointer" @click="$emit('importreusable',component)">
-                                    <i class="material-icons text-blue-800">widgets</i>
-                                    <div class="leading-4">{{ component.name }}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            -->
+           
             <i v-if="!$attrs.importReusable" class="material-icons z-top absolute right-0 m-2 cursor-pointer text-gray-500" @click="$emit('close')">close</i>
             <template v-if="schema && !$attrs.importReusable"  v-for="(group,g) in schema.keys">
                 
@@ -53,13 +31,7 @@
                 <div class="nuxpresso-modal text-xs p-4 z-50 w-1/3 border" v-if="grids">
                     <i class="material-icons absolute right-0 top-0" @click="grids=!grids">close</i>
                     <moka-grids @grid="addGrid" :loop="isloop"/>
-                    <!--
-                    <h3>Columns</h3>
-                    <div class="flex flex-col">
-                        Number of cols<br/>
-                        <input type="number" min="1" max="12" v-model="grid.cols"/> 
-                        <button class="my-2" @click="createGridNew">OK</button>
-                    </div>-->
+                    
                 </div>
             </transition>
             
@@ -271,7 +243,6 @@ export default {
             console.log ( 'element =>  ' , component )
             if ( component.element === 'grid' ){
                 this.selected = component
-                console.log ( component )
                 component.label === 'Articles Grid' ? this.isloop = true : this.isloop = false
                 this.grids = true
                 return

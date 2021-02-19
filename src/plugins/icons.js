@@ -1,3 +1,6 @@
+/**
+ * Material Icons Object of Arrays (categories)
+ */
 const icons = {
     action: [
         "3d_rotation",

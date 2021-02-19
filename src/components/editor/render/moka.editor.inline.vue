@@ -1,7 +1,7 @@
 <template>
 <span>
-    <component v-if="editor.current && editor.current.id === element.id" :is="tag" :class="$cssResponsive(editor.current.css) + ' relative z-2xtop focus:p-2 cursor-text editor'" contenteditable @blur="handleInput" v-html="editor.current.content"></component>
-    <component v-else :is="tag" :class="$cssResponsive(element.css)" v-html="element.content"></component>
+    <component v-if="editor.current && editor.current.id === element.id" :is="tag" :class="$cssResponsive(editor.current.css) + ' relative z-2xtop focus:p-2 cursor-text editor'" contenteditable @blur="handleInput" v-html="editor.current.content" @contextmenu="openCustomizer"></component>
+    <component v-else :is="tag" :class="$cssResponsive(element.css)" v-html="element.content" @contextmenu="openCustomizer"></component>
 </span>
 </template>
 
@@ -25,6 +25,10 @@ export default {
     },
   
     methods:{
+        openCustomizer(e){
+            e.preventDefault();
+            this.$store.dispatch('setAction','customize')
+        },
         handleInput: function(e){
             let text = e.target.innerHTML.replaceAll(/style=\".*"/gm,'')
             this.editor.current.content = text

@@ -16,9 +16,17 @@
                 :develop="false"/> 
             
             <moka-slider-container
-                v-if="block && block.hasOwnProperty('blocks')" @action="elementAction" 
+                v-if="block && block.hasOwnProperty('blocks') && !block.hasOwnProperty('blocks_flip')" @action="elementAction" 
                 :doc="block" :refreshAnimation="refreshAnimation"/>
-            <!--<moka-slider :key="block.id" :ref="block.id" v-if="block && block.hasOwnProperty('slider')" :develop="true" :embeded="true" :doc="block" :editor="true"/>-->
+            
+            <moka-flipbox
+                :key="block.id" 
+                :ref="block.id" 
+                v-if="block && block.hasOwnProperty('blocks_flip')" 
+                :develop="false" 
+                :embeded="true" 
+                :doc="block" 
+                :editor="true"/>
             
         </template>
         
@@ -28,6 +36,7 @@
 
 <script>
 import MokaElement from '@/components/editor/preview/moka.element'
+import MokaFlipbox from '@/components/editor/preview/moka.flipbox'
 import { mapState } from 'vuex'
 
 import gsap from 'gsap'
@@ -37,7 +46,7 @@ const plugins = [ScrollTrigger];
 
 export default {
     name: 'MokaSliderContainer',
-    components: { MokaElement  },
+    components: { MokaElement  , MokaFlipbox },
     props: [ 'doc'  ],
     computed:{
         ...mapState(['moka']),

@@ -16,8 +16,8 @@
                 :develop="false"/> 
 
             <moka-preview-container
-                v-if="block && !block.hasOwnProperty('slider') && block.hasOwnProperty('blocks') && !block.hasOwnProperty('menu')" @action="elementAction" 
-                :doc="block"/>
+                v-if="block && !block.hasOwnProperty('slider') && block.hasOwnProperty('blocks') && !block.hasOwnProperty('menu') && !block.hasOwnProperty('image_flip')" @action="elementAction" 
+                :doc="block" :animation="$attrs.animation"/>
 
             <moka-slider 
                 :key="block.id" 
@@ -28,6 +28,14 @@
                 :doc="block" 
                 :editor="true"/>
 
+            <moka-flipbox
+                :key="block.id" 
+                :ref="block.id" 
+                v-if="block && block.hasOwnProperty('image_flip')" 
+                :develop="true" 
+                :embeded="true" 
+                :doc="block" 
+                :editor="true"/>
                 
 
         </template>
@@ -40,17 +48,20 @@
 //import MokaElement from '@/components/editor/preview/moka.element'
 import MokaElement from '@/components/editor/preview/moka.element.component'
 import draggable from 'vuedraggable'
-import MokaSlider from '@/components/editor/preview/moka.slider'//'@/components/editor/preview/moka.preview.slider'
+import MokaSlider from '@/components/editor/preview/moka.slider'
+import MokaFlipbox from './moka.flipbox.vue'
+
 import { mapState } from 'vuex'
 
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
 gsap.registerPlugin ( ScrollTrigger )
 const plugins = [ScrollTrigger];
 export default {
     name: 'MokaPreviewContainer',
-    components: { MokaElement , MokaSlider , draggable },
-    props: [ 'doc'  ],
+    components: { MokaElement , MokaSlider , draggable , MokaFlipbox },
+    props: [ 'doc' ,   { 'animation' : Boolean , default: true } ],
     data:()=>({
         modal: true
     }),
@@ -138,6 +149,7 @@ export default {
     },
     mounted(){
         window.scrollTo(0,0)
+        if ( !this.animation ) return 
         if ( this.doc.hasOwnProperty('gsap') && this.doc.gsap.animation ){
             this.animate ( this.doc , this.doc.id )
         }

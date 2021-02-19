@@ -381,6 +381,8 @@ import MokaGrids from '@/components/editor/render/moka.grids'
 import MokaColor from '@/components/editor/tailwind/tailwind.color'
 import MokaBgcolor from '@/components/editor/tailwind/tailwind.bgcolor'
 import { mapState } from 'vuex'
+import jp from 'jsonpath'
+
 export default {
     name: 'MokaEditor',
     components: { 
@@ -601,22 +603,31 @@ export default {
         //duplicate current element
         duplicateElement(current){
             
-            //delete this.editor.current.parent    
-
+            delete this.editor.current.parent    
+            var parent = jp.parent ( this.$attrs.component , '$..blocks[?(@.id=="' + current.id + '")]' )
+            let i 
+            if ( parent ){
+                parent.forEach ( (p,index) => {
+                    if ( p.id === current.id ){
+                        i = index
+                    }
+                })
+                let el = JSON.parse(JSON.stringify(this.editor.current))
+                let obj = this.$clone ( el )
+                obj.id = this.$randomID()
+                parent.splice ( i+1 , 0 , obj )
+                this.$message ( 'Element duplicated')
+            }
+            /*
             let el = JSON.parse(JSON.stringify(this.editor.current))
             let obj = this.$clone ( el )
             obj.id = this.$randomID()
             this.$findNode ( this.editor.current.id , this.moka.component.json )
             this.editor.parent.blocks.push ( obj )
             delete this.editor.current.parent
-            //if ( this.editor.parent.type === 'grid' ){
-                //let parent = this.editor.parent
-                //let cols = parseInt(parent.cols) + 1
-                //parent.css.container = parent.css.container.replace('grid-cols-' + parent.cols,'grid-cols-'+cols)
-                //parent.cols = parseInt(parent.cols) + 1
-                //this.$store.dispatch('setParent',parent)
-            //}
+            */
         },
+
         //replace a basic HTML element (not containers)
         replaceElement(component){
             //console.log ( component )
@@ -686,6 +697,7 @@ export default {
                 } else {
                     imported = obj.json
                     component = this.$clone(imported)
+                    console.log ( 'slider => ' , component )
                 }            
             } else {
                 imported = obj

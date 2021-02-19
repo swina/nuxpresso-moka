@@ -26,14 +26,14 @@
             <svg v-if="el.tag === 'svg'" :viewBox="el.content.viewBox" width="100%" height="100%" v-html="el.content.g" :class="el.css + ' fill-current'"></svg>
 
             <img v-if="el.element === 'img' && el.image && el.image.url && el.image.ext != '.svg'" 
-                :src="$imageURL(el.image)" :caption="el.image.caption" :alt="el.image.alternative_text" :class="$cssResponsive(el.css)"/>
+                :src="$imageURL(el.image)" :caption="el.image.caption" :alt="el.image.alternative_text" :class="$cssResponsive(el.css) + imageCSSDefault"/>
             
             <div v-if="(el.element === 'img')  && el.image && el.image.ext === '.svg'" :class="el.css + ' fill-current'">     
                 <simple-svg :src="$imageURL(el.image)" width="100%" height="100%"/>
             </div>
             <!--<button v-if="el.element === 'button'" :class="el.css">{{ el.content }}</button>-->
 
-            <img :class="$cssResponsive(el.css)" :ref="el.id" v-if="el.type==='video' && el.image && el.image.url && el.image.ext != '.svg'" :src="$imagePreviewURL(el.image)"/><!--el.image.previewUrl-->
+            <img :class="$cssResponsive(el.css) + imageCSSDefault" :ref="el.id" v-if="el.type==='video' && el.image && el.image.url && el.image.ext != '.svg'" :src="$imagePreviewURL(el.image)"/><!--el.image.previewUrl-->
 
             <i :class="'material-icons text-10xl m-auto ' + $cssResponsive(el.css)" v-if="el.type==='video' && !el.image" :title="el.label">movie</i> 
 
@@ -101,7 +101,7 @@
                 </div>
             </nav>
             </transition>
-            <div v-if="$attrs.develop " :class="'absolute border border-green-500 border-dashed z-top top-0 left-0 bottom-0 right-0 scale-x-102 scale-y-102 transform ' + active(el.id,el.css) + ' bg-transparent'" style="min-height:2rem" @click="select(el)">
+            <div v-if="$attrs.develop " :class="'absolute border border-green-500 border-dashed top-0 left-0 bottom-0 right-0 scale-x-100 scale-y-100 transform z-' + $attrs.level + ' ' + active(el.id,el.css) + ' bg-transparent'" style="min-height:2rem" @click="select(el)" @contextmenu="$contextMenu($event,el,el.element==='menu'?'edit':'customize')">
                 <div class="h-2 w-2 absolute top-0 right-0 bg-black rounded-full -m-1" @click="moveUp(el.id)"></div>
                 <div class="h-2 w-2 absolute top-0 left-0 bg-black rounded-full -m-1"></div>
                 <div class="h-2 w-2 absolute bottom-0 right-0 bg-black rounded-full -m-1"></div>
@@ -173,6 +173,11 @@ export default {
             }
             return ''
         },
+        imageCSSDefault(){
+            if ( !this.el.css ){
+                return ' w-full h-auto'
+            }
+        }
         
         
     },

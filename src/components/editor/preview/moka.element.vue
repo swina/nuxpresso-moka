@@ -95,6 +95,7 @@ export default {
     }),
     props: ['current'],
     beforeMount(){
+        /*
         let vm = this
         this.article = 'article[' + this.$attrs.element.field + ']'
         if ( this.$attrs.element.element === 'article' && this.$attrs.element.id ){
@@ -103,6 +104,7 @@ export default {
                 return Promise.resolve(response)
             })
         }
+        */
     },
     computed:{
         ...mapState ( ['moka'] ),
