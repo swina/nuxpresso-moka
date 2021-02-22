@@ -2,11 +2,10 @@
     <component
         :is="semantic"
         :id="doc.hasOwnProperty('anchor')? doc.anchor : doc.id"
-        v-if="doc && (modal || moka.popup)"
-        :modal="popup"  
+        v-if="doc"
+        :key="randomID"
         :class="classe(doc.css)" :style="doc.style + ' ' +  background(doc)" :ref="doc.id">
         <template v-for="(block,b) in doc.blocks">
-            
             <moka-element
                 @click="elementAction"
                 v-if="block && !block.hasOwnProperty('blocks') || block.hasOwnProperty('items')"
@@ -16,7 +15,8 @@
                 :develop="false"/> 
 
             <moka-preview-container
-                v-if="block && !block.hasOwnProperty('slider') && block.hasOwnProperty('blocks') && !block.hasOwnProperty('menu') && !block.hasOwnProperty('image_flip')" @action="elementAction" 
+                :key="block.id"
+                v-if="block && !block.hasOwnProperty('slider') && block.hasOwnProperty('blocks') && !block.hasOwnProperty('items') && !block.hasOwnProperty('image_flip') && !block.hasOwnProperty('popup')" @action="elementAction" 
                 :doc="block" :animation="$attrs.animation"/>
 
             <moka-slider 
@@ -36,10 +36,17 @@
                 :embeded="true" 
                 :doc="block" 
                 :editor="true"/>
-                
+               
+            <moka-popup
+                :key="block.id" 
+                :ref="block.id" 
+                v-if="block && block.hasOwnProperty('popup')" 
+                :develop="true" 
+                :embeded="true" 
+                :doc="block" 
+                :editor="true"/>
 
         </template>
-        <i class="material-icons absolute top-0 right-0 m-1" v-if="doc.hasOwnProperty('popup') && doc.popup.close" @click="popupClose">close</i>
     </component>
 
 </template>
@@ -49,8 +56,8 @@
 import MokaElement from '@/components/editor/preview/moka.element.component'
 import draggable from 'vuedraggable'
 import MokaSlider from '@/components/editor/preview/moka.slider'
-import MokaFlipbox from './moka.flipbox.vue'
-
+import MokaFlipbox from './moka.flipbox'
+import MokaPopup from './moka.popup'
 import { mapState } from 'vuex'
 
 import gsap from 'gsap'
@@ -60,10 +67,14 @@ gsap.registerPlugin ( ScrollTrigger )
 const plugins = [ScrollTrigger];
 export default {
     name: 'MokaPreviewContainer',
-    components: { MokaElement , MokaSlider , draggable , MokaFlipbox },
-    props: [ 'doc' ,   { 'animation' : Boolean , default: true } ],
+    components: { MokaElement , MokaSlider , draggable , MokaFlipbox , MokaPopup },
+    props: { 
+        doc : { type: Object }  
+    },
     data:()=>({
-        modal: true
+        modal: true,
+        animation: null,
+        randomID: null
     }),
     computed:{
         ...mapState(['moka']),
@@ -73,28 +84,30 @@ export default {
         semantic(){
             return this.doc.semantic ? this.doc.semantic : 'div'
         },
+        /*
         popup(){
-            if ( this.doc.hasOwnProperty('popup') ){
+            if ( this.doc.hasOwnProperty('popup')  ){
                 if ( this.doc.popup.trigger ){
-                    //this.doc.css.css.replace('modal','')
-                    this.modal = false
+                    if ( this.doc.popup.trigger === this.moka.popup ){
+                        this.modal = true
+                        
+                    } else {
+                        this.modal = false
+                    }
                 }
             }
+        },
+        popupCSS(){
+
+            return this.doc.hasOwnProperty ( 'popup' ) ? 'moka-popup-' + this.randomID : ''
         }
+        */
     },
-    watch:{
-        '$store.state.moka.popup':function(v){
-            if ( v ){
-                if ( this.doc.hasOwnProperty('gsap') && this.doc.gsap.animation ){
-                    this.animate ( this.doc , this.doc.id )
-                }
-            }
-        }
-    },
+    
     methods:{
         
         classe(css){
-            return css.hasOwnProperty('css') ? css.css + ' ' + css.container : css
+            return css.hasOwnProperty('css') ? css.css + ' ' + css.container : css 
         },
         stile(block,doc){
             if ( !block || !doc ) return 
@@ -117,7 +130,7 @@ export default {
         },
         animate(element,id){
             let vm = this
-            if ( this.$refs && element.hasOwnProperty('gsap') && element.gsap.animation ){
+            //if ( this.$refs && element.hasOwnProperty('gsap') && element.gsap.animation && !this.doc.hasOwnProperty('popup') ){
                 let ani = gsap.effects[element.gsap.animation]( this.$refs[id] ,{
                     trigger: this.$refs[id],
                     duration: parseFloat(element.gsap.duration),
@@ -126,11 +139,11 @@ export default {
                 })
                 ScrollTrigger.create({
                     id: id,
-                    start: "top 99%",
+                    start: "center 99%",
                     trigger: this.$refs[id],
                     toggleActions: "play pause restart none",
                     animation:ani,
-                    onEnter: ()=>{ 
+                    onEnter: ()=>{
                         if ( element.gsap.delay ){
                             ani.play()
                         } else {
@@ -139,48 +152,21 @@ export default {
                     },
                     
                 });
+                
                     
-            }
-        },
-        popupClose(){
-            this.modal = false
-            this.$store.dispatch('popup','')
+            //}
         }
     },
     mounted(){
+        //this.randomID = this.$randomID()
         window.scrollTo(0,0)
-        if ( !this.animation ) return 
-        if ( this.doc.hasOwnProperty('gsap') && this.doc.gsap.animation ){
-            this.animate ( this.doc , this.doc.id )
+        //if ( !this.doc && !this.doc.hasOwnProperty('gsap') && !this.doc.gsap && !this.doc.gsap.animation ) return 
+        if ( this.doc.hasOwnProperty('gsap') && this.doc.gsap.animation  ){
+            if ( this.doc.hasOwnProperty ( 'popup') && this.doc.popup.trigger ) return
+                this.$animation( this.doc , this.doc.id , this.$refs )
         }
         return
-        this.doc.blocks.forEach ( block => {
-            if ( block.hasOwnProperty('gsap') && block.gsap.animation  ){
-                this.animate(block, block.id)
-            }
-            if ( block.hasOwnProperty('blocks') ){
-                block.blocks.forEach ( container => {
-                    if ( container.hasOwnProperty('gsap') && container.gsap.animation ){
-                        this.animate ( container , container.id )
-                    }
-                    if ( container.hasOwnProperty('blocks') ){
-                        container.blocks.forEach ( el => {
-                            if ( el.hasOwnProperty('gsap') && el.gsap.animation ){
-                                this.animate ( el , el.id   )
-                            }
-                                if ( el.hasOwnProperty('blocks') ){
-                                el.blocks.forEach ( element => {
-                                        if ( element.hasOwnProperty('gsap') && element.gsap.animation ){
-                                        this.animate ( element , element.id   )
-                                    }
-                                })
-                            }
-                            
-                        })
-                    }
-                })
-            }
-        })
+        
     }
 }
 </script>

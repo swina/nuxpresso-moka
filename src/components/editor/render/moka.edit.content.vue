@@ -4,7 +4,12 @@
         <div class="bg-gray-400 cursor-pointer hover:bg-blue-300 text-gray-800 px-1 mb-1" v-if="$attrs.entity && editor.current.tag != 'document'" @click="setOpt('semantic'),semantic=!semantic">
             HTML Semantic
         </div>
-        <moka-options class="mb-2" v-if="label==='semantic'" attr="semantics" v-model="$attrs.entity.entity.semantic" :css="$attrs.entity.entity.semantic"/>
+        <moka-options 
+            class="mb-2" 
+            v-if="label==='semantic'" 
+            attr="semantics" 
+            v-model="$attrs.entity.entity.semantic" 
+            :css="$attrs.entity.entity.semantic"/>
 
 
 
@@ -13,7 +18,12 @@
             Media
         </div>
         <div class="p-4 text-center" v-if="$attrs.entity && $attrs.entity.entity.hasOwnProperty('image')">
-            <moka-image-placeholder v-if="$attrs.entity" size="sm" :image="$attrs.entity.entity.image" @noimage="$attrs.entity.entity.image=null,$attrs.entity.entity.link=''" @media="$emit('media')"/> 
+            <moka-image-placeholder 
+                v-if="$attrs.entity" 
+                size="sm" 
+                :image="$attrs.entity.entity.image" 
+                @noimage="$attrs.entity.entity.image=null,$attrs.entity.entity.link=''" 
+                @media="$emit('media')"/> 
         </div>
 
         <!-- video options -->
@@ -45,20 +55,21 @@
         <transition name="fade">
             <div v-if="label==='link'" class="flex flex-col">
                 <label>Link</label>
-                <input class="nodark" type="text" v-model="$attrs.element.link"/>
+                <input class="w-full" type="text" v-model="$attrs.element.link"/>
                 <label>Article/Page</label>
-                <select class="nodark" v-model="$attrs.element.link">
+                <select class="w-full" v-model="$attrs.element.link">
                     <option v-for="(opt,o) in moka.articles" :value="'/' + opt.slug">{{ opt.title }}</option>
                 </select>
                 <label>Anchor</label>
-                <input class="nodark" type="text" v-model="$attrs.element.anchor"/>
+                <input class="w-full" type="text" v-model="$attrs.element.anchor"/>
             </div>
+
              <!-- slider link next prev -->
             <div class="flex flex-col my-1 text-left" v-if="$attrs.component.category==='slider'">
                 <label>Slide name</label>
-                <input type="text" class="dark" v-model="editor.current.name"/>
+                <input type="text" class="w-full" v-model="editor.current.name"/>
                 <label>Slider Action</label>
-                <select class="dark" v-model="$attrs.element.action">
+                <select class="w-full" v-model="$attrs.element.action">
                     <option value=""></option>
                     <option value="slider_next">Next</option>
                     <option value="slider_prev">Prev</option>
@@ -71,7 +82,11 @@
             Icon
         </div>
         <!-- icon settings -->
-        <moka-icons v-if="label==='icon'" :tag="$attrs.element.tag" :icon="$attrs.element.content" v-model="$attrs.element.content"/>
+        <moka-icons 
+            v-if="label==='icon'" 
+            :tag="$attrs.element.tag" 
+            :icon="$attrs.element.content" 
+            v-model="$attrs.element.content"/>
         
         <!-- popup -->
         <div v-if="$attrs.element.hasOwnProperty('popup')" class="flex flex-col">
@@ -96,7 +111,7 @@
 
         <!-- form field -->
         <div v-if="$attrs.element.tag === 'input'" class="flex flex-col">
-            <div class="bg-gray-700 cursor-pointer hover:bg-blue-300 mb-1 text-gray-100 px-1" @click="setOpt('formfield')"><label>Field/Button</label></div>
+            <div class="bg-gray-400 cursor-pointer hover:bg-blue-300 mb-1 text-gray-800 px-1" @click="setOpt('formfield')"><label>Field/Button</label></div>
             <div class="flex flex-col" v-if="label==='formfield'">
                 <label>Default value</label>
                 <input class="w-full" type="text" v-model="$attrs.element.content"/>

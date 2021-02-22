@@ -134,6 +134,7 @@ var classes = {
         { label: '25%' , value: 'h-1/4' },
         { label: '33%' , value: 'h-1/3' },
         { label: '50%' , value: 'h-1/2' },
+        { label: '60%' , value: 'h-3/5' },
         { label: '66%' , value: 'h-2/3' },
         { label: '75%' , value: 'h-3/4' },
         { label: '80%' , value: 'h-4/5' },

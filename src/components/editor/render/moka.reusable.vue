@@ -220,12 +220,13 @@ export default {
         ...mapState(['moka']), 
         setcomponents(){
             console.clear()
-            //this.components = this.moka.components//this.admin.jsoncomponents
             return true
         },
         schema(){
-            this.components = this.$arrayGroup ( this.mokacomponents , 'category' , 'id' )
-            return this.moka.elements.moka
+            if ( this.mokacomponents ){
+                this.components = this.$arrayGroup ( this.mokacomponents , 'category' , 'id' )
+                return this.moka.elements.moka
+            }
         },
         svgs(){
             return waves

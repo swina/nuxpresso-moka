@@ -74,22 +74,41 @@
        
         <div :class="'absolute transform border-2 border-dashed top-0 left-0 bottom-0 right-0 z-' + zindex + ' scale-x-' + (105-root) + ' ' + active(doc.id,doc)" @click="setCurrent(doc)" v-if="doc && !doc.hasOwnProperty('items')"  @contextmenu="$contextMenu($event,doc,'customize')">
             <!--{{ $attrs.level }} {{ $attrs.index }}-->
+            
             <span v-if="doc && doc.hasOwnProperty('loop') && doc.loop" class="text-xs"><i class="material-icons">article</i> Article Loop</span>
+            
             <span v-if="doc && doc.hasOwnProperty('blocks_flip')" class="text-xs"><i class="material-icons">flip_camera_android</i> Flipbox</span>
+            
             <div class="h-2 w-2 absolute top-0 right-0 bg-black rounded-full -m-1" @click="moveUp(doc.id)"></div>
+            
             <div class="h-3 w-3 absolute top-0 left-0 bg-blue-500 rounded-full -m-2" @dblclick="$store.dispatch('setAction','addcomponent')" title="Dblclick to add an element"></div>
+            
             <div class="h-2 w-2 absolute bottom-0 right-0 bg-black rounded-full -m-1"></div>
             <div class="h-2 w-2 absolute bottom-0 left-0 bg-black rounded-full -m-1"></div>
+            <moka-floating-bar 
+                v-if="doc.id===moka.selected" 
+                :doc="doc" 
+                @moveup="moveUp(doc.id)"/>
+            <!--             
             <div v-if="doc.id===moka.selected" class="z-highest absolute top-0 left-0 ml-4 p-1 -mt-6  h-6 w-auto bg-gray-800 text-gray-300 text-xs rounded-2xl items-center flex flex-row justify-around">
+                
                 <i class="transform scale-100 material-icons text-lime-400 hover:text-red-500  text-sm mr-2" v-if="doc.icon">{{doc.icon}}</i>
+                
                 <i class="transform scale-100 material-icons text-lime-400 hover:text-red-500 text-sm mr-2" v-if="!doc.icon">select_all</i>
+                
                 <i class="transform scale-100 material-icons hover:text-blue-500  text-base mr-2" @click="moveUp(doc.id)" title="Move up">expand_less</i>
+                
                 <i v-if="doc.type==='flex' || doc.type==='grid'" class="mr-2 material-icons hover:text-blue-500 text-sm leading-4" @click="$store.dispatch('setAction','addcomponent')" title="Add element">add</i>
                 <i v-if="doc.tag==='form'" class="mr-2 material-icons hover:text-blue-500 text-sm leading-4" @click="$store.dispatch('setAction','formsetting')" title="Settings">settings</i> 
+                
                 <i class="mr-2 material-icons hover:text-blue-500 text-sm leading-4 " @click="$store.dispatch('setAction','customize')" title="Customize">brush</i>
+                
                 <i v-if="doc.type === 'flex' || doc.type==='grid'" class="material-icons text-gray-400 hover:text-blue-400 mr-2" title="Add block" @click="$store.dispatch('setAction','addreusable')">widgets</i> 
+                
                 <i class="mr-2 material-icons hover:text-blue-500 text-sm leading-4 " @click="$store.dispatch('setAction','delete')" title="Delete">delete</i>
-            </div>
+
+            </div> -->
+            
             <!--<div class="absolute bottom-0 left-0 -mb-4 text-xs" v-if="doc.gsap && doc.gsap.animation">{{ doc.gsap.animation }}</div>
             -->
             <span v-if="doc && doc.hasOwnProperty('slider')" class="px-4 py-1 rounded-xl text-sm bg-yellow-500">SLIDER</span>
@@ -114,11 +133,13 @@ import MokaSlider from '@/components/editor/preview/moka.slider'
 import MokaEditorSlides from '@/components/editor/render/moka.editor.slides'
 import MokaEditorFlipbox from '@/components/editor/render/moka.editor.flipbox'
 import MokaSlidesContainer from '@/components/editor/render/moka.editor.slides'
+import MokaFloatingBar from './moka.editor.floating.bar'
 import { mapState } from 'vuex'
 import jp from 'jsonpath'
+
 export default {
     name: 'MokaContainer',
-    components: { MokaElement , MokaSlider , MokaEditorSlides , MokaEditorFlipbox , MokaSlidesContainer },
+    components: { MokaElement , MokaSlider , MokaEditorSlides , MokaEditorFlipbox , MokaSlidesContainer , MokaFloatingBar },
     props: [ 'doc' , 'coords' ,'pos' ],
     data:()=>({
         index: 0,
@@ -165,6 +186,7 @@ export default {
             this.$store.dispatch( 'selected' , el.id )
             this.$store.dispatch('setLevel',level)
             this.$store.dispatch ( 'setCurrent' , el )
+            
             this.$emit('selected',el)
         },
         
@@ -275,18 +297,16 @@ export default {
         }
     },
     mounted(){
+        /*
         window.addEventListener("keydown", e => {
-            if ( e.altKey && e.code === 'ArrowUp' ){
-                this.editor.current && this.editor.current.type === 'grid' ?
-                    this.move(true) :
-                        null
-            }
+            
             if ( e.altKey && e.code === 'ArrowDown' ){
                 this.editor.current && this.editor.current.type === 'grid' ?
                     this.move(false) :
                         null
             }
         })
+        */
     }
 
 }

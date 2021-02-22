@@ -43,6 +43,7 @@
                     <moka-editor-selectors 
                         :doc="doc"
                         :component="current"
+                        :parent="$attrs.component"
                         :develop="true"
                         :category="$attrs.component.category"
                         :root="true"
@@ -188,7 +189,7 @@
     
     <!-- SAVE AS COMPONENT -->
     <transition name="fade">
-        <div v-if="saveBlockAsComponent" class="nuxpresso-modal rounded w-full md:w-1/3 p-2 flex flex-col bg-white z-2xtop">
+        <div v-if="saveBlockAsComponent" class="nuxpresso-modal rounded w-full md:w-1/3 p-2 flex flex-col bg-white z-2xtop border-t-8 border-gray-700 ">
             <i class="material-icons absolute top-0 right-0 cursor-pointer" @click="saveBlockAsComponent=!saveBlockAsComponent">close</i>
             
             <h4>Save Block As Reusable</h4>
@@ -214,7 +215,7 @@
 
     <!-- EXPORT COMPONENT -->
     <transition name="fade">
-        <div v-if="exportComponent" class="nuxpresso-modal rounded w-full md:w-1/4  p-4 flex flex-col bg-white z-2xtop">
+        <div v-if="exportComponent" class="nuxpresso-modal rounded w-full md:w-1/4  p-4 flex flex-col bg-white z-2xtop border-t-8 border-gray-700 ">
             <i class="material-icons absolute top-0 right-0 cursor-pointer" @click="exportComponent=!exportComponent">close</i>
 
             <h4>Export Component</h4>
@@ -286,7 +287,7 @@
 
     <!-- SLIDER SETTINGS -->
     <transition name="fade">
-        <div v-if="editor.action === 'slidersettings'" class="nuxpresso-modal w-1/2 lg:w-1/2 xl:w-1/3 p-2 bg-white z-2xtop border rounded shadow-lg">
+        <div v-if="editor.action === 'slidersettings'" class="nuxpresso-modal w-1/2 lg:w-1/2 xl:w-1/3 p-2 bg-white z-2xtop border-t-8 border-gray-700 rounded shadow-lg">
             <i class="material-icons absolute top-0 right-0 cursor-pointer" @click="$store.dispatch('setAction',null)">close</i>
             <h4>Slider Settings</h4>
             <div class="p-2">
@@ -318,7 +319,7 @@
 
     <!-- create a CMS page -->
     <transition name="fade">
-        <div v-if="createPage" class="nuxpresso-modal z-2xtop border w-1/3 bg-white p-2 rounded shadow">
+        <div v-if="createPage" class="nuxpresso-modal z-2xtop border-t-8 border-gray-700 w-1/3 bg-white p-2 rounded shadow">
             <i class="material-icons absolute top-0 right-0 m-1" @click="createPage=!createPage">close</i>
             <h5>Create CMS Article</h5>
             <!-- <div class="text-orange-500 text-sm font-bold" v-if="hasPages && articles">This document is used as template by {{articles.length}} page/s</div> -->
@@ -879,14 +880,13 @@ export default {
             
             let blocks = {
                 blocks: vm.doc,
-                component: vm.$attrs.component,
                 lastUpdate: new Date()
             }
             let data = {
                 autosave:  blocks
             }
-            vm.$http.put ( 'components/' + vm.$attrs.component.id , data ).then ( response => {
-                console.log ( response )
+            vm.$http.put ( 'components/' + vm.$attrs.component.id , data ).catch( error => {
+                this.$message ( 'Error during autosave' )
             })
             vm.$store.dispatch ( 'autoSave' , blocks )
             window.localStorage.setItem('nuxpresso-autosave',JSON.stringify(blocks))

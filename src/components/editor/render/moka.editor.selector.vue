@@ -4,7 +4,7 @@
     
     <div v-if="$attrs.category!='element' && $attrs.category != 'slider'" >
           
-        <div :class="'relative border-4 border-dashed p-4 text-black ' + docCss" :style="stile(doc,true) + ' ' + background(doc)" id="content">
+        <div :class="'relative border-4 border-dashed p-10 text-black ' + docCss" :style="stile(doc,true) + ' ' + background(doc)" id="content">
             <template v-for="(block,b) in doc.blocks">
                 
                 <moka-container 
@@ -186,7 +186,9 @@
 
             <div class="bg-gray-700 text-white p-1 flex items-center">Edit 
                 <i class="material-icons ml-2 absolute right-0 mr-12 text-sm" title="Customize" @click="$store.dispatch('setAction','customize')">brush</i>
+
                 <i class="material-icons absolute  right-0  text-white mr-6 cursor-pointer" @click="fullscreen=!fullscreen" :title="fullscreen?'close fullscreen':'fullscreen'">{{fullscreen?'close_fullscreen':'fullscreen'}}</i>
+
                 <i class="material-icons absolute  right-0  text-white mr-1 cursor-pointer" @click="$store.dispatch('setAction',null),editContent=!editContent">close</i></div>
             <div class="p-4">
                 
@@ -197,7 +199,7 @@
                 <!-- rich text element -->
                 <moka-text-editor v-if="editor.current && editor.current.tag === 'element' && editor.current.element === 'p'"  v-model="editor.current.content" @close="editContent=!editContent"/>
 
-                <moka-edit-icon v-if="editor.current && ( editor.current.tag === 'icon' || editor.current.tag === 'icon_bt')" v-model="editor.current.content"/>
+                <moka-edit-icon v-if="editor.current && ( editor.current.tag === 'icon' || editor.current.tag === 'icon_bt')" :tag="editor.current.tag" v-model="editor.current.content"/>
 
                 
                 
@@ -228,24 +230,34 @@
     </transition>
     <!-- FORM SETTINGS -->
     <transition name="fade">
-        <div v-if="editor.action==='formsetting'" class="nuxpresso-modal w-full md:w-1/4 z-2xtop p-2 bg-white rounded-l shadow border">
+        <div v-if="editor.action==='formsetting'" class="nuxpresso-modal w-full md:w-1/3 border-t-8 border-gray-700 z-2xtop p-2 bg-white rounded-l shadow border">
             <i class="material-icons absolute right-0 m-1" @click="$store.dispatch('setAction',null)">close</i>
             <h4>Form settings</h4>
             <div class="flex flex-col">
                 <label>Action</label>
-                <input type="text" v-model="editor.current.action"/>
+                <input class="w-full xs" type="text" v-model="editor.current.action"/>
                 <label>Success message</label>
-                <input type="text" v-model="editor.current.success"/>
+                <input class="w-full" type="text" v-model="editor.current.success"/>
                 <label>Redirect to</label>
-                <input type="text" v-model="editor.current.redirect"/>
+                <input class="w-full" type="text" v-model="editor.current.redirect"/>
                 <label>Error message</label>
-                <input type="text" v-model="editor.current.error"/>
+                <input class="w-full" type="text" v-model="editor.current.error"/>
+                <button class="success m-auto w-12 my-2" @click="$store.dispatch('setAction',null)">OK</button>
             </div>
+        </div>
+    </transition>
+
+    <!-- POPUP SETTINGS -->
+    <transition name="fade">
+         <div v-if="editor.action==='popupsettings' && editor.current && editor.current.hasOwnProperty('popup')" class="nuxpresso-modal w-full md:w-1/3 border-t-8 border-gray-700 z-2xtop p-2 bg-white rounded-l shadow border">
+            
+            <i class="material-icons absolute right-0 m-1" @click="$store.dispatch('setAction',null)">close</i>
+            <moka-popup-settings :id="editor.current.id"/>
         </div>
     </transition>
     <!-- DELETE OBJECT MODAL -->
     <transition name="fade">
-        <div class="nuxpresso-modal bg-white border shadow p-4 z-2xtop" v-if="confirmModal||editor.action==='delete'">
+        <div class="nuxpresso-modal bg-white border-t-8 border-gray-700 shadow p-4 z-2xtop" v-if="confirmModal||editor.action==='delete'">
             <h5>Delete this object ?</h5>
             <button @click="confirm=false,confirmModal=false,$store.dispatch('setAction',null)">No</button>
             <button class="ml-2 danger" @click="confirm=true,confirmModal=!confirmModal,removeElement()">Yes, delete</button>
@@ -253,7 +265,7 @@
     </transition>
     <!-- ANIMATION -->
     <transition name="slideleft">
-        <div v-if="animations && editor.current" class="fixed z-2xtop w-1/5 text-sm left-0 bottom-0 p-2 flex flex-col bg-white">
+        <div v-if="animations && editor.current" class="fixed z-2xtop w-1/5 text-sm left-0 bottom-0 p-2 flex flex-col bg-white border-t-8 border-gray-700 ">
             
             <i class="material-icons absolute top-0 right-0" @click="animations=!animations">close</i>
 
@@ -280,7 +292,7 @@
 
     <!--HOTKEYS-->
     <transition name="fade">
-        <div class="fixed z-2xtop top-0 left-0 w-1/4 bg-white" v-if="help">
+        <div class="fixed z-2xtop top-0 left-0 w-1/3 bg-white" v-if="help">
             <moka-hotkeys @close="help=!help"/>
         </div>
     </transition>
@@ -299,10 +311,12 @@ import MokaContainer from '@/components/editor/render/moka.editor.container'
 import MokaSideBar from '@/components/editor/render/moka.editor.side.toolbar'
 import MokaCustomizeDrawer from '@/components/editor/render/moka.editor.customize.drawer'
 import MokaHotkeys from '@/components/editor/render/moka.hotkeys'
+import MokaPopupSettings from './moka.editor.popup.settings'
 import draggable from 'vuedraggable'
 import gsap from 'gsap'
 import gsapEffects from '@/plugins/animations'
 import { mapState } from 'vuex' 
+import jp from 'jsonpath'
 
 export default {
     name: 'MokaEditorSelectors',
@@ -342,6 +356,7 @@ export default {
         MokaCustomizeDrawer,
         MokaTree,
         MokaHotkeys,
+        MokaPopupSettings,
         draggable
     },
     props: [ 'doc' , 'component' ],
@@ -577,7 +592,7 @@ export default {
             this.$store.dispatch('setCurrent',block)
             this.$store.dispatch('selected',block.id)
             this.removeElement()
-        }
+        },
     },
     mounted(){  
         let vm = this
@@ -659,6 +674,7 @@ export default {
                     this.confirmModal =! this.confirmModal
                 }
             }
+           
             if ( e.altKey && e.code === 'KeyT' ){
                 this.tree =! this.tree
             }

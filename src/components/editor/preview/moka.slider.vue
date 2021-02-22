@@ -9,7 +9,7 @@
                   <moka-preview-container
                   :class="'slide flex-none top-0 left-0 right-0 bottom-0 w-full slide_' + i"
                   v-if="block && block.hasOwnProperty('blocks') && !block.hasOwnProperty('menu')" 
-                  :doc="block" @action="hasSlideAction" :current="current"/>
+                  :doc="block" :key="block.id" @action="hasSlideAction" :current="current"/>
             </template>
             
             <div class="fixed bottom-0 right-0 z-top p-4 bg-black bg-opacity-50 opacity-0 hover:opacity-100">
@@ -17,8 +17,8 @@
               <i class="material-icons nuxpresso-icon-circle" @click="$emit('close')">close</i>
             </div>
             
-            <div v-if="doc.slider.dots.enable" class="md:absolute bottom-0 left-0 text-center flex-row justify-center items-center -mb-1 w-full">
-              <i :class="'material-icons mr-2 ' + dotActive(n)" v-for="n in doc.blocks.length" @click="goTo(n-1)">fiber_manual_record</i>
+            <div v-if="doc.slider.dots.enable" class="md:absolute bottom-0 left-0 text-center flex-row justify-center items-center p-1 w-full">
+              <i :class="'material-icons mr-2 ' + dotActive(n)" :key="'dot-' + doc.id + n" v-for="n in doc.blocks.length" @click="goTo(n-1)">fiber_manual_record</i>
             </div>
 
             <div v-if="doc.slider.navigation.enable">
@@ -31,7 +31,7 @@
             </div>
             <div v-if="doc.slider.buttons" :class="'absolute left-0 text-center hidden md:flex md:flex-row justify-center items-center my-2 w-full ' + doc.slider.buttons_position">
               <template v-for="(slide,n) in doc.blocks">
-                <button :class="'mx-1 capitalize '  + buttonsClass" @click="goTo(n)">{{ slide.name || 'slide' + (n+1) }}</button>
+                <button :key="'btn_' + doc.id + n" :class="'mx-1 capitalize '  + buttonsClass" @click="goTo(n)">{{ slide.name || 'slide' + (n+1) }}</button>
               </template>
 
         </div>
@@ -200,7 +200,6 @@ export default {
         })
     },
     beforeDestroy(){
-      console.log ( 'destroy timer ...' )
       clearInterval(this.timer)
       this.timer = null
     }

@@ -1,5 +1,6 @@
 <template>
     <div :data="init">
+        <!-- material icons -->
         <div v-if="$attrs.tag==='icon'" class="flex flex-col">
             <i class="material-icons m-auto p-2 border" v-if="$attrs.value">{{ $attrs.value }}</i>
             <div class="text-xs text-center">{{ $attrs.value }}</div>
@@ -15,15 +16,17 @@
                 <i v-for="(icon,n) in searchIcons" class="flex flex-row flex-wrap material-icons cursor-pointer m-2" @click="$emit('input',icon)">{{ icon }}</i>
             </div>
         </div> 
-        <div v-if="$attrs.tag === 'icon_bt'">
-            <i class="material-icons absolute top-0 right-0 m-1" @click="$emit('close')">close</i>
+        <!-- bootstrap icons -->
+        <div v-if="$attrs.tag === 'icon_bt'" class="flex flex-col">
+            
+            <div class="flex flex-row">
             <input type="text" placeholder="search icon" v-model="bt_icon_search"/>
-            <i class="bi-caret-left-fill" @click="bt_start=bt_start-100" v-if="bt_start>0"></i>
-            <i class="bi-caret-right-fill" @click="bt_start=bt_start+100"></i>
-            <div class="absolute flex mt-2 h-48 flex-row px-1 justify-center items-start flex-wrap overflow-y-auto" style="" v-if="bt_icons">
+                <i class="bi-caret-left-fill" @click="bt_start=bt_start-100" v-if="bt_start>0"></i>
+                <i class="bi-caret-right-fill" @click="bt_start=bt_start+100"></i>
+            </div>
+            <div class="flex mt-2 h-48 flex-row px-1 bg-white items-start flex-wrap overflow-y-auto" style="" v-if="bt_icons">
                 <template v-for="icon in bt_icons_found">
                     <i :class="'bi-' + icon + ' text-xl m-1 float-left'" :title="icon" @click="$emit('input',icon)"></i>
-                    <!--<b-icon :icon="icon.split('.')[0]" class="border p-1 rounded text-2xl float-left mx-1 my-1"/>-->
                 </template>
             </div>
         </div>

@@ -169,7 +169,7 @@ export default {
         },
         stile(){
             if (this.el.image ){
-                return 'background-image:url(' + this.el.image.url + ');background-repeat:no-repeat; background-size:cover;background-position:center center; ' + this.el.style  
+                return 'background-image:url(' + this.el.image.url + ');' + this.el.style  
             }
             return ''
         },

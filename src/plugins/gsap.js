@@ -17,7 +17,8 @@ export default {
             @refs         Object      => Vue $refs
          */
         Vue.prototype.$animation = (element,id,refs)=>{
-            if ( refs && element.hasOwnProperty('gsap') && element.gsap.animation ){
+            if ( refs && refs[id] && element.hasOwnProperty('gsap') && element.gsap.animation ){
+                
                 let ani = gsap.effects[element.gsap.animation]( refs[id] ,{
                     trigger: refs[id],
                     duration: parseFloat(element.gsap.duration),

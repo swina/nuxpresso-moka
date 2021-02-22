@@ -13,7 +13,7 @@
 
         
         <transition name="fade">
-        <div v-if="saveAsNew" class="nuxpresso-modal rounded w-full md:w-1/4 p-2 flex flex-col bg-white z-2xtop">
+        <div v-if="saveAsNew" class="nuxpresso-modal rounded w-full md:w-1/4 p-2 flex flex-col bg-white z-2xtop border-t-8 border-gray-700">
             <i class="material-icons absolute top-0 right-0 cursor-pointer" @click="saveAsNew=!saveAsNew">close</i>
             <h4>Duplicate</h4>
             <div class="flex flex-col bg-gray-300 p-2 rounded">

@@ -93,7 +93,7 @@ export default {
         menu_show: false,
         gsap_ani: null
     }),
-    props: ['current'],
+    props: ['current','runAnimation'],
     beforeMount(){
         /*
         let vm = this
@@ -130,8 +130,15 @@ export default {
         
         animations(){
             return gsapEffects
-        }
+        },
         
+        
+    },
+    watch:{
+        runAnimation(v){
+            console.log ( 'rerun animation => ' , v )
+            v ? this.animate ( this.element , this.element.id  ) : null
+        }
     },
     methods:{
         showmenu(){

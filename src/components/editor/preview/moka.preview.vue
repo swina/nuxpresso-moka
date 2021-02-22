@@ -44,6 +44,7 @@ gsap.registerPlugin ( ScrollTrigger )
 const plugins = [ScrollTrigger];
 import gsapEffects from '@/plugins/animations'
 import { mapState } from 'vuex'
+
 export default {
     name: 'MokaPreview',
     data:()=>({
@@ -167,6 +168,7 @@ export default {
         }
     },
     mounted(){
+        
         window.scrollTo(0,0)
         this.refreshID = this.$randomID()
         this.doc.blocks.forEach ( block => {

@@ -18,8 +18,10 @@
                 :top="false"
                 :index="b"
                 :level="parseInt($attrs.level)+1" 
-                v-if="block && block.hasOwnProperty('blocks')" 
+                v-if="block && block.hasOwnProperty('blocks') && !block.hasOwnProperty('blocks_flip')" 
                 :doc="block"/>
+
+           
         </template>     
        
     </div>
@@ -28,12 +30,13 @@
 
 <script>
 import MokaElement from '@/components/editor/preview/moka.element.component'
+import MokaFlipbox from './moka.flipbox'
 //import MokaSingleContainer from '@/components/editor/preview/moka.preview.single.container'
 import { mapState } from 'vuex'
 import jp from 'jsonpath'
 export default {
     name: 'MokaPreviewSingleContainer',
-    components: { MokaElement },
+    components: { MokaElement , MokaFlipbox },
     props: [ 'doc' , 'coords' ,'pos' ],
     data:()=>({
         index: 0,

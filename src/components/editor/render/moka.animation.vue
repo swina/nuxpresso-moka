@@ -1,5 +1,6 @@
 <template>
     <div class="flex flex-col" v-if="current" :key="current.id">
+        <!-- Element animation settings -->
         <div class="bg-gray-300 p-2 rounded">
             <label>Animation</label>
             <select class="w-full" v-model="$attrs.value.gsap.animation" @change="animate(current,current.id)">

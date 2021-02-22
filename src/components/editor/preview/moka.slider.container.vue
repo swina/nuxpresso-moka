@@ -2,6 +2,7 @@
     <div
         :id="doc && doc.hasOwnProperty('anchor')? doc.anchor : doc.id"
         v-if="doc"
+        :key="doc.id"
         :animateMe="refreshAnimation"  
         :class="classe(doc.css)" :style="doc.style + ' ' +  background(doc)" :ref="doc.id">
         <template v-for="(block,b) in doc.blocks">
@@ -17,6 +18,9 @@
             
             <moka-slider-container
                 v-if="block && block.hasOwnProperty('blocks') && !block.hasOwnProperty('blocks_flip')" @action="elementAction" 
+                :key="block.id"
+                :id="block.id"
+                :ref="block.id"
                 :doc="block" :refreshAnimation="refreshAnimation"/>
             
             <moka-flipbox
@@ -25,8 +29,7 @@
                 v-if="block && block.hasOwnProperty('blocks_flip')" 
                 :develop="false" 
                 :embeded="true" 
-                :doc="block" 
-                :editor="true"/>
+                :doc="block"/>
             
         </template>
         

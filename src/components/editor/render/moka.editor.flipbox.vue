@@ -32,9 +32,9 @@
             <div :class="'h-2 w-2 absolute bottom-0 right-0 rounded-full -m-1 ' + side"></div>
             <div class="h-2 w-2 absolute bottom-0 left-0 bg-black rounded-full -m-1"></div>
             <div v-if="doc.id===moka.selected" class="z-2xtop absolute top-0 left-0 ml-4 p-1 -mt-6  h-6 w-auto bg-gray-800 text-gray-300 text-xs rounded-2xl items-center flex flex-row justify-around">
-                <i class="transform scale-100 material-icons text-lime-400 hover:text-red-500  text-sm mr-2" v-if="doc.icon">{{doc.icon}}</i>
+                <i class="transform scale-100 material-icons text-purple-500 hover:text-red-500  text-sm mr-2" v-if="doc.icon">{{doc.icon}}</i>
                 <i class="transform scale-100 material-icons text-lime-400 hover:text-red-500 text-sm mr-2" v-if="!doc.icon">select_all</i>
-                <i class="transform scale-100 material-icons text-base mr-2" @click="moveUp(doc.id)" title="Move up">expand_less</i>
+                <i class="transform scale-100 material-icons hover:text-blue-500 text-base mr-2" @click="moveUp(doc.id)" title="Move up">expand_less</i>
                 <i v-if="doc.type==='flex' || doc.type==='grid'" class="mr-2 material-icons hover:text-blue-500 text-sm leading-4" @click="$store.dispatch('setAction','addcomponent')" title="Add element">add</i>
                 <i v-if="doc.tag==='form'" class="mr-2 material-icons hover:text-blue-500 text-sm leading-4" @click="$store.dispatch('setAction','formsetting')" title="Settings">settings</i> 
                 <i class="mr-2 material-icons hover:text-blue-500 text-sm leading-4 " @click="$store.dispatch('setAction','customize')" title="Customize">brush</i>
@@ -168,15 +168,16 @@ export default {
         },
         active(id,doc){
             if ( !doc ) return 
-            let color = 'border-brown-400 '
+            let color = ' border-purple-400 '
             //doc && !doc.hasOwnProperty('type') ? color = 'border-red-500 ' : null
             //doc && doc.hasOwnProperty('slider') ? color = 'border-yellow-500 ' : null
             //doc && doc.hasOwnProperty('popup') ? color = 'border-teal-200 ' : null
             doc.type === 'flex' ?
                 doc.hasOwnProperty('popup') ? color = 'border-teal-200 border-2 ' :
-                    color = 'border-yellow-700 border-2 bg-gray-300 bg-opacity-25 ' : ''
-            if ( this.moka && this.moka.selected ) {
-                return this.moka.selected === id ? color + 'opacity-100 ' : color + 'opacity-0 hover:opacity-100'
+                    color = color + ' border-2 bg-gray-300 bg-opacity-25 ' : ''
+            if ( this.editor && this.editor.current ) {
+                console.log ( color )
+                return this.editor.current.id === id ? color + 'opacity-100 ' : color + 'opacity-0 hover:opacity-100'
             } else {
                 return color + 'opacity-0 hover:opacity-100 '
             }
