@@ -11,15 +11,16 @@ import api from "./plugins/api";
 
 import VueUploadComponent from 'vue-upload-component'
 Vue.component('file-upload', VueUploadComponent)
+
 import LoadingSpinner from '@/components/loading'
 Vue.component('moka-loading',LoadingSpinner)
+
+import MokaModal from '@/components/modal'
+Vue.component ( 'moka-modal' , MokaModal )
 
 api.defaults.timeout = 10000;
 Vue.prototype.$http = api 
 
-import { ApolloClient } from 'apollo-client'
-import { createHttpLink } from 'apollo-link-http'
-import { InMemoryCache } from 'apollo-cache-inmemory'
 
 
 import VueBlobJsonCsv from 'vue-blob-json-csv'
@@ -39,18 +40,21 @@ import 'vue-draggable-resizable/dist/VueDraggableResizable.css'
 Vue.component('vue-draggable-resizable', VueDraggableResizable)
 
 
+import { ApolloClient } from 'apollo-client'
+import { createHttpLink } from 'apollo-link-http'
+import { InMemoryCache } from 'apollo-cache-inmemory'
 
 
 // Cache implementation
 const cache = new InMemoryCache()
 
-// HTTP connection to the API
-console.log ( process.env.VUE_APP_GRAPHQL)
 
 const httpLink = createHttpLink({
   // You should use an absolute URL here
-  uri: process.env.VUE_APP_GRAPHQL  //|| 'http://localhost:1337/graphql',
+  uri: window.localStorage.getItem('moka-strapiurl') + 'graphql' || process.env.VUE_APP_GRAPHQL  //|| 'http://localhost:1337/graphql',
 })
+// HTTP connection to the API
+console.log ( httpLink )
 
 // Create the apollo client
 const apolloClient = new ApolloClient({
@@ -72,7 +76,7 @@ Vue.component('MokaMedia',MokaMedia)
 import VueHtml2Canvas from "vue-html2canvas";
 Vue.use(VueHtml2Canvas);
 
-
+console.log ( 'Strapi CMS => ' , window.localStorage.getItem ( 'moka-strapiur') || process.env.VUE_APP_API_URL )
 import {SimpleSVG} from 'vue-simple-svg'
 Vue.component('simple-svg', SimpleSVG)
 

@@ -8,7 +8,8 @@ const user = {
         production: {
             url: process.env.VUE_APP_PRODUCTION_URL || null
         },
-        build: process.env.VUE_APP_NUXPRESSO_BUILD || null
+        build: process.env.VUE_APP_NUXPRESSO_BUILD || null,
+        strapiurl: null
     },
     mutations: {
         login ( state , login ){
@@ -25,6 +26,9 @@ const user = {
         },
         production ( state , production ){
             state.production = production
+        },
+        strapiurl ( state , url ){
+            state.strapiurl = url
         }
     },
     actions: {
@@ -42,6 +46,9 @@ const user = {
         },
         production ( { commit } , production ){
             commit ( 'production' , production )
+        },
+        strapiurl ( { commit } , url ){
+            commit ( 'strapiurl'  , url )
         }
     }
 

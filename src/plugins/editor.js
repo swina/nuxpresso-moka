@@ -6,6 +6,11 @@ import Vue from 'vue'
 import _ from 'lodash'
 import store from '../store'
 
+import MokaModalDelete from '@/components/modals/modal.object.delete'
+Vue.component ( 'moka-modal-delete' , MokaModalDelete )
+
+import MokaModalSave from '@/components/modals/modal.save.before'
+Vue.component ( 'moka-modal-save' , MokaModalSave)
 /**
  * Constants
  * 

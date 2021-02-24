@@ -223,7 +223,7 @@
             <vue-blob-json-csv
                 file-type="json"
                 :file-name="$attrs.component.name"
-                :data="[exportJSON]"
+                :data="[jsonToExport]"
                 confirm="Do you want to download it?"
             >
             <button class="my-2">Download {{$attrs.component.name}}</button>
@@ -359,13 +359,21 @@
     </transition>
 
     <transition name="fade">
-        <div class="nuxpresso-modal z-2xtop w-1/3 p-4 flex flex-col" v-if="endEditor">
+        <moka-modal-save 
+            v-if="endEditor"
+            :close="false"
+            buttons="save"
+            @close="$store.dispatch('setAction',null),$router.push('dashboard')"
+            @save="$emit('save'),$store.dispatch('setAction',null),$router.push('dashboard')"/>
+        <!--    
+        <div class="nuxpresso-modal z-2xtop w-1/4 p-4 flex flex-col border-t-8 border-gray-700" v-if="endEditor">
             <p>Save before to close ?</p>
             <div class="mt-4 flex flex-row justify-center">
                 <button class="danger mr-2" @click="$store.dispatch('setAction',null),$router.push('dashboard')">Close</button>
                 <button class="success" @click="$emit('save'),$store.dispatch('setAction',null),$router.push('dashboard')">Save</button>
             </div>
         </div>
+        -->
     </transition>
 </div>
 </template>
@@ -449,7 +457,8 @@ export default {
         bodySettings: false,
         templateSettings: false,
         timer: null,
-        endEditor: false
+        endEditor: false,
+        jsonToExport: null
     }),
     apollo: {
         articles : {
@@ -478,13 +487,7 @@ export default {
                 this.doc.body_bg  + ' ' + this.doc.body_color :
                     'w-full bg-white'
         },
-        //export blocks as JSON file 
-        exportJSON(){
-            let json = JSON.parse(JSON.stringify(this.$attrs.component))
-            delete json.id
-            //this.$store.dispatch('loading')
-            return JSON.stringify(json)
-        },
+       
         //check if loaded component has blocks
         hasblocks(){
             if ( !this.$attrs.component ) this.$router.push('dashboard')
@@ -506,6 +509,37 @@ export default {
         
     },
     methods:{
+         //export blocks as JSON file 
+        exportJSON(){
+            let json = JSON.parse(JSON.stringify(this.$attrs.component))
+            delete json.id
+            delete json.autosave
+            let vm = this
+            
+            if ( json.hasOwnProperty ( 'image' ) ){
+                this.dataURI ( vm.$imageURL ( json.image ) ).then ( response => {
+                    return response
+                }).then ( dataUrl => {
+                    json.image_uri = dataUrl
+                    console.log ( json )
+                    vm.jsonToExport = JSON.stringify ( json )
+                    //return JSON.stringify ( json ) 
+                })
+            } else {
+                vm.jsonToExport = JSON.stringify ( json )
+                //return JSON.stringify ( json )
+            }
+            //this.$store.dispatch('loading')
+        },
+        async dataURI(image){
+            let blob = await fetch(image).then(r => r.blob());
+            let dataUrl = await new Promise(resolve => {
+                let reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.readAsDataURL(blob);
+            });
+            return dataUrl
+        },
         //add a grid as new block
         addGrid(grid){
             this.editor.current.blocks.push ( grid )
@@ -873,6 +907,11 @@ export default {
             document.querySelector('#content').style.fontFamily = font
             this.doc.fontFamily = font
         },
+        exportComponent(v){
+            if ( v ){
+                return this.exportJSON()
+            }
+        }
     },
     mounted(){
         let vm = this

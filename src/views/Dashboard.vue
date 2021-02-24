@@ -5,8 +5,8 @@
         <nav class="w-2/12 fixed min-h-screen bg-gray-800 text-white flex flex-col cursor-pointer">
             
             <!-- LOGO -->
-            <div class="my-2 text-center font-thin ">
-                <div class="text-xl w-16 m-auto h-16 bg-gray-900 hover:border-gray-200 border-transparent border rounded-full flex flex-col text-gray-300 font-black animate-pulse cursor-pointer" @click="$router.push('/')">
+            <div class="my-1 text-center font-thin ">
+                <div class="text-base w-12 m-auto h-12 bg-gray-900 hover:border-gray-200 border-transparent border rounded-full flex flex-col text-gray-300 font-black animate-pulse cursor-pointer" @click="$router.push('/')">
                     <div class="m-auto">M O K A</div>
                 </div>
                 <div class="text-gray-500 text-xs font-hairline">S T U D I O</div>
@@ -14,16 +14,16 @@
 
             <!-- MENU DEFINED IN @/plugins/app.js -->
             <template v-if="menu && menu.items" v-for="item in menu.items">
-                 <div :key="item.label" v-if="item.component" :class="'flex flex-row items-center py-1 font-thin text-sm p-2 hover:bg-gray-700 ' + activeItem(item.component)" @click="section=item.component,label=item.label,filter=item.filter,$store.dispatch('dashboard_filter','')">
+                 <div :key="item.label" v-if="item.component" :class="'flex flex-row items-center py-0 text-xs p-2 hover:bg-gray-700 font-hairline ' + activeItem(item.component)" @click="section=item.component,label=item.label,filter=item.filter,$store.dispatch('dashboard_filter','')">
                     <i v-if="item.icon" class="material-icons mr-2">{{ item.icon }}</i> {{ item.label }}
                  </div>
-                 <div v-else :key="item.label" class="flex flex-row items-center py-1 font-thin text-sm p-2 hover:bg-gray-700" @click="label=item.label">
+                 <div v-else :key="item.label" class="flex flex-row items-center py-0 font-thin text-sm p-2 hover:bg-gray-700" @click="label=item.label">
                     <i v-if="item.icon" class="material-icons mr-2">{{ item.icon }}</i> {{ item.label }}
                  </div>
                  <transition name="fade">
                  <div v-if="item.hasOwnProperty('items') && ( label===item.label || user.dashboard === item.component)">
                     <template v-for="sub in item.items">
-                        <div :key="sub.label" :class="'flex flex-row items-center py-1 pl-10 font-thin text-sm p-2 hover:bg-gray-700 ' + active(sub.filter)" @click="section=sub.component,filter=sub.filter,$store.dispatch('dashboard_filter',filter)">
+                        <div :key="sub.label" :class="'flex flex-row items-center py-0 pl-10 font-thin text-sm p-2 hover:bg-gray-700 ' + active(sub.filter)" @click="section=sub.component,filter=sub.filter,$store.dispatch('dashboard_filter',filter)">
                             {{ sub.label }}
                         </div>
                     </template>
@@ -42,12 +42,28 @@
             </div></a>
 
             <div class="absolute bottom-0 flex flex-col w-full m-auto items-center justify-center">
+                <div class="text-xs" @click="strapiurl=!strapiurl">{{ server }}</div>
                 <img src="../assets/layers.png" class="h-10 w-10 mr-2"/> 
-                <div class="mr-2">N U X P R E S S O</div>
+                <!--<div class="mr-2">N U X P R E S S O</div>-->
             </div>
 
            
         </nav>
+        <transition name="fade">
+            <moka-modal v-if="strapiurl" 
+                :close="true"
+                buttons="save"
+                @close="strapiurl=!strapiurl"
+                @click_0="strapiurl=!strapiurl"
+                @click_1="setStrapiURL()">
+                <span slot="title">Change Strapi URL</span>
+                <div class="flex flex-col" slot="content">
+                    <label>Strapi CMS URL</label>
+                    <input type="text" v-model="strapi" class="sm w-full" placeholder="http://localhost:1337/"/>
+                    <span>Current: {{ server }}</span>
+                </div>
+            </moka-modal>
+        </transition>
 
         <!-- LOAD COMPONENT -->
         <div class="w-full flex flex-row">
@@ -80,6 +96,7 @@ import MokaGrid from '@/components/editor/render/moka.grids'
 import MokaThemes from '@/components/moka/moka.themes'
 import { mapState } from 'vuex'
 import menu from '@/plugins/app'
+import axios from 'axios'
 export default {
     name: 'MokaDashboard',
     components: {
@@ -90,7 +107,9 @@ export default {
         section: '',
         component: '',
         filter: '',
-        menu: null
+        menu: null,
+        strapiurl: false,
+        strapi: ''
     }),
     computed:{
         ...mapState ( [ 'moka' , 'user'] ),
@@ -99,6 +118,9 @@ export default {
             this.menu = menu
             return true
         },
+        server(){
+            return window.localStorage.getItem ( 'moka-strapiurl' ) || process.env.VUE_APP_API_URL 
+        }
         
     },
     watch:{
@@ -123,12 +145,35 @@ export default {
             )
         console.log ( libraries.keys() )
     },
+    mounted(){
+        this.strapi = window.localStorage.getItem ( 'moka-strapiurl' )
+    },
     methods:{
         activeItem(component){
             return component === this.user.dashboard && !this.user.dashboard_filter ? 'bg-gray-600' : ''
         },
         active(filter){
             return filter === this.user.dashboard_filter ? 'bg-gray-600' : ''
+        },
+        setStrapiURL(){
+            if ( this.strapi && this.strapi != window.localStorage.getItem ( 'moka-strapiurl' ) ){
+                this.$message ( 'Trying to connect ... please wait' )
+                axios.get ( this.strapi + 'settings' ).then ( response => {
+                    if ( response.data ){
+                        this.$message ( 'Connection successful ... sync data...' )
+                        window.localStorage.setItem ( 'moka-strapiurl' , this.strapi )
+                        window.setTimeout ( ()=>{
+                            window.location.reload()
+                        },4000)
+                    }
+                }).catch ( error => {
+                    console.log ( error )
+                    this.$message ( 'Strapi at ' + this.strapi + ' timeout')
+                    this.strapiurl = true
+                })
+            } else {
+                this.$message ( 'No change since you are still connected to ' + this.strapi )
+            }
         }
     },
     apollo:{

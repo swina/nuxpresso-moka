@@ -7,6 +7,8 @@
             <h3 class="">Media <span class="text-xs">[{{total}} files]</span></h3> 
             <div class="col-span-2">
                 <button @click="uploadFile=!uploadFile">Upload</button>
+                <label class="ml-2">Import from URL</label>
+                <input type="text" class="w-3/5" v-model="imageURL"/>
             </div>
             
             <div class="text-right text-sm">
@@ -52,6 +54,7 @@
                 </span>
             </div>
             <div>
+                
                 <i @click="prev" v-if="start > 0" class="material-icons mr-2 text-3xl cursor-pointer">chevron_left</i>
                 <i v-if="start < 1" class="material-icons mr-2 text-3xl text-gray-300">chevron_left</i>
                 <i @click="next" class="material-icons text-3xl cursor-pointer">chevron_right</i>
@@ -108,6 +111,21 @@
                 <button class="ml-2 danger" @click="deleteMedia">Yes, delete</button>
             </div>  
         </transition>
+        <!-- IMAGE FROM URL -->
+        <transition name="fade">
+            <moka-modal
+                v-if="imageURL"
+                @close="imageURL=''"
+                @click_0="imageURL=''"
+                @click_1="setImageByURL()">
+                <div slot="title">Image URL</div>
+                <div slot="content">
+                    <img :src="imageURL" class="w-64"/>
+                    <div v-if="editor.current && editor.current.image">{{ editor.current.image.width }} x {{ editor.current.image.height }} <span class="px-1 bg-gray-300 text-black rounded uppercase">{{ editor.current.image.ext}}</span></div>
+                </div>
+            </moka-modal>    
+        </transition>
+
     </div>
     </div>
 </template>
@@ -130,11 +148,15 @@ export default {
         edit: false,
         selectThumbnail: false,
         selectedImage: null,
-        total:0
+        total:0,
+        imageURL: '',
+        extImage: null
+
     }),
     computed:{
         ...mapState ( ['moka','editor'] ),
         media(){
+            
             return this.files
         }
        
@@ -169,6 +191,26 @@ export default {
                     this.assignImg()
                 }
             }
+        },
+        setImageByURL(){
+            var imgURL = new Image();
+            imgURL.src = this.imageURL;
+            let name = this.imageURL.split('.')
+            name = name[name.length-1]
+            let width, height
+            imgURL.onload = ()=> { 
+                this.extImage = {
+                    url : this.imageURL,
+                    size: null,
+                    width: imgURL.width,
+                    height: imgURL.height,
+                    ext: name                
+                }
+                console.log ( imgURL )
+                this.$emit('newimage', this.extImage )
+                this.$emit('close')
+            }
+            
         },
         assignImg(image){
            
@@ -210,6 +252,9 @@ export default {
         this.$http.get ( 'upload/files/count?' ).then ( response => {
             this.total = response.data
         })
+        if ( this.editor.current.image && this.editor.current.image.url.includes('http') ){
+                this.imageURL = this.editor.current.image.url
+        }
     },
     
     apollo: {

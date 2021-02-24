@@ -157,7 +157,6 @@ export default {
             
         },
         customize(){
-            console.log ( 'element customize')
             this.$emit('customize')
         },
         edit(block){
@@ -176,7 +175,6 @@ export default {
                 doc.hasOwnProperty('popup') ? color = 'border-teal-200 border-2 ' :
                     color = color + ' border-2 bg-gray-300 bg-opacity-25 ' : ''
             if ( this.editor && this.editor.current ) {
-                console.log ( color )
                 return this.editor.current.id === id ? color + 'opacity-100 ' : color + 'opacity-0 hover:opacity-100'
             } else {
                 return color + 'opacity-0 hover:opacity-100 '

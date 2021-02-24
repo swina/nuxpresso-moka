@@ -81,7 +81,10 @@
                 <h5 class="bg-gray-700 text-gray-200 p-1">MOKAStudio settings</h5>
                     <div class="flex flex-row">
                     <div class="flex flex-col p-2 w-full md:w-1/2">
-                        <label class="font-bold">Block Types</label>
+                        <label>Strapi URL</label>
+                        <input type="text" class="text-base w-full" v-model="strapiurl"/>
+                        <button @click="setStrapiURL()">Save</button>
+                        <label class="mt-4 font-bold">Block Types</label>
                         <select v-if="moka && moka.elements.types" v-model="currentType" multiple class="h-32 w-full" readonly>
                             <option v-for="(tipo,index) in moka.elements.types.types" :value="index">{{tipo}}</option>
                         </select>
@@ -162,16 +165,27 @@ export default {
             email: '',
             pasword: '',
             confirm: ''
-        }
+        },
+        strapiurl: ''
     }),
     computed: {
-        ...mapState ( ['moka'] ),
+        ...mapState ( ['moka','user'] ),
         colors(){
             return this.mokacolors()
         }
     },
-    
+    mounted(){
+        if ( window.localStorage.getItem('moka-strapiurl') ){
+            this.strapiurl = window.localStorage.getItem('moka-strapiurl')
+        }
+    },
     methods:{
+        setStrapiURL(){
+            window.localStorage.setItem ( 'moka-strapiurl' , this.strapiurl )
+            alert ( 'Changed Strapi Server')
+            window.location.reload()
+            this.$router.push ( '/' )
+        },
         mokacolors(){
             return classes.colors
         },

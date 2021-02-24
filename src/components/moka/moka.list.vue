@@ -38,9 +38,34 @@
             @duplicate="duplicate"/>
 
         <transition name="fade">
+            <moka-modal
+                v-if="create"
+                buttons="save"
+                :close="true"
+                @click_0="create=!create"
+                @click_1="saveNewComponent"
+                @close="create=!create">
+                <div slot="title">Create new block</div>
+                <div slot="content">
+                    <label>Name*</label>
+                    <input class="w-full" type="text" v-model="newComponent.name"/>
+                    <label>Category</label>
+                    <select class="w-full" v-model="newComponent.category">
+                        <option value="component">component</option>
+                        <option value="widget">widget</option>
+                        <option value="template">template</option>
+                        <option value="page">page</option>
+                        <option value="slider">slider</option>
+                        <option value="gallery">gallery</option> 
+                    </select>
+                    <label>Description</label>
+                    <textarea class="w-full" v-model="newComponent.description"/>
+                </div>
+            </moka-modal>
+            <!--
             <div class="nuxpresso-modal w-1/3 bg-gray-800 text-gray-500 p-4 flex flex-col text-sm" v-if="create">
                 <i class="material-icons absolute top-0 right-0 cursor-pointer" @click="create=!create">close</i>
-                <h4>New component</h4>
+                <h4>New block</h4>
                 <label>Name*</label>
                 <input class="w-full dark" type="text" v-model="newComponent.name"/>
                 <label>Category</label>
@@ -56,6 +81,7 @@
                 <textarea class="w-full dark" v-model="newComponent.description"/>
                 <button @click="saveNewComponent" class="my-2">Save</button>
             </div>
+            -->
         </transition>
         <transition name="fade">
             <div class="absolute top-0 left-0 min-h-screen w-screen bg-white" v-if="preview">
@@ -63,20 +89,56 @@
                 <moka-preview :category="component.category" :doc="doc" v-if="!doc.hasOwnProperty('slider')" @close="preview=!preview" :dashboard="true"/>
 
                 <moka-slider v-if="doc.hasOwnProperty('slider')" :embeded="true" :doc="doc" @close="preview=!preview"/>
-                <!--<i v-if="doc.hasOwnProperty('slider')" class="absolute top-0 right-0 m-1 z-top material-icons nuxpresso-icon-circle text-black" title="Close" @click="preview=!preview">close</i>-->
             </div>
         </transition>
+        <!-- IMPORT BLOCKS -->
         <transition name="fade">
+            <moka-modal
+                v-if="importJSON"
+                buttons="close"
+                :close="true"
+                @click_0="importJSON=!importJSON"
+                @close="importJSON=!importJSON">
+                <div slot="title">Import Block</div>
+                <div slot="content">
+                    <moka-upload @close="importJSON=!importJSON"/>
+                </div>
+            </moka-modal>
+            <!--
             <div v-if="importJSON" class="nuxpresso-modal w-full md:w-1/3 bg-gray-800 rounded border-4 border-gray-500  shadow-xl p-2 text-gray-600 text-sm">
                 <moka-upload @close="importJSON=!importJSON"/>
             </div>
+            -->
         </transition>
         
         <!-- EXPORT COMPONENT -->
         <transition name="fade">
-            <div v-if="exportComponent" class="nuxpresso-modal w-full  border-4 border-gray-500 md:w-1/3 bg-gray-800 rounded shadow-xl p-2 text-gray-600 text-sm z-2xtop">
-                <i class="material-icons absolute top-0 right-0 m-1 cursor-pointer" @click="exportComponent=!exportComponent">close</i>
-                <h4>Export Category</h4>
+            
+            
+            <moka-modal
+                v-if="exportComponent"
+                :close="true"
+                buttons="close"
+                @click_0="exportComponent=!exportComponent"
+                @close="exportComponent=!exportComponent">
+                <div slot="title" class="capitalize">Export Blocks Category {{ filter }}</div>
+                <div slot="content">
+                     <div>
+                        <label>Save as</label><br/>
+                        <input class="w-3/4" type="text" v-model="filename"/>.json
+                    </div>
+                    <vue-blob-json-csv
+                        file-type="json"
+                        :file-name="filename"
+                        :data="blocks_dump">
+                        <button class="my-2 success" @click="exportComponent=!exportComponent">Download Library</button>
+                        Blocks: {{ blocks_dump.length }}
+                    </vue-blob-json-csv>
+                </div>
+            </moka-modal>
+            <!-- <div v-if="exportComponent" class="nuxpresso-modal w-full  border-4 border-gray-500 md:w-1/3 bg-gray-800 rounded shadow-xl p-2 text-gray-600 text-sm z-2xtop">
+                <i class="material-icons absolute top-0 right-0 m-1 cursor-pointer" @click="exportComponent=!exportComponent">close</i> -->
+                <!--<h4>Export Category</h4>
                 <div>
                     <label>Save as</label><br/>
                     <input class="dark" type="text" v-model="filename"/>.json
@@ -89,8 +151,8 @@
                 >
                 <button class="my-2 success" @click="exportComponent=!exportComponent">Download Library</button>
                 Blocks: {{ blocks_dump.length }}
-                </vue-blob-json-csv>
-            </div>
+                </vue-blob-json-csv>-->
+            <!-- </div> -->
         </transition>
         <!-- EXPORT SELECTED -->
         <transition name="fade">
@@ -179,6 +241,7 @@ export default {
             let json = {
                 objects : []
             }
+            
             this.objects.forEach ( obj => {
                 json.objects.push ( obj )
             })

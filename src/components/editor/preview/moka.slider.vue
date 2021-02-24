@@ -22,16 +22,16 @@
             </div>
 
             <div v-if="doc.slider.navigation.enable">
-              <div :class="'absolute top-0 left-0 h-full flex justify-center items-center p-1 ' + over" @click="goTo(index-1)">
+              <div :class="'absolute top-0 left-0 h-full flex justify-center items-center p-1 ' + over" @click="goTo(index-1)" v-if="index > 0">
                 <i :class="'slider-navigation-icon material-icons text-4xl ' + doc.slider.navigation.css">{{ doc.slider.navigation.icons[0]}}</i>
               </div>
-              <div :class="'absolute top-0 right-0 h-full flex justify-center items-center p-1 ' + over" @click="goTo(index+1)">
+              <div :class="'absolute top-0 right-0 h-full flex justify-center items-center p-1 ' + over" @click="goTo(index+1)" v-if="index < doc.blocks.length-1">
                 <i :class="'slider-navigation-icon material-icons text-4xl ' + doc.slider.navigation.css">{{ doc.slider.navigation.icons[1]}}</i>
               </div>
             </div>
-            <div v-if="doc.slider.buttons" :class="'absolute left-0 text-center hidden md:flex md:flex-row justify-center items-center my-2 w-full ' + doc.slider.buttons_position">
+            <div v-if="doc.slider.buttons" :class="'slider-buttons absolute left-0 text-center hidden md:flex md:flex-row border-b justify-left items-center my-2 w-full ' + doc.slider.buttons_position">
               <template v-for="(slide,n) in doc.blocks">
-                <button :key="'btn_' + doc.id + n" :class="'mx-1 capitalize '  + buttonsClass" @click="goTo(n)">{{ slide.name || 'slide' + (n+1) }}</button>
+                <button :key="'btn_' + doc.id + n" :class="'mx-0 capitalize '  + buttonsClass" @click="goTo(n)">{{ slide.name || 'slide' + (n+1) }}</button>
               </template>
 
         </div>

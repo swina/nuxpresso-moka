@@ -133,6 +133,7 @@ var classes = {
         { label: '20%' , value: 'h-1/5'},
         { label: '25%' , value: 'h-1/4' },
         { label: '33%' , value: 'h-1/3' },
+        { label: '40%' , value: 'h-2/5' },
         { label: '50%' , value: 'h-1/2' },
         { label: '60%' , value: 'h-3/5' },
         { label: '66%' , value: 'h-2/3' },

@@ -1,6 +1,6 @@
 <template>
     
-    <div class="z-highest absolute top-0 left-0 ml-2 p-1 -mt-2  h-6 w-auto bg-gray-800 text-gray-300 text-xs rounded-2xl items-center flex flex-row justify-around">
+    <div class="z-highest absolute top-0 left-0 ml-2 p-1 -mt-4  h-6 w-auto bg-gray-800 text-gray-300 text-xs rounded-2xl items-center flex flex-row justify-around">
         
         <i class="transform scale-100 material-icons text-lime-400 hover:text-red-500  text-sm mr-2" v-if="doc.icon">{{doc.icon}}</i>
         

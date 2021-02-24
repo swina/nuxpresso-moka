@@ -26,7 +26,7 @@
     <!-- responsive -->
     <i :class="'bi-list moka-icons z-max fixed md:hidden top-0 left-0 m-1 text-3xl' + el.css.css " v-if="el.element === 'menu' && el.responsive" @click="showmenu"></i>
     <transition :name="'fade' || moka.settings.responsive_menu_transition">
-        <nav v-if="menu_show" :class="el.css.responsive + ' ' + moka.settings.responsive_menu_css"> 
+        <nav v-if="menu_show" :class="'md:hidden ' + el.css.responsive + ' ' + moka.settings.responsive_menu_css"> 
             <i :class="'bi-list moka-icons z-max fixed md:hidden top-0 left-0 m-1 text-3xl ' + el.css.css" v-if="el.element === 'menu' && el.responsive" @click="showmenu"></i>
             <div class="h-6"></div>
             <div v-for="(item,i) in el.items" :class="el.css.css + ' cursor-pointer relative p-1'"> 

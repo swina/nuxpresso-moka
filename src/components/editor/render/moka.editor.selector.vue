@@ -113,9 +113,9 @@
             <span>Mobile Breakpoint <span class="lowercase font-bold mr-2">{{ breakpoint }}</span></span>
             <span class="capitalize">CSS class</span>
             
-            <input v-if="!editor.current.css.hasOwnProperty('css')" type="text" class="ml-2 64" v-model="editor.current.css"/>
+            <input v-if="!editor.current.css.hasOwnProperty('css')" type="text" class="ml-2 w-2/5" v-model="editor.current.css"/>
             
-            <input v-else type="text" class="ml-2 w-64" v-model="editor.current.css.css"/>
+            <input v-else type="text" class="ml-2 w-2/5" v-model="editor.current.css.css"/>
 
             <i class="material-icons moka-icon-circle ml-2" title="Edit CSS classes" @click="editCSS=!editCSS">edit</i>
 
@@ -257,11 +257,16 @@
     </transition>
     <!-- DELETE OBJECT MODAL -->
     <transition name="fade">
+        <moka-modal-delete 
+            v-if="confirmModal||editor.action==='delete'"
+            @close="confirm=false,confirmModal=false,$store.dispatch('setAction',null)"
+            @delete="confirm=true,confirmModal=!confirmModal,removeElement()"/>
+        <!--    
         <div class="nuxpresso-modal bg-white border-t-8 border-gray-700 shadow p-4 z-2xtop" v-if="confirmModal||editor.action==='delete'">
             <h5>Delete this object ?</h5>
             <button @click="confirm=false,confirmModal=false,$store.dispatch('setAction',null)">No</button>
             <button class="ml-2 danger" @click="confirm=true,confirmModal=!confirmModal,removeElement()">Yes, delete</button>
-        </div>  
+        </div>-->
     </transition>
     <!-- ANIMATION -->
     <transition name="slideleft">

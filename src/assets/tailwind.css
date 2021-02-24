@@ -61,7 +61,9 @@ button {
     width: fit-content;
 }
 
-
+button:focus {
+  @apply outline-none;
+}
 
 button:hover {
     @apply bg-white text-black border-gray-300;

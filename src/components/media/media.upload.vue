@@ -9,6 +9,7 @@
       @beforedelete="onBeforeDelete($event)"
       :theme="theme?'list':''"
       ref="vueFileAgent" v-model="fileRecords"></vue-file-agent>
+    
     <button :disabled="!fileRecords.length" @click="uploadFiles()">
     Upload {{ fileRecords.length }} files
     </button>
@@ -62,7 +63,8 @@ export default {
       theme: true,
       fileRecords:[],
       fileRecordsForUpload: [], // maintain an upload queue
-      currentFile: null
+      currentFile: null,
+      imageURL: ''
   }),
   computed:{
     uploadUrl(){

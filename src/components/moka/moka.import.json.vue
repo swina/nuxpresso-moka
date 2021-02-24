@@ -1,14 +1,16 @@
 <template>
     <div class="flex flex-col p-4">
+        <!--
         <div class="text-xl">Import Blocks</div>
         <i class="material-icons absolute top-0 right-0 m-1" @click="$emit('close')">close</i>
+        -->
         <div v-if="loaded">
             <div v-if="!isLibrary" class="flex flex-col p-2">
-                <img :src="json.image_uri" v-if="json.image_uri" class="h-32 w-32 m-auto object-cover object-top"/>
+                <img :src="json.image_uri" v-if="json.image_uri" class="w-full border mb-2 m-auto object-cover object-top"/>
                 <label>Name*</label>
-                <input type="text" class="w-full dark" v-model="json.name"/>
+                <input type="text" class="w-full" v-model="json.name"/>
                 <label>Category</label>
-                <select class="w-full dark" v-model="json.category">
+                <select class="w-full" v-model="json.category">
                     <option value="element">element</option>
                     <option value="component">component</option>
                     <option value="widget">widget</option>
@@ -18,15 +20,24 @@
                     <option value="gallery">gallery</option> 
                 </select>
                 <label>Description</label>
-                <textarea class="dark w-full" v-model="json.description"/>
+                <textarea class="w-full" v-model="json.description"/>
                 <button @click="saveImported" class="mt-2 success">Save</button>
 
             </div>
             <div v-else class="flex flex-col">
-                <p>You are importing a library => {{ json[0].category }}
+                <p>You are importing a library
                 <br>
                 Blocks : {{ json.length }}
                 </p>
+                <div class="flex flex-row">
+                <select size="10" v-model="blockIndex">
+                    <option v-for="(comp,i) in json" :value="i">
+                        {{ comp.category }} - {{ comp.name }}
+                    </option>
+                </select>
+                <button @click="json.splice(blockIndex,1)">Remove</button>
+                </div>
+                
                 <button class="warning" @click="importLibrary">Import Library</button>
                 <div v-if="loadedComponent">{{loadedComponent}}</div>
             </div>
@@ -44,7 +55,8 @@ export default {
         files: [],
         json: null,
         loaded: false,
-        loadedComponent:''
+        loadedComponent:'',
+        blockIndex: null
     }),
     methods:{
         loadTextFromFile(ev) {
@@ -57,8 +69,11 @@ export default {
                 this.json = JSON.parse(this.json) 
                 this.json.map ( (comp,index) => {
                     //comp = JSON.parse(comp)
-                    comp.image && comp.image.url ? comp.image_uri = comp.image.url : null
-                    comp.image = null
+                    if ( typeof comp === 'string' ){
+                        comp = JSON.parse(comp)
+                    }
+                    //comp.image && comp.image.url ? comp.image_uri = comp.image.url : null
+                    //comp.image = null
                     this.json[index] = comp
                 })  
 
@@ -76,11 +91,11 @@ export default {
         saveImported(){
             this.$http.post ( 'components' , this.json ).then ( result => {
                 this.$store.dispatch ( 'loadComponents' )
-                this.$store.dispatch('message','Component uploaded successfully' )
+                this.$message('Component uploaded successfully' )
                 this.$emit('close')
             }).catch ( error => {
                 console.log ( error )
-                this.$store.dispatch('message','An error occured. Check your console log' )
+                this.$message('An error occured. Check your console log' )
             })
             return null
         },
@@ -93,12 +108,12 @@ export default {
                     this.loadedComponent = component.name
                     if ( n >= this.json.length ){
                         this.$store.dispatch ( 'loadComponents' )
-                        this.$store.dispatch('message','Blocks uploaded successfully' )
+                        this.$message('Blocks uploaded successfully' )
                         this.loadedComponent = 'Blocks loaded successfully !'
                     }
                 }).catch ( error => {
                     console.log ( error )
-                    this.$store.dispatch('message','An error occured. Check your console log' )
+                    this.$message('An error occured. Check your console log' )
                 })
             })
             

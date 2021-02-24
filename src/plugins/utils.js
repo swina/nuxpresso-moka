@@ -44,7 +44,7 @@ export default {
         let url = ''
         image.url.includes('http') ? 
             url = image.url : 
-                url = process.env.VUE_APP_API_URL + image.url.replace('/','') 
+                url = ( window.localStorage.getItem('moka-strapiurl') || process.env.VUE_APP_API_URL ) + image.url.replace('/','') 
         return url
         
     }
@@ -55,12 +55,36 @@ export default {
             image.previewUrl ? 
                 image.previewUrl.includes('http') ? 
                     url = image.previewUrl : 
-                        url = process.env.VUE_APP_API_URL + image.previewUrl.replace('/','') :
+                        url = ( window.localStorage.getItem('moka-strapiurl') || process.env.VUE_APP_API_URL ) + image.previewUrl.replace('/','') :
                             image.url.includes('http') ? url = image.url : 
-                                url = process.env.VUE_APP_API_URL + image.url.replace('/','') 
+                                url =  ( window.localStorage.getItem('moka-strapiurl') || process.env.VUE_APP_API_URL ) + image.url.replace('/','') 
         
         return url
         
+    }
+
+    Vue.prototype.$imageToDataURI = ( image ) => {
+        return async (image) => {
+            let blob = await fetch(image).then(r => r.blob());
+            let dataUrl = await new Promise(resolve => {
+                let reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.readAsDataURL(blob);
+            });
+            return dataUrl
+        }
+    }
+
+    Vue.prototype.$imageFromURL = ( image ) => {
+        async (image) => {
+            let blob = await fetch(image).then(r => r.blob());
+            let dataUrl = await new Promise(resolve => {
+                let reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.readAsDataURL(blob);
+            });
+            return dataUrl
+        }
     }
 
     Vue.prototype.$layer = (element)=>{
